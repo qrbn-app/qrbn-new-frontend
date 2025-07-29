@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #071a12;
+    --foreground: #f0fdf4;
+    --primary: #14532d;
+    --primary-foreground: #f0fdf4;
+    --secondary: #1a2e1a;
+    --secondary-foreground: #f0fdf4;
+    --accent: #d1b86a;
+    --accent-foreground: #071a12;
+    --muted: #0f2419;
+    --muted-foreground: #a3a3a3;
+    --border: #14532d;
+    --input: #14532d;
+    --ring: #d1b86a;
+  }
+}
+
+.islamic-pattern {
+  background-image: radial-gradient(circle at 25% 25%, rgba(209, 184, 106, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(20, 83, 45, 0.2) 0%, transparent 50%);
+}
+
+.geometric-overlay {
+  background-image: linear-gradient(45deg, transparent 40%, rgba(209, 184, 106, 0.05) 50%, transparent 60%),
+    linear-gradient(-45deg, transparent 40%, rgba(20, 83, 45, 0.1) 50%, transparent 60%);
+}
+
+.glow-shadow {
+  box-shadow: 0 0 20px rgba(209, 184, 106, 0.2);
+}
+
+.crescent-shadow {
+  filter: drop-shadow(0 0 10px rgba(209, 184, 106, 0.3));
+}
