@@ -115,15 +115,15 @@ export default function ZakatPage() {
                       <h3 className="text-lg font-semibold text-[#f0fdf4]">Payment Details</h3>
                       <div className="flex justify-between items-center">
                         <span className="text-[#f0fdf4]/70">Zakat Amount:</span>
-                        <span className="text-[#d1b86a] font-bold">{calculatedZakat.toLocaleString("en-US")} USDT</span>
+                        <span className="text-[#d1b86a] font-bold">{(calculatedZakat / 1000).toFixed(3)} ETH</span>
                       </div>
                       <Separator className="bg-[#14532d]" />
                       <div className="flex justify-between items-center text-lg font-semibold">
                         <span className="text-[#f0fdf4]">Total:</span>
-                        <span className="text-[#d1b86a]">{calculatedZakat.toLocaleString("en-US")} USDT</span>
+                        <span className="text-[#d1b86a]">{(calculatedZakat / 1000).toFixed(3)} ETH</span>
                       </div>
 
-                      <PaymentModal amount={calculatedZakat} type="zakat-maal" title="Zakat Maal Payment">
+                      <PaymentModal amount={calculatedZakat / 1000} type="zakat-maal" title="Zakat Maal Payment">
                         <Button
                           className="w-full bg-[#14532d] hover:bg-[#1a3a1f] text-[#f0fdf4] glow-shadow"
                           disabled={calculatedZakat === 0}

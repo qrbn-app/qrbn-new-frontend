@@ -290,13 +290,16 @@ export default function QurbanPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="text-sm text-[#f0fdf4]/70">Total Amount:</div>
-                    <div className="text-2xl font-bold text-[#d1b86a]">{selectedAnimalData.price} USDT</div>
+                    <div className="text-2xl font-bold text-[#d1b86a]">{(selectedAnimalData.price / 1000).toFixed(3)} ETH</div>
+                    <div className="text-xs text-[#f0fdf4]/50">≈ ${selectedAnimalData.price} USD</div>
                   </div>
 
                   <PaymentModal
-                    amount={selectedAnimalData.price}
+                    amount={selectedAnimalData.price / 1000} // Convert to ETH equivalent
                     type="qurban"
                     title={`Qurban - ${selectedAnimalData.name}`}
+                    animalType={selectedAnimalData.type}
+                    location={selectedAnimalData.location}
                   >
                     <Button className="bg-[#14532d] hover:bg-[#1a3a1f] text-[#f0fdf4] glow-shadow px-8">
                       <Wallet className="h-4 w-4 mr-2" />

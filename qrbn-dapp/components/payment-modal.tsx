@@ -10,38 +10,69 @@ import { Separator } from "@/components/ui/separator"
 import { Progress } from "@/components/ui/progress"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Wallet, ArrowRight, CheckCircle, Clock, ExternalLink } from "lucide-react"
+import { Wallet, ArrowRight, CheckCircle, Clock, ExternalLink, Loader2 } from "lucide-react"
+import { useAccount } from "wagmi"
+import { useQurbanDonation, useZakatDonation, useTransactionStatus } from "@/hooks/use-contracts"
 
 interface PaymentModalProps {
   amount: number
   type: "zakat-maal" | "zakat-fitrah" | "qurban"
   title: string
   children: React.ReactNode
+  animalType?: string
+  location?: string
 }
 
-export function PaymentModal({ amount, type, title, children }: PaymentModalProps) {
-  const [selectedToken, setSelectedToken] = useState("usdt")
+export function PaymentModal({ amount, type, title, children, animalType = "goat", location = "Indonesia" }: PaymentModalProps) {
+  const [selectedToken, setSelectedToken] = useState("eth")
   const [paymentStep, setPaymentStep] = useState<"select" | "confirm" | "processing" | "success">("select")
-  const [txHash, setTxHash] = useState("")
+  const [txHash, setTxHash] = useState<`0x${string}` | undefined>()
+  
+  const { address, isConnected } = useAccount()
+  const { makeQurbanDonation, isLoading: isQurbanLoading } = useQurbanDonation()
+  const { makeZakatDonation, isLoading: isZakatLoading } = useZakatDonation()
+  const { isSuccess: txSuccess, isError: txError } = useTransactionStatus(txHash)
 
   const tokens = {
+    eth: { name: "ETH", balance: "0.5", icon: "⚡" },
     usdt: { name: "USDT", balance: "150.50", icon: "💰" },
     usdc: { name: "USDC", balance: "89.25", icon: "💵" },
   }
 
+  const isLoading = isQurbanLoading || isZakatLoading
+
   const processPayment = async () => {
+    if (!isConnected) {
+      return
+    }
+
     setPaymentStep("processing")
 
-    // Mock payment processing
-    await new Promise((resolve) => setTimeout(resolve, 3000))
+    try {
+      let hash: `0x${string}`
 
-    setTxHash("0x1234567890abcdef1234567890abcdef12345678")
-    setPaymentStep("success")
+      if (type === "qurban") {
+        hash = await makeQurbanDonation(amount, animalType, location)
+      } else {
+        hash = await makeZakatDonation(amount)
+      }
+
+      setTxHash(hash)
+      
+      // Wait for transaction success
+      setTimeout(() => {
+        setPaymentStep("success")
+      }, 2000)
+
+    } catch (error) {
+      console.error("Payment failed:", error)
+      setPaymentStep("select")
+    }
   }
 
   const resetModal = () => {
     setPaymentStep("select")
-    setTxHash("")
+    setTxHash(undefined)
   }
 
   return (
@@ -56,8 +87,8 @@ export function PaymentModal({ amount, type, title, children }: PaymentModalProp
           <div className="space-y-6">
             <div className="text-center p-4 bg-[#14532d]/30 rounded-lg">
               <div className="text-sm text-[#f0fdf4]/70 mb-1">{title}</div>
-              <div className="text-2xl font-bold text-[#d1b86a] mb-1">{amount} USDT</div>
-              <div className="text-xs text-[#f0fdf4]/50">Direct USDT payment</div>
+              <div className="text-2xl font-bold text-[#d1b86a] mb-1">{amount} ETH</div>
+              <div className="text-xs text-[#f0fdf4]/50">Direct ETH payment on Lisk Sepolia</div>
             </div>
 
             <div>
@@ -96,12 +127,13 @@ export function PaymentModal({ amount, type, title, children }: PaymentModalProp
               </div>
             </div>
 
-            <Button
-              onClick={() => setPaymentStep("confirm")}
-              className="w-full bg-[#14532d] hover:bg-[#1a3a1f] text-[#f0fdf4] glow-shadow"
-            >
-              Continue
-            </Button>
+              <Button
+                onClick={() => setPaymentStep("confirm")}
+                className="w-full bg-[#14532d] hover:bg-[#1a3a1f] text-[#f0fdf4] glow-shadow"
+                disabled={!isConnected}
+              >
+                {!isConnected ? "Connect Wallet First" : "Continue"}
+              </Button>
           </div>
         )}
 
@@ -120,7 +152,7 @@ export function PaymentModal({ amount, type, title, children }: PaymentModalProp
                 </div>
                 <div className="flex justify-between">
                   <span className="text-[#f0fdf4]/70">Amount:</span>
-                  <span className="text-[#d1b86a]">{amount} USDT</span>
+                  <span className="text-[#d1b86a]">{amount} ETH</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-[#f0fdf4]/70">Network:</span>
@@ -145,9 +177,19 @@ export function PaymentModal({ amount, type, title, children }: PaymentModalProp
               <Button
                 onClick={processPayment}
                 className="flex-1 bg-[#14532d] hover:bg-[#1a3a1f] text-[#f0fdf4] glow-shadow"
+                disabled={isLoading || !isConnected}
               >
-                <Wallet className="h-4 w-4 mr-2" />
-                Pay Now
+                {isLoading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  <>
+                    <Wallet className="h-4 w-4 mr-2" />
+                    Pay Now
+                  </>
+                )}
               </Button>
             </div>
           </div>
@@ -186,15 +228,19 @@ export function PaymentModal({ amount, type, title, children }: PaymentModalProp
                 <div className="flex justify-between">
                   <span className="text-[#f0fdf4]/70">Transaction Hash:</span>
                   <div className="flex items-center">
-                    <span className="text-[#d1b86a] text-sm font-mono">{txHash.slice(0, 10)}...</span>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="h-6 w-6 p-0 ml-2 text-[#d1b86a]"
-                      onClick={() => window.open(`https://sepolia-blockscout.lisk.com/tx/${txHash}`, "_blank")}
-                    >
-                      <ExternalLink className="h-3 w-3" />
-                    </Button>
+                    <span className="text-[#d1b86a] text-sm font-mono">
+                      {txHash ? `${txHash.slice(0, 10)}...` : "Processing..."}
+                    </span>
+                    {txHash && (
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-6 w-6 p-0 ml-2 text-[#d1b86a]"
+                        onClick={() => window.open(`https://sepolia-blockscout.lisk.com/tx/${txHash}`, "_blank")}
+                      >
+                        <ExternalLink className="h-3 w-3" />
+                      </Button>
+                    )}
                   </div>
                 </div>
                 <div className="flex justify-between">
