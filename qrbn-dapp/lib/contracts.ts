@@ -9,8 +9,8 @@ export const CONTRACT_ADDRESSES = {
   QurbanNFT: '0x49316Dd941a78f27f431c072722b7C613D9731d4' as Address,
   QrbnTreasury: '0x93a5FD10595F311f1134Ea673136CA22412e5158' as Address,
   // USDT contract address on Lisk Sepolia (Update this with the actual USDT address)
-  USDT: '0x05D032ac25d322df992303dCa074EE7392C117b9' as Address, // Replace with actual USDT on Lisk Sepolia
-  // USDT: '0x0E82fDDAd51cc3ac12b69761C45bBCB9A2Bf3C83' as Address, // Replace with actual USDT on Lisk Sepolia --- IGNORE ---
+  // USDT: '0x05D032ac25d322df992303dCa074EE7392C117b9' as Address, // Replace with actual USDT on Lisk Sepolia
+  USDT: '0xb368eFe908117b9Aed375aa6fcF9C4de1B5697BF' as Address, // Replace with actual USDT on Lisk Sepolia --- IGNORE ---
 } as const
 
 // Basic ERC20 ABI for QrbnToken

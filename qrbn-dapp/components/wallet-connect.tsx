@@ -73,7 +73,7 @@ export function WalletConnect() {
     <div className="flex items-center space-x-4">
       <div className="flex items-center space-x-2">
         <Badge className="bg-[#14532d] text-[#d1b86a]">
-          {chain?.name || "Unknown Network"}
+          {chain?.name || "Lisk Sepolia"}
         </Badge>
         <div className="text-sm text-[#f0fdf4]">{formatAddress(address!)}</div>
         <Button
