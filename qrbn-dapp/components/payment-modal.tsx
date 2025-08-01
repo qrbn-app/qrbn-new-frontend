@@ -10,7 +10,10 @@ import { Separator } from "@/components/ui/separator"
 import { Progress } from "@/components/ui/progress"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Wallet, ArrowRight, CheckCircle, Clock, ExternalLink } from "lucide-react"
+import { Wallet, ArrowRight, CheckCircle, Clock, ExternalLink, Loader2 } from "lucide-react"
+import { useContracts } from "@/hooks/use-contracts"
+import { useAccount } from "wagmi"
+import { parseUnits } from "viem"
 
 interface PaymentModalProps {
   amount: number
@@ -23,20 +26,57 @@ export function PaymentModal({ amount, type, title, children }: PaymentModalProp
   const [selectedToken, setSelectedToken] = useState("usdt")
   const [paymentStep, setPaymentStep] = useState<"select" | "confirm" | "processing" | "success">("select")
   const [txHash, setTxHash] = useState("")
+  const [usdtBalance, setUSDTBalance] = useState<string>("0")
+  
+  const contracts = useContracts()
+  const { address, isConnected } = useAccount()
 
   const tokens = {
-    usdt: { name: "USDT", balance: "150.50", icon: "💰" },
-    usdc: { name: "USDC", balance: "89.25", icon: "💵" },
+    usdt: { name: "USDT", balance: usdtBalance, icon: "💰" },
+  }
+
+  // Load USDT balance when modal opens
+  const loadUSDTBalance = async () => {
+    if (!contracts || !address) return
+    
+    try {
+      const balance = await contracts.getUSDTBalance(address)
+      const formatted = contracts.formatTokenAmount(balance, 6) // USDT has 6 decimals
+      setUSDTBalance(formatted)
+    } catch (error) {
+      console.error('Error loading USDT balance:', error)
+    }
   }
 
   const processPayment = async () => {
+    if (!contracts || !address || !isConnected) {
+      console.error('Wallet not connected or contracts not available')
+      return
+    }
+
     setPaymentStep("processing")
 
-    // Mock payment processing
-    await new Promise((resolve) => setTimeout(resolve, 3000))
+    try {
+      // Convert amount to wei (USDT has 6 decimals)
+      const amountInWei = parseUnits(amount.toString(), 6)
+      
+      let hash: `0x${string}`
+      
+      if (type === "qurban") {
+        hash = await contracts.contributeQurban(amountInWei)
+      } else {
+        // For zakat payments
+        const zakatType = type === "zakat-maal" ? "maal" : "fitrah"
+        hash = await contracts.donateZakat(amountInWei, zakatType)
+      }
 
-    setTxHash("0x1234567890abcdef1234567890abcdef12345678")
-    setPaymentStep("success")
+      setTxHash(hash)
+      setPaymentStep("success")
+    } catch (error) {
+      console.error("Payment processing error:", error)
+      // Handle error - could add error state here
+      setPaymentStep("select")
+    }
   }
 
   const resetModal = () => {
@@ -44,8 +84,20 @@ export function PaymentModal({ amount, type, title, children }: PaymentModalProp
     setTxHash("")
   }
 
+  const openInBlockExplorer = () => {
+    if (txHash) {
+      window.open(`https://sepolia-blockscout.lisk.com/tx/${txHash}`, '_blank')
+    }
+  }
+
   return (
-    <Dialog onOpenChange={(open) => !open && resetModal()}>
+    <Dialog onOpenChange={(open) => {
+      if (!open) {
+        resetModal()
+      } else {
+        loadUSDTBalance()
+      }
+    }}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="bg-[#0f2419] border-[#14532d] text-[#f0fdf4] max-w-md">
         <DialogHeader>
@@ -61,24 +113,15 @@ export function PaymentModal({ amount, type, title, children }: PaymentModalProp
             </div>
 
             <div>
-              <label className="text-sm text-[#f0fdf4]/70 mb-2 block">Select Token</label>
-              <Select value={selectedToken} onValueChange={setSelectedToken}>
-                <SelectTrigger className="bg-[#14532d] border-[#14532d] text-[#f0fdf4]">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-[#0f2419] border-[#14532d]">
-                  {Object.entries(tokens).map(([key, token]) => (
-                    <SelectItem key={key} value={key} className="text-[#f0fdf4] focus:bg-[#14532d]">
-                      <div className="flex items-center justify-between w-full">
-                        <span>
-                          {token.icon} {token.name}
-                        </span>
-                        <span className="text-[#d1b86a] ml-4">Balance: {token.balance}</span>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <label className="text-sm text-[#f0fdf4]/70 mb-2 block">Payment Token</label>
+              <div className="bg-[#14532d] border border-[#14532d] rounded-md p-3 text-[#f0fdf4]">
+                <div className="flex items-center justify-between w-full">
+                  <span>
+                    💰 USDT
+                  </span>
+                  <span className="text-[#d1b86a]">Balance: {usdtBalance}</span>
+                </div>
+              </div>
             </div>
 
             <div className="space-y-2 text-xs text-[#f0fdf4]/60">

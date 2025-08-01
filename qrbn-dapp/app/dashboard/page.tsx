@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Award, TrendingUp, Users, Vote } from "lucide-react"
 import { NFTCertificateCard } from "@/components/nft-certificate-card"
+import { ContractDemo } from "@/components/contract-demo"
 
 export default function DashboardPage() {
   return (
@@ -69,7 +70,7 @@ export default function DashboardPage() {
         </div>
 
         <Tabs defaultValue="history" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 bg-[#0f2419] border border-[#14532d]">
+          <TabsList className="grid w-full grid-cols-3 bg-[#0f2419] border border-[#14532d]">
             <TabsTrigger
               value="history"
               className="data-[state=active]:bg-[#14532d] data-[state=active]:text-[#d1b86a]"
@@ -81,6 +82,12 @@ export default function DashboardPage() {
               className="data-[state=active]:bg-[#14532d] data-[state=active]:text-[#d1b86a]"
             >
               NFT Certificates
+            </TabsTrigger>
+            <TabsTrigger
+              value="contracts"
+              className="data-[state=active]:bg-[#14532d] data-[state=active]:text-[#d1b86a]"
+            >
+              Contract Data
             </TabsTrigger>
           </TabsList>
 
@@ -166,6 +173,10 @@ export default function DashboardPage() {
               <NFTCertificateCard title="Qurban Certificate" date="2024-01-10" type="Qurban" tokenId="2001" />
               <NFTCertificateCard title="Zakat Fitrah 2024" date="2024-01-05" type="Zakat" tokenId="1002" />
             </div>
+          </TabsContent>
+
+          <TabsContent value="contracts">
+            <ContractDemo />
           </TabsContent>
         </Tabs>
       </div>

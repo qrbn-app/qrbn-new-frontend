@@ -1,21 +1,40 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Wallet, Copy, Check } from "lucide-react"
-import { useAccount, useDisconnect, useBalance } from "wagmi"
+import { useAccount, useDisconnect } from "wagmi"
 import { useConnectModal } from "@xellar/kit"
+import { useContracts } from "@/hooks/use-contracts"
 
 export function WalletConnect() {
   const { address, isConnected, chain } = useAccount()
   const { disconnect } = useDisconnect()
   const { open } = useConnectModal()
   const [copied, setCopied] = useState(false)
+  const [usdtBalance, setUSDTBalance] = useState<string>("0")
+  
+  const contracts = useContracts()
 
-  const { data: balance } = useBalance({
-    address,
-  })
+  // Load USDT balance when wallet is connected
+  useEffect(() => {
+    const loadUSDTBalance = async () => {
+      if (!contracts || !address) return
+      
+      try {
+        const balance = await contracts.getUSDTBalance(address)
+        const formatted = contracts.formatTokenAmount(balance, 6) // USDT has 6 decimals
+        setUSDTBalance(formatted)
+      } catch (error) {
+        console.error('Error loading USDT balance:', error)
+      }
+    }
+
+    if (isConnected && address && contracts) {
+      loadUSDTBalance()
+    }
+  }, [isConnected, address, contracts])
 
   const connectWallet = async () => {
     try {
@@ -67,11 +86,11 @@ export function WalletConnect() {
         </Button>
       </div>
 
-      {balance && (
+      {usdtBalance && (
         <div className="flex items-center space-x-3 text-sm">
           <div className="text-[#f0fdf4]/70">
-            Balance: <span className="text-[#d1b86a]">
-              {parseFloat(balance.formatted).toFixed(4)} {balance.symbol}
+            USDT: <span className="text-[#d1b86a]">
+              {parseFloat(usdtBalance).toFixed(2)} USDT
             </span>
           </div>
         </div>
