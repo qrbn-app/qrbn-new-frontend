@@ -31,12 +31,7 @@ export function Navigation() {
             <Link href="/dashboard" className="text-[#f0fdf4] hover:text-[#d1b86a] transition-colors">
               Dashboard
             </Link>
-            <Link
-              href="https://www.tally.xyz/gov/qrbn"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#f0fdf4] hover:text-[#d1b86a] transition-colors"
-            >
+            <Link href="/dao" className="text-[#f0fdf4] hover:text-[#d1b86a] transition-colors">
               DAO
             </Link>
             <WalletConnect />
@@ -60,12 +55,7 @@ export function Navigation() {
             <Link href="/dashboard" className="block text-[#f0fdf4] hover:text-[#d1b86a]">
               Dashboard
             </Link>
-            <Link
-              href="https://www.tally.xyz/gov/qrbn"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block text-[#f0fdf4] hover:text-[#d1b86a]"
-            >
+            <Link href="/dao" className="block text-[#f0fdf4] hover:text-[#d1b86a]">
               DAO
             </Link>
             <div className="pt-2">
