@@ -320,19 +320,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Open Source Community**: For the amazing tools and libraries
 - **Muslim Developer Community**: For feedback and contributions
 
-## 📞 Support
-
-- **Website**: [https://qrbn.app](https://qrbn.app)
-- **Email**: support@qrbn.app
-- **Discord**: [QRBN Community](https://discord.gg/qrbn)
-- **Twitter**: [@QRBNApp](https://twitter.com/QRBNApp)
-- **Telegram**: [QRBN Official](https://t.me/qrbnofficial)
-
 ## 🔗 Links
 
-- **Live Demo**: [https://demo.qrbn.app](https://demo.qrbn.app)
-- **Documentation**: [https://docs.qrbn.app](https://docs.qrbn.app)
-- **Smart Contracts**: [Contract Integration Guide](CONTRACT_INTEGRATION.md)
+- **Live Demo**: [https://qrbn.app](https://qrbn.app)
+- **Documentation**: In Progress
+- **Smart Contracts**: Contract Integration Guide in Progress
 - **Web3 Setup**: [Web3 Integration Guide](docs/WEB3_SETUP.md)
 - **Block Explorer**: [Lisk Sepolia Blockscout](https://sepolia-blockscout.lisk.com)
 
