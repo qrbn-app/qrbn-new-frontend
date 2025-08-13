@@ -101,9 +101,9 @@ export default function DashboardPage() {
                   <CardContent>
                     <div className="space-y-4">
                       {[
-                        { type: "Zakat Maal", amount: "167 USDT", date: "2024-01-15", status: "Completed" },
-                        { type: "Qurban - Goat", amount: "167 USDT", date: "2024-01-10", status: "In Progress" },
-                        { type: "Zakat Fitrah", amount: "11.65 USDT", date: "2024-01-05", status: "Completed" },
+                        { type: "Zakat Maal", amount: "167 USDT", date: "2025-01-15", status: "Completed" },
+                        { type: "Qurban - Goat", amount: "167 USDT", date: "2025-01-10", status: "In Progress" },
+                        { type: "Zakat Fitrah", amount: "11.65 USDT", date: "2025-01-05", status: "Completed" },
                       ].map((donation, index) => (
                         <div key={index} className="flex items-center justify-between p-4 bg-[#14532d]/30 rounded-lg">
                           <div>
@@ -169,9 +169,9 @@ export default function DashboardPage() {
 
           <TabsContent value="certificates">
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <NFTCertificateCard title="Zakat Maal 2024" date="2024-01-15" type="Zakat" tokenId="1001" />
-              <NFTCertificateCard title="Qurban Certificate" date="2024-01-10" type="Qurban" tokenId="2001" />
-              <NFTCertificateCard title="Zakat Fitrah 2024" date="2024-01-05" type="Zakat" tokenId="1002" />
+              <NFTCertificateCard title="Zakat Maal 2025" date="2025-01-15" type="Zakat" tokenId="1001" />
+              <NFTCertificateCard title="Qurban Certificate" date="2025-01-10" type="Qurban" tokenId="2001" />
+              <NFTCertificateCard title="Zakat Fitrah 2025" date="2025-01-05" type="Zakat" tokenId="1002" />
             </div>
           </TabsContent>
 

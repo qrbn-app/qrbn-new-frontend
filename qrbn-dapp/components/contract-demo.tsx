@@ -29,9 +29,15 @@ interface ContractData {
     totalSupply: string
   } | null
   nftBalance: string
+  zakatNftBalance: string
   qurbanPool: string
+  zakatPool: string
   userContributions: string
+  userZakatContributions: string
   proposalCount: string
+  nisabThreshold: string
+  zakatRate: string
+  fitrahAmount: string
 }
 
 export function ContractDemo() {
@@ -58,16 +64,28 @@ export function ContractDemo() {
         qrbnBalance,
         tokenInfo,
         nftBalance,
+        zakatNftBalance,
         qurbanPool,
+        zakatPool,
         userContributions,
-        proposalCount
+        userZakatContributions,
+        proposalCount,
+        nisabThreshold,
+        zakatRate,
+        fitrahAmount
       ] = await Promise.all([
         contracts.getQrbnBalance(address),
         contracts.getQrbnTokenInfo(),
         contracts.getQurbanNFTBalance(address),
+        contracts.getZakatNFTBalance(address),
         contracts.getCurrentQurbanPool(),
+        contracts.getCurrentZakatPool(),
         contracts.getUserContributions(address),
-        contracts.getProposalCount()
+        contracts.getUserZakatContributions(address),
+        contracts.getProposalCount(),
+        contracts.getNisabThreshold(),
+        contracts.getZakatRate(),
+        contracts.getFitrahAmount()
       ])
 
       setContractData({
@@ -77,9 +95,15 @@ export function ContractDemo() {
           totalSupply: contracts.formatTokenAmount(tokenInfo.totalSupply)
         } : null,
         nftBalance: nftBalance.toString(),
+        zakatNftBalance: zakatNftBalance.toString(),
         qurbanPool: contracts.formatTokenAmount(qurbanPool),
+        zakatPool: contracts.formatTokenAmount(zakatPool),
         userContributions: contracts.formatTokenAmount(userContributions),
-        proposalCount: proposalCount.toString()
+        userZakatContributions: contracts.formatTokenAmount(userZakatContributions),
+        proposalCount: proposalCount.toString(),
+        nisabThreshold: contracts.formatTokenAmount(nisabThreshold),
+        zakatRate: zakatRate.toString(),
+        fitrahAmount: contracts.formatTokenAmount(fitrahAmount)
       })
     } catch (err) {
       console.error('Error loading contract data:', err)
@@ -181,7 +205,7 @@ export function ContractDemo() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-[#f0fdf4]/70">Total Supply:</span>
-                    <span className="text-[#d1b86a]">{contractData.qrbnTokenInfo.totalSupply}</span>
+                    <span className="text-[#d1b86a]">{(Number(contractData.qrbnTokenInfo.totalSupply) * Math.pow(10, 18)).toLocaleString()}</span>
                   </div>
                   <Separator className="bg-[#14532d]" />
                   <div className="flex justify-between">
@@ -264,6 +288,53 @@ export function ContractDemo() {
               >
                 <ExternalLink className="h-4 w-4 mr-2" />
                 View Qurban Contract
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Zakat Pool Data */}
+          <Card className="bg-[#0f2419] border-[#14532d]">
+            <CardHeader>
+              <CardTitle className="text-[#f0fdf4] flex items-center gap-2">
+                <Coins className="h-5 w-5 text-[#d1b86a]" />
+                Zakat Pool
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-[#f0fdf4]/70">Current Pool:</span>
+                  <span className="text-[#d1b86a]">{contractData.zakatPool} USDT</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[#f0fdf4]/70">Your Contributions:</span>
+                  <span className="text-[#d1b86a]">{contractData.userZakatContributions} USDT</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[#f0fdf4]/70">Zakat NFT Certificates:</span>
+                  <Badge className="bg-[#14532d] text-[#d1b86a]">{contractData.zakatNftBalance}</Badge>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[#f0fdf4]/70">Nisab Threshold:</span>
+                  <span className="text-[#d1b86a]">{contractData.nisabThreshold} USDT</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[#f0fdf4]/70">Zakat Rate:</span>
+                  <span className="text-[#d1b86a]">{(parseInt(contractData.zakatRate) / 100).toFixed(1)}%</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[#f0fdf4]/70">Fitrah Amount:</span>
+                  <span className="text-[#d1b86a]">{contractData.fitrahAmount} USDT</span>
+                </div>
+              </div>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => openInBlockExplorer(CONTRACT_ADDRESSES.Zakat)}
+                className="w-full border-[#14532d] text-[#f0fdf4] hover:bg-[#14532d]/20"
+              >
+                <ExternalLink className="h-4 w-4 mr-2" />
+                View Zakat Contract
               </Button>
             </CardContent>
           </Card>

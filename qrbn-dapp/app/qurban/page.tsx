@@ -62,7 +62,7 @@ const qurbanAnimals = {
       id: "cow-premium",
       name: "Premium Cow Share",
       type: "cow",
-      price: 100,
+      price: 500,
       image: "premiumcow.jpg",
       condition: "Excellent",
       age: "3-4 years",
@@ -75,7 +75,7 @@ const qurbanAnimals = {
       id: "cow-standard",
       name: "Standard Cow Share",
       type: "cow",
-      price: 80,
+      price: 400,
       image: "/standardcow.jpg",
       condition: "Good",
       age: "2-3 years",
@@ -88,7 +88,7 @@ const qurbanAnimals = {
       id: "cow-economy",
       name: "Economy Cow Share",
       type: "cow",
-      price: 65,
+      price: 350,
       image: "economiccow.jpg",
       condition: "Good",
       age: "2 years",
@@ -351,7 +351,7 @@ export default function QurbanPage() {
                   <div className="text-center h-full flex flex-col justify-center">
                     <Award className="h-12 w-12 text-[#d1b86a] mx-auto mb-2 crescent-shadow" />
                     <div className="text-xs text-[#f0fdf4]/70 mb-1">QRBN Certificate</div>
-                    <div className="text-sm font-semibold text-[#d1b86a]">Qurban 2024</div>
+                    <div className="text-sm font-semibold text-[#d1b86a]">Qurban 2025</div>
                     <div className="text-xs text-[#f0fdf4]/50 mt-2">Will be minted upon completion</div>
                   </div>
                 </div>

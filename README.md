@@ -63,12 +63,14 @@ QRBN is a revolutionary Islamic finance platform built on blockchain technology 
 
 | Contract | Address | Purpose |
 |----------|---------|---------|
-| QrbnToken | `0xD91dFc79E1a4b551a3fd6eAE20b66612a0E8aA4a` | QRBN governance token |
-| QrbnGov | `0x53f338F6ceFB06Afb37a1cfbb9AA3B600D52eeA0` | DAO governance contract |
-| QrbnTimelock | `0x163dcB447774C8c0dF1ccCcb653b1a2E89c7E8aF` | Governance timelock controller |
-| Qurban | `0x8429B08E77CcDeafbA6F9cf23e1E19660F6A98C9` | Qurban contribution contract |
-| QurbanNFT | `0x6448807DC186f1391C744578F79ACa6C72a6582F` | NFT certificates for Qurban |
-| QrbnTreasury | `0xb999a4e2C3bCdb862246DD8158715720DB0463d3` | Community treasury |
+| QrbnToken | `0x0061f6008E05935386E5Ad5b5A608EAd0D062698` | QRBN governance token |
+| QrbnGov | `0x1057C3615610f1F1a90B8c6c094a9DDE3D70bC2B` | DAO governance contract |
+| QrbnTimelock | `0xD480E4394b1Df72b39eAdBb0ce36ccB19dB5867C` | Governance timelock controller |
+| Qurban | `0x94c9dCb80Dc75484b0270152372aCcd2a318e609` | Qurban contribution contract |
+| QurbanNFT | `0x6271C03042f41B8e08DDe8413a7d0db4597E51c1` | NFT certificates for Qurban |
+| Zakat | `0x7cE0B440AcD36820c429bdfD9899a5e59D33BE5b` | Zakat donation contract |
+| ZakatNFT | `0x2A628BACF45cb6b9Dcf8305A2615693023068B1A` | NFT certificates for Zakat |
+| QrbnTreasury | `0x841e2afAAfE341e172Ec1a080898D98302F6bb80` | Community treasury |
 
 ## 🚀 Getting Started
 

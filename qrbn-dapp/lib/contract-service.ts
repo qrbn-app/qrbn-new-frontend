@@ -5,6 +5,8 @@ import {
   QRBN_GOV_ABI, 
   QURBAN_NFT_ABI,
   QURBAN_ABI,
+  ZAKAT_ABI,
+  ZAKAT_NFT_ABI,
   USDT_ABI
 } from './contracts'
 
@@ -138,6 +140,94 @@ export class ContractService {
     }
   }
 
+  // Zakat contract methods
+  async getCurrentZakatPool() {
+    try {
+      const pool = await this.publicClient.readContract({
+        address: CONTRACT_ADDRESSES.Zakat,
+        abi: ZAKAT_ABI,
+        functionName: 'getCurrentZakatPool'
+      })
+      return pool
+    } catch (error) {
+      console.error('Error getting current Zakat pool:', error)
+      return BigInt(0)
+    }
+  }
+
+  async getUserZakatContributions(address: `0x${string}`) {
+    try {
+      const contributions = await this.publicClient.readContract({
+        address: CONTRACT_ADDRESSES.Zakat,
+        abi: ZAKAT_ABI,
+        functionName: 'getUserZakatContributions',
+        args: [address]
+      })
+      return contributions
+    } catch (error) {
+      console.error('Error getting user Zakat contributions:', error)
+      return BigInt(0)
+    }
+  }
+
+  async getNisabThreshold() {
+    try {
+      const threshold = await this.publicClient.readContract({
+        address: CONTRACT_ADDRESSES.Zakat,
+        abi: ZAKAT_ABI,
+        functionName: 'nisabThreshold'
+      })
+      return threshold
+    } catch (error) {
+      console.error('Error getting nisab threshold:', error)
+      return BigInt(0)
+    }
+  }
+
+  async getZakatRate() {
+    try {
+      const rate = await this.publicClient.readContract({
+        address: CONTRACT_ADDRESSES.Zakat,
+        abi: ZAKAT_ABI,
+        functionName: 'zakatRate'
+      })
+      return rate
+    } catch (error) {
+      console.error('Error getting Zakat rate:', error)
+      return BigInt(250) // Default 2.5% (250 out of 10000)
+    }
+  }
+
+  async getFitrahAmount() {
+    try {
+      const amount = await this.publicClient.readContract({
+        address: CONTRACT_ADDRESSES.Zakat,
+        abi: ZAKAT_ABI,
+        functionName: 'fitrahAmount'
+      })
+      return amount
+    } catch (error) {
+      console.error('Error getting Fitrah amount:', error)
+      return BigInt(0)
+    }
+  }
+
+  // ZakatNFT methods
+  async getZakatNFTBalance(address: `0x${string}`) {
+    try {
+      const balance = await this.publicClient.readContract({
+        address: CONTRACT_ADDRESSES.ZakatNFT,
+        abi: ZAKAT_NFT_ABI,
+        functionName: 'balanceOf',
+        args: [address]
+      })
+      return balance
+    } catch (error) {
+      console.error('Error getting Zakat NFT balance:', error)
+      return BigInt(0)
+    }
+  }
+
   // Utility methods
   formatTokenAmount(amount: bigint, decimals: number = 18) {
     const divisor = BigInt(10 ** decimals)
@@ -245,18 +335,18 @@ export class ContractService {
       const account = this.walletClient.account
       if (!account) throw new Error('No account found')
       
-      const allowance = await this.getUSDTAllowance(account.address, CONTRACT_ADDRESSES.Qurban)
+      const allowance = await this.getUSDTAllowance(account.address, CONTRACT_ADDRESSES.Zakat)
       if (allowance < amount) {
         // Need to approve first
-        await this.approveUSDT(CONTRACT_ADDRESSES.Qurban, amount)
+        await this.approveUSDT(CONTRACT_ADDRESSES.Zakat, amount)
       }
 
       // Map zakat type to number (0 = maal, 1 = fitrah)
       const zakatTypeNum = zakatType === 'maal' ? 0 : 1
 
       const hash = await this.walletClient.writeContract({
-        address: CONTRACT_ADDRESSES.Qurban,
-        abi: QURBAN_ABI,
+        address: CONTRACT_ADDRESSES.Zakat,
+        abi: ZAKAT_ABI,
         functionName: 'donateZakat',
         args: [amount, zakatTypeNum],
         account: account,

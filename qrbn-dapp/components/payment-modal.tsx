@@ -229,12 +229,13 @@ export function PaymentModal({ amount, type, title, children }: PaymentModalProp
                 <div className="flex justify-between">
                   <span className="text-[#f0fdf4]/70">Transaction Hash:</span>
                   <div className="flex items-center">
-                    <span className="text-[#d1b86a] text-sm font-mono">{txHash.slice(0, 10)}...</span>
+                    <span className="text-[#d1b86a] text-sm font-mono">{txHash ? txHash.slice(0, 10) : 'N/A'}...</span>
+                    {/* <span className="text-[#d1b86a] text-sm font-mono">{txHash.slice(0, 10)}...</span> */}
                     <Button
                       size="sm"
                       variant="ghost"
                       className="h-6 w-6 p-0 ml-2 text-[#d1b86a]"
-                      onClick={() => window.open(`https://sepolia-blockscout.lisk.com/tx/${txHash}`, "_blank")}
+                      onClick={() => txHash && window.open(`https://sepolia-blockscout.lisk.com/tx/${txHash}`, "_blank")}
                     >
                       <ExternalLink className="h-3 w-3" />
                     </Button>
