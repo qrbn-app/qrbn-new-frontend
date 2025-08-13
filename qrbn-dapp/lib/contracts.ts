@@ -261,7 +261,7 @@ export const DAO_REPRESENTATIVES: Record<DAORepresentativeType, DAORepresentativ
       'Participate in monthly community calls',
       'Help onboard new community members'
     ],
-    formUrl: 'https://forms.gle/CommunityRepQRBN2024'
+    formUrl: 'https://forms.gle/CommunityRepQRBN2025'
   },
   organizational: {
     type: 'organizational',
@@ -279,7 +279,7 @@ export const DAO_REPRESENTATIVES: Record<DAORepresentativeType, DAORepresentativ
       'Ensure compliance with organizational standards',
       'Bridge between organizations and the DAO'
     ],
-    formUrl: 'https://forms.gle/OrganizationalRepQRBN2024'
+    formUrl: 'https://forms.gle/OrganizationalRepQRBN2025'
   },
   sharia: {
     type: 'sharia',
@@ -297,6 +297,6 @@ export const DAO_REPRESENTATIVES: Record<DAORepresentativeType, DAORepresentativ
       'Veto power on non-compliant proposals',
       'Issue Sharia compliance certificates'
     ],
-    formUrl: 'https://forms.gle/ShariaCouncilQRBN2024'
+    formUrl: 'https://forms.gle/ShariaCouncilQRBN2025'
   }
 }

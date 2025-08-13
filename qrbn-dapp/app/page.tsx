@@ -131,7 +131,7 @@ export default function HomePage() {
             <Mosque className="h-6 w-6 text-[#d1b86a] mr-2" />
             <span className="text-[#f0fdf4]">Built with Islamic principles at heart</span>
           </div>
-          <p className="text-[#f0fdf4]/60">© 2024 QRBN.app - Transparent Islamic Finance Platform</p>
+          <p className="text-[#f0fdf4]/60">© 2025 QRBN.app - Transparent Islamic Finance Platform</p>
         </div>
       </footer>
     </div>
