@@ -230,6 +230,7 @@ export function PaymentModal({ amount, type, title, children }: PaymentModalProp
                   <span className="text-[#f0fdf4]/70">Transaction Hash:</span>
                   <div className="flex items-center">
                     <span className="text-[#d1b86a] text-sm font-mono">{txHash ? txHash.slice(0, 10) : 'N/A'}...</span>
+                    {/* <span className="text-[#d1b86a] text-sm font-mono">{txHash.slice(0, 10)}...</span> */}
                     <Button
                       size="sm"
                       variant="ghost"
