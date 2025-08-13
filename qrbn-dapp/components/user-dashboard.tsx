@@ -23,7 +23,9 @@ interface UserDashboardData {
   qrbnBalance: string
   usdtBalance: string
   nftCount: string
+  zakatNftCount: string
   totalContributions: string
+  totalZakatContributions: string
   proposalCount: bigint
   daoRequirements: {
     community: boolean
@@ -53,7 +55,9 @@ export function UserDashboard() {
         qrbnBalance,
         usdtBalance,
         nftBalance,
+        zakatNftBalance,
         contributions,
+        zakatContributions,
         proposalCount,
         communityReqs,
         orgReqs,
@@ -62,7 +66,9 @@ export function UserDashboard() {
         contracts.getQrbnBalance(address),
         contracts.getUSDTBalance(address),
         contracts.getQurbanNFTBalance(address),
+        contracts.getZakatNFTBalance(address),
         contracts.getUserContributions(address),
+        contracts.getUserZakatContributions(address),
         contracts.getProposalCount(),
         contracts.checkDAORequirements(address, 'community'),
         contracts.checkDAORequirements(address, 'organizational'),
@@ -73,7 +79,9 @@ export function UserDashboard() {
         qrbnBalance: contracts.formatTokenAmount(qrbnBalance),
         usdtBalance: contracts.formatTokenAmount(usdtBalance, 6),
         nftCount: nftBalance.toString(),
+        zakatNftCount: zakatNftBalance.toString(),
         totalContributions: contracts.formatTokenAmount(contributions),
+        totalZakatContributions: contracts.formatTokenAmount(zakatContributions),
         proposalCount,
         daoRequirements: {
           community: communityReqs.meetsTokenRequirement && communityReqs.hasQurbanContribution,
@@ -146,7 +154,7 @@ export function UserDashboard() {
       </div>
 
       {/* Balance Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
         <Card className="bg-[#0f2419] border-[#14532d]">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
@@ -175,7 +183,7 @@ export function UserDashboard() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-[#f0fdf4]/70">NFT Certificates</p>
+                <p className="text-sm text-[#f0fdf4]/70">Qurban NFTs</p>
                 <p className="text-xl font-bold text-[#d1b86a]">{data.nftCount}</p>
               </div>
               <Award className="h-8 w-8 text-[#d1b86a]" />
@@ -187,8 +195,32 @@ export function UserDashboard() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-[#f0fdf4]/70">Total Contributions</p>
+                <p className="text-sm text-[#f0fdf4]/70">Zakat NFTs</p>
+                <p className="text-xl font-bold text-[#d1b86a]">{data.zakatNftCount}</p>
+              </div>
+              <Award className="h-8 w-8 text-[#d1b86a]" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-[#0f2419] border-[#14532d]">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-[#f0fdf4]/70">Qurban Contributions</p>
                 <p className="text-xl font-bold text-[#d1b86a]">{parseFloat(data.totalContributions).toFixed(2)}</p>
+              </div>
+              <Heart className="h-8 w-8 text-[#d1b86a]" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-[#0f2419] border-[#14532d]">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-[#f0fdf4]/70">Zakat Contributions</p>
+                <p className="text-xl font-bold text-[#d1b86a]">{parseFloat(data.totalZakatContributions).toFixed(2)}</p>
               </div>
               <Heart className="h-8 w-8 text-[#d1b86a]" />
             </div>

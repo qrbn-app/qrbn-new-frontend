@@ -2,12 +2,23 @@ import { Address } from 'viem'
 
 // Contract addresses on Lisk Sepolia
 export const CONTRACT_ADDRESSES = {
+<<<<<<< Updated upstream
   QrbnTimelock: '0x5a2B2Dd70740FE6e89f27c1873Cd51e2eA6128B4' as Address,
   QrbnGov: '0x20f0DC35b3439B8bd123a7968086A397cde38af7' as Address,
   QrbnToken: '0xF288b95F986bd297c3e6E283066CB52B6986E931' as Address,
   Qurban: '0xcaba4eC21D3f63Ac33817a14564A0c9Da0E8410b' as Address,
   QurbanNFT: '0x49316Dd941a78f27f431c072722b7C613D9731d4' as Address,
   QrbnTreasury: '0x93a5FD10595F311f1134Ea673136CA22412e5158' as Address,
+=======
+  QrbnTimelock: '0xD480E4394b1Df72b39eAdBb0ce36ccB19dB5867C' as Address,
+  QrbnGov: '0x1057C3615610f1F1a90B8c6c094a9DDE3D70bC2B' as Address,
+  QrbnToken: '0x0061f6008E05935386E5Ad5b5A608EAd0D062698' as Address,
+  Qurban: '0x94c9dCb80Dc75484b0270152372aCcd2a318e609' as Address,
+  QurbanNFT: '0x6271C03042f41B8e08DDe8413a7d0db4597E51c1' as Address,
+  Zakat: '0x7cE0B440AcD36820c429bdfD9899a5e59D33BE5b' as Address,
+  ZakatNFT: '0x2A628BACF45cb6b9Dcf8305A2615693023068B1A' as Address,
+  QrbnTreasury: '0x841e2afAAfE341e172Ec1a080898D98302F6bb80' as Address,
+>>>>>>> Stashed changes
   // USDT contract address on Lisk Sepolia (Update this with the actual USDT address)
   // USDT: '0x05D032ac25d322df992303dCa074EE7392C117b9' as Address, // Replace with actual USDT on Lisk Sepolia
   USDT: '0xb368eFe908117b9Aed375aa6fcF9C4de1B5697BF' as Address, // Replace with actual USDT on Lisk Sepolia --- IGNORE ---
@@ -117,12 +128,76 @@ export const QURBAN_ABI = [
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
+  }
+] as const
+
+// Basic Zakat contract ABI
+export const ZAKAT_ABI = [
+  {
+    "inputs": [],
+    "name": "getCurrentZakatPool",
+    "outputs": [{"name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{"name": "user", "type": "address"}],
+    "name": "getUserZakatContributions",
+    "outputs": [{"name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
   },
   {
     "inputs": [{"name": "amount", "type": "uint256"}, {"name": "zakatType", "type": "uint8"}],
     "name": "donateZakat",
     "outputs": [],
-    "stateMutability": "nonpayable", 
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "nisabThreshold",
+    "outputs": [{"name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "zakatRate",
+    "outputs": [{"name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "fitrahAmount",
+    "outputs": [{"name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+  }
+] as const
+
+// Basic ZakatNFT ABI
+export const ZAKAT_NFT_ABI = [
+  {
+    "inputs": [{"name": "owner", "type": "address"}],
+    "name": "balanceOf",
+    "outputs": [{"name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{"name": "tokenId", "type": "uint256"}],
+    "name": "tokenURI",
+    "outputs": [{"name": "", "type": "string"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{"name": "owner", "type": "address"}, {"name": "index", "type": "uint256"}],
+    "name": "tokenOfOwnerByIndex",
+    "outputs": [{"name": "", "type": "uint256"}],
+    "stateMutability": "view",
     "type": "function"
   }
 ] as const

@@ -6,12 +6,23 @@ This document describes how the QRBN DApp integrates with smart contracts deploy
 
 | Contract | Address | Purpose |
 |----------|---------|---------|
+<<<<<<< Updated upstream
 | QrbnTimelock | `0x5a2B2Dd70740FE6e89f27c1873Cd51e2eA6128B4` | DAO governance timelock controller |
 | QrbnGov | `0x20f0DC35b3439B8bd123a7968086A397cde38af7` | DAO governance contract |
 | QrbnToken | `0xF288b95F986bd297c3e6E283066CB52B6986E931` | QRBN governance token |
 | Qurban | `0xcaba4eC21D3f63Ac33817a14564A0c9Da0E8410b` | Qurban contribution contract |
 | QurbanNFT | `0x49316Dd941a78f27f431c072722b7C613D9731d4` | NFT certificates for Qurban |
 | QrbnTreasury | `0x93a5FD10595F311f1134Ea673136CA22412e5158` | Community treasury |
+=======
+| QrbnTimelock | `0xD480E4394b1Df72b39eAdBb0ce36ccB19dB5867C` | DAO governance timelock controller |
+| QrbnGov | `0x1057C3615610f1F1a90B8c6c094a9DDE3D70bC2B` | DAO governance contract |
+| QrbnToken | `0x0061f6008E05935386E5Ad5b5A608EAd0D062698` | QRBN governance token |
+| Qurban | `0x94c9dCb80Dc75484b0270152372aCcd2a318e609` | Qurban contribution contract |
+| QurbanNFT | `0x6271C03042f41B8e08DDe8413a7d0db4597E51c1` | NFT certificates for Qurban |
+| Zakat | `0x7cE0B440AcD36820c429bdfD9899a5e59D33BE5b` | Zakat donation contract |
+| ZakatNFT | `0x2A628BACF45cb6b9Dcf8305A2615693023068B1A` | NFT certificates for Zakat |
+| QrbnTreasury | `0x841e2afAAfE341e172Ec1a080898D98302F6bb80` | Community treasury |
+>>>>>>> Stashed changes
 
 ## Architecture Overview
 
@@ -34,8 +45,9 @@ This document describes how the QRBN DApp integrates with smart contracts deploy
 
 ### Smart Contract Data Display
 - Real-time QRBN token balances
-- NFT certificate counts  
+- NFT certificate counts (Qurban and Zakat)
 - Qurban pool contributions
+- Zakat pool contributions and nisab calculations
 - DAO proposal counts
 - Treasury status
 
@@ -61,6 +73,20 @@ const requirements = await contracts?.checkDAORequirements(address, 'community')
 ```typescript
 const balance = await contracts?.getQrbnBalance(address)
 const formatted = contracts?.formatTokenAmount(balance)
+```
+
+### Check Zakat Pool and Nisab
+```typescript
+const zakatPool = await contracts?.getCurrentZakatPool()
+const nisabThreshold = await contracts?.getNisabThreshold()
+const zakatRate = await contracts?.getZakatRate()
+const fitrahAmount = await contracts?.getFitrahAmount()
+```
+
+### Get User Zakat Contributions
+```typescript
+const zakatContributions = await contracts?.getUserZakatContributions(address)
+const zakatNftBalance = await contracts?.getZakatNFTBalance(address)
 ```
 
 ### View Contract on Block Explorer
@@ -99,14 +125,16 @@ All contracts link to Lisk Sepolia Blockscout for transparency.
 ## Integration Points
 
 ### Payment Modal
-- Currently mocked but ready for smart contract integration
-- Will call Qurban/Zakat contracts for actual payments
+- Connect to Zakat and Qurban contracts for actual payments
+- Zakat payments through dedicated Zakat contract
+- Qurban contributions through Qurban contract
 - NFT minting upon successful contribution
 
 ### Dashboard
 - Live contract data display
-- User statistics from blockchain
-- NFT certificate gallery
+- User statistics from blockchain (Qurban and Zakat contributions)
+- NFT certificate gallery (Qurban and Zakat NFTs)
+- Zakat calculation tools with real-time nisab and rates
 
 ### Navigation
 - DAO page replaces external Tally link
@@ -122,10 +150,11 @@ All contracts link to Lisk Sepolia Blockscout for transparency.
 
 ## Next Steps
 
-1. **Payment Integration**: Connect payment modal to actual smart contracts
+1. **Enhanced Zakat Features**: Implement real-time nisab calculations and automatic Zakat eligibility checks
 2. **Enhanced ABIs**: Add full contract ABIs for complete functionality  
 3. **Event Listening**: Subscribe to contract events for real-time updates
 4. **Governance Actions**: Direct proposal creation and voting from DApp
 5. **Treasury Management**: Admin interface for treasury operations
+6. **Zakat Distribution**: Track and display Zakat fund allocation and impact
 
 This integration provides a solid foundation for the QRBN DApp to interact with its smart contract ecosystem while maintaining transparency and user experience.
