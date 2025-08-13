@@ -2,12 +2,12 @@ import { Address } from 'viem'
 
 // Contract addresses on Lisk Sepolia
 export const CONTRACT_ADDRESSES = {
-  QrbnTimelock: '0x5a2B2Dd70740FE6e89f27c1873Cd51e2eA6128B4' as Address,
-  QrbnGov: '0x20f0DC35b3439B8bd123a7968086A397cde38af7' as Address,
-  QrbnToken: '0xF288b95F986bd297c3e6E283066CB52B6986E931' as Address,
-  Qurban: '0xcaba4eC21D3f63Ac33817a14564A0c9Da0E8410b' as Address,
-  QurbanNFT: '0x49316Dd941a78f27f431c072722b7C613D9731d4' as Address,
-  QrbnTreasury: '0x93a5FD10595F311f1134Ea673136CA22412e5158' as Address,
+  QrbnTimelock: '0x163dcB447774C8c0dF1ccCcb653b1a2E89c7E8aF' as Address,
+  QrbnGov: '0x53f338F6ceFB06Afb37a1cfbb9AA3B600D52eeA0' as Address,
+  QrbnToken: '0xD91dFc79E1a4b551a3fd6eAE20b66612a0E8aA4a' as Address,
+  Qurban: '0x8429B08E77CcDeafbA6F9cf23e1E19660F6A98C9' as Address,
+  QurbanNFT: '0x6448807DC186f1391C744578F79ACa6C72a6582F' as Address,
+  QrbnTreasury: '0xb999a4e2C3bCdb862246DD8158715720DB0463d3' as Address,
   // USDT contract address on Lisk Sepolia (Update this with the actual USDT address)
   // USDT: '0x05D032ac25d322df992303dCa074EE7392C117b9' as Address, // Replace with actual USDT on Lisk Sepolia
   USDT: '0xb368eFe908117b9Aed375aa6fcF9C4de1B5697BF' as Address, // Replace with actual USDT on Lisk Sepolia --- IGNORE ---

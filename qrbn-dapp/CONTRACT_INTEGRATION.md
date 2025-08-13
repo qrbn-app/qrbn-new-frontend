@@ -6,12 +6,12 @@ This document describes how the QRBN DApp integrates with smart contracts deploy
 
 | Contract | Address | Purpose |
 |----------|---------|---------|
-| QrbnTimelock | `0x5a2B2Dd70740FE6e89f27c1873Cd51e2eA6128B4` | DAO governance timelock controller |
-| QrbnGov | `0x20f0DC35b3439B8bd123a7968086A397cde38af7` | DAO governance contract |
-| QrbnToken | `0xF288b95F986bd297c3e6E283066CB52B6986E931` | QRBN governance token |
-| Qurban | `0xcaba4eC21D3f63Ac33817a14564A0c9Da0E8410b` | Qurban contribution contract |
-| QurbanNFT | `0x49316Dd941a78f27f431c072722b7C613D9731d4` | NFT certificates for Qurban |
-| QrbnTreasury | `0x93a5FD10595F311f1134Ea673136CA22412e5158` | Community treasury |
+| QrbnTimelock | `0x163dcB447774C8c0dF1ccCcb653b1a2E89c7E8aF` | DAO governance timelock controller |
+| QrbnGov | `0x53f338F6ceFB06Afb37a1cfbb9AA3B600D52eeA0` | DAO governance contract |
+| QrbnToken | `0xD91dFc79E1a4b551a3fd6eAE20b66612a0E8aA4a` | QRBN governance token |
+| Qurban | `0x8429B08E77CcDeafbA6F9cf23e1E19660F6A98C9` | Qurban contribution contract |
+| QurbanNFT | `0x6448807DC186f1391C744578F79ACa6C72a6582F` | NFT certificates for Qurban |
+| QrbnTreasury | `0xb999a4e2C3bCdb862246DD8158715720DB0463d3` | Community treasury |
 
 ## Architecture Overview
 
