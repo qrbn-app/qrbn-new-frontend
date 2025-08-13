@@ -51,7 +51,7 @@ export default function ZakatPage() {
       const fitrahInUSDT = parseFloat(contracts.formatTokenAmount(fitrah, 6))
       const poolInUSDT = parseFloat(contracts.formatTokenAmount(pool, 6))
       // Zakat rate is likely stored as basis points (e.g., 250 = 2.5%)
-      const ratePercent = Number(rate) / 100 // Convert from basis points to percentage
+      const ratePercent = Number(rate) / 10000 // Convert from basis points to percentage
 
       setNisabThreshold(nisabInUSDT)
       setZakatRate(ratePercent)
