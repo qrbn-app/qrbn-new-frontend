@@ -63,14 +63,6 @@ QRBN is a revolutionary Islamic finance platform built on blockchain technology 
 
 | Contract | Address | Purpose |
 |----------|---------|---------|
-<<<<<<< Updated upstream
-| QrbnToken | `0xF288b95F986bd297c3e6E283066CB52B6986E931` | QRBN governance token |
-| QrbnGov | `0x20f0DC35b3439B8bd123a7968086A397cde38af7` | DAO governance contract |
-| QrbnTimelock | `0x5a2B2Dd70740FE6e89f27c1873Cd51e2eA6128B4` | Governance timelock controller |
-| Qurban | `0xcaba4eC21D3f63Ac33817a14564A0c9Da0E8410b` | Qurban contribution contract |
-| QurbanNFT | `0x49316Dd941a78f27f431c072722b7C613D9731d4` | NFT certificates for Qurban |
-| QrbnTreasury | `0x93a5FD10595F311f1134Ea673136CA22412e5158` | Community treasury |
-=======
 | QrbnToken | `0x0061f6008E05935386E5Ad5b5A608EAd0D062698` | QRBN governance token |
 | QrbnGov | `0x1057C3615610f1F1a90B8c6c094a9DDE3D70bC2B` | DAO governance contract |
 | QrbnTimelock | `0xD480E4394b1Df72b39eAdBb0ce36ccB19dB5867C` | Governance timelock controller |
@@ -79,7 +71,6 @@ QRBN is a revolutionary Islamic finance platform built on blockchain technology 
 | Zakat | `0x7cE0B440AcD36820c429bdfD9899a5e59D33BE5b` | Zakat donation contract |
 | ZakatNFT | `0x2A628BACF45cb6b9Dcf8305A2615693023068B1A` | NFT certificates for Zakat |
 | QrbnTreasury | `0x841e2afAAfE341e172Ec1a080898D98302F6bb80` | Community treasury |
->>>>>>> Stashed changes
 
 ## 🚀 Getting Started
 
