@@ -300,7 +300,7 @@ export default function FAQPage() {
                   Join our Discord community for help and discussions
                 </p>
                 <button 
-                  onClick={() => window.open("https://discord.gg/qrbn", "_blank")}
+                  onClick={() => window.open("https://discord.gg/UGzzJ8aR4x", "_blank")}
                   className="inline-flex items-center gap-2 text-[#d1b86a] hover:text-[#d1b86a]/80 text-sm"
                 >
                   Join Discord <ExternalLink className="h-3 w-3" />
