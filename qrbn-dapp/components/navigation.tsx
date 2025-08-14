@@ -34,6 +34,12 @@ export function Navigation() {
             <Link href="/dao" className="text-[#f0fdf4] hover:text-[#d1b86a] transition-colors">
               DAO
             </Link>
+            <Link href="/docs" className="text-[#f0fdf4] hover:text-[#d1b86a] transition-colors">
+              Docs
+            </Link>
+            <Link href="/faq" className="text-[#f0fdf4] hover:text-[#d1b86a] transition-colors">
+              FAQ
+            </Link>
             <WalletConnect />
           </div>
 
@@ -57,6 +63,12 @@ export function Navigation() {
             </Link>
             <Link href="/dao" className="block text-[#f0fdf4] hover:text-[#d1b86a]">
               DAO
+            </Link>
+            <Link href="/docs" className="block text-[#f0fdf4] hover:text-[#d1b86a]">
+              Docs
+            </Link>
+            <Link href="/faq" className="block text-[#f0fdf4] hover:text-[#d1b86a]">
+              FAQ
             </Link>
             <div className="pt-2">
               <WalletConnect />
