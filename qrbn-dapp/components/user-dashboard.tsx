@@ -298,7 +298,7 @@ export function UserDashboard() {
 
               <Button 
                 className="w-full bg-[#14532d] hover:bg-[#1a3a1f] text-[#f0fdf4]"
-                onClick={() => window.open("https://www.tally.xyz/gov/qrbn-dao", "_blank")}
+                onClick={() => window.open("https://www.tally.xyz/gov/qrbn-app-dao", "_blank")}
               >
                 <ExternalLink className="h-4 w-4 mr-2" />
                 Vote on Tally

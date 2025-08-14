@@ -296,7 +296,7 @@ export default function DAOPage() {
                 Access the full DAO governance platform powered by Tally to vote on proposals and participate in governance.
               </p>
               <Button
-                onClick={() => window.open("https://www.tally.xyz/gov/qrbn", "_blank")}
+                onClick={() => window.open("https://www.tally.xyz/gov/qrbn-app", "_blank")}
                 className="w-full bg-[#14532d] hover:bg-[#1a3a1f] text-[#f0fdf4] glow-shadow"
               >
                 <ExternalLink className="h-4 w-4 mr-2" />
