@@ -5,6 +5,7 @@ import {
 	useContext,
 	type ReactNode,
 	useEffect,
+	useState,
 } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useSignMessage, WagmiProvider, type Config } from "wagmi";
@@ -18,7 +19,8 @@ import {
 } from "@xellar/kit";
 import axios from "axios";
 import { liskSepolia } from "viem/chains";
-import { config } from "@/lib/client-config";
+import { getClientConfig } from "@/lib/client-config";
+
 
 const queryClient = new QueryClient();
 
@@ -155,15 +157,24 @@ function WalletStateController({ children }: { children: ReactNode }) {
 	);
 }
 
-// Main WalletProvider component
 export function WalletProvider({ children }: { children: ReactNode }) {
-	return (
-		<WagmiProvider config={config}>
-			<QueryClientProvider client={queryClient}>
-				<XellarKitProvider theme={darkTheme}>
-					<WalletStateController>{children}</WalletStateController>
-				</XellarKitProvider>
-			</QueryClientProvider>
-		</WagmiProvider>
-	);
+  const [isClient, setIsClient] = useState(false);
+  const [clientConfig, setClientConfig] = useState<Config | null>(null);
+
+  useEffect(() => {
+    setIsClient(true); // mark client
+    setClientConfig(getClientConfig()); // safe to call browser-only APIs here
+  }, []);
+
+  if (!isClient || !clientConfig) return null; // prevent SSR and invalid config
+
+  return (
+    <WagmiProvider config={clientConfig}>
+      <QueryClientProvider client={queryClient}>
+        <XellarKitProvider theme={darkTheme}>
+          <WalletStateController>{children}</WalletStateController>
+        </XellarKitProvider>
+      </QueryClientProvider>
+    </WagmiProvider>
+  );
 }
