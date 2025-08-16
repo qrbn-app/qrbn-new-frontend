@@ -1,26 +1,14 @@
 "use client";
 
-import {
-	createContext,
-	useContext,
-	type ReactNode,
-	useEffect,
-	useState,
-} from "react";
+import { createContext, useContext, type ReactNode, useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useSignMessage, WagmiProvider, type Config } from "wagmi";
 import { useAccount, useBalance, useDisconnect } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import {
-	XellarKitProvider,
-	defaultConfig,
-	darkTheme,
-	useConnectModal,
-} from "@xellar/kit";
+import { XellarKitProvider, defaultConfig, darkTheme, useConnectModal } from "@xellar/kit";
 import axios from "axios";
 import { liskSepolia } from "viem/chains";
 import { getClientConfig } from "@/lib/client-config";
-
 
 const queryClient = new QueryClient();
 
@@ -37,11 +25,9 @@ const WalletContext = createContext<WalletContextType>({
 	isConnected: false,
 	balance: "0",
 	connect: async () => {
-		console.warn(
-			"Connect function should be triggered by XellarKit UI components."
-		);
+		console.warn("Connect function should be triggered by XellarKit UI components.");
 	},
-	disconnect: () => { },
+	disconnect: () => {},
 });
 
 export const useWallet = () => useContext(WalletContext);
@@ -50,11 +36,7 @@ export const useWallet = () => useContext(WalletContext);
 function WalletStateController({ children }: { children: ReactNode }) {
 	const { toast } = useToast();
 
-	const {
-		address: wagmiAddress,
-		isConnected: wagmiIsConnected,
-		status: wagmiStatus,
-	} = useAccount();
+	const { address: wagmiAddress, isConnected: wagmiIsConnected, status: wagmiStatus } = useAccount();
 	const { data: wagmiBalanceData } = useBalance({ address: wagmiAddress });
 	const { disconnect: wagmiDisconnect } = useDisconnect();
 	const { signMessageAsync } = useSignMessage();
@@ -65,8 +47,7 @@ function WalletStateController({ children }: { children: ReactNode }) {
 
 	const { open } = useConnectModal();
 
-	const baseUrl =
-		process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+	const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 	const signAuthMessage = async () => {
 		// Check if access token already exists
@@ -76,24 +57,18 @@ function WalletStateController({ children }: { children: ReactNode }) {
 			return;
 		}
 		try {
-			const response = await axios.post(
-				`${baseUrl}/auth/request-message`,
-				{
-					wallet_address: address,
-				}
-			);
+			const response = await axios.post(`${baseUrl}/auth/request-message`, {
+				wallet_address: address,
+			});
 
 			const { message } = response.data;
 			const signature = await signMessageAsync({ message });
 
-			const signatureResponse = await axios.post(
-				`${baseUrl}/auth/verify`,
-				{
-					message: message,
-					signature: signature,
-					wallet_address: address,
-				}
-			);
+			const signatureResponse = await axios.post(`${baseUrl}/auth/verify`, {
+				message: message,
+				signature: signature,
+				wallet_address: address,
+			});
 
 			const { access_token } = signatureResponse.data;
 			console.log("Access token received:", access_token);
@@ -112,21 +87,19 @@ function WalletStateController({ children }: { children: ReactNode }) {
 	useEffect(() => {
 		if (wagmiStatus === "connected") {
 			console.log("Wallet connected successfully via wagmi:", address);
-			signAuthMessage();
+			// TODO: fix this
+			// signAuthMessage();
 		} else if (wagmiStatus === "disconnected") {
 			console.log("Wallet disconnected via wagmi");
 		}
 	}, [wagmiStatus, address, toast]);
 
 	const connect = async () => {
-		console.warn(
-			"Programmatic connect via context is not standard with XellarKit. Please use XellarKit's UI components."
-		);
+		console.warn("Programmatic connect via context is not standard with XellarKit. Please use XellarKit's UI components.");
 		toast({
 			variant: "default",
 			title: "Connect Wallet",
-			description:
-				"Please use the dedicated UI button to connect your wallet.",
+			description: "Please use the dedicated UI button to connect your wallet.",
 		});
 		open();
 	};
@@ -158,23 +131,23 @@ function WalletStateController({ children }: { children: ReactNode }) {
 }
 
 export function WalletProvider({ children }: { children: ReactNode }) {
-  const [isClient, setIsClient] = useState(false);
-  const [clientConfig, setClientConfig] = useState<Config | null>(null);
+	const [isClient, setIsClient] = useState(false);
+	const [clientConfig, setClientConfig] = useState<Config | null>(null);
 
-  useEffect(() => {
-    setIsClient(true); // mark client
-    setClientConfig(getClientConfig()); // safe to call browser-only APIs here
-  }, []);
+	useEffect(() => {
+		setIsClient(true); // mark client
+		setClientConfig(getClientConfig()); // safe to call browser-only APIs here
+	}, []);
 
-  if (!isClient || !clientConfig) return null; // prevent SSR and invalid config
+	if (!isClient || !clientConfig) return null; // prevent SSR and invalid config
 
-  return (
-    <WagmiProvider config={clientConfig}>
-      <QueryClientProvider client={queryClient}>
-        <XellarKitProvider theme={darkTheme}>
-          <WalletStateController>{children}</WalletStateController>
-        </XellarKitProvider>
-      </QueryClientProvider>
-    </WagmiProvider>
-  );
+	return (
+		<WagmiProvider config={clientConfig}>
+			<QueryClientProvider client={queryClient}>
+				<XellarKitProvider theme={darkTheme}>
+					<WalletStateController>{children}</WalletStateController>
+				</XellarKitProvider>
+			</QueryClientProvider>
+		</WagmiProvider>
+	);
 }
