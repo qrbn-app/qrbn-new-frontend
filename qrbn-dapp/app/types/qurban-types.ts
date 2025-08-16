@@ -1,19 +1,19 @@
 type Animal = {
 	id: bigint;
 	name: string;
-	animalType: bigint;
-	totalShares: bigint;
-	availableShares: bigint;
+	animalType: number;
+	totalShares: number;
+	availableShares: number;
 	pricePerShare: bigint;
 	location: string;
 	image: string;
 	description: string;
 	breed: string;
-	weight: bigint;
-	age: bigint;
+	weight: number;
+	age: number;
 	farmName: string;
 	sacrificeDate: bigint;
-	status: bigint;
+	status: number;
 	vendorAddr: string;
 	createdAt: bigint;
 };

@@ -9,6 +9,6 @@ export function displayTokenPrice(price: bigint, decimals = 6) {
 	return (Number(price) / 10 ** decimals).toLocaleString();
 }
 
-export function isAnimalSold(status: bigint) {
-	return Number(status) == 2;
+export function isAnimalSold(status: number) {
+	return status == 2;
 }

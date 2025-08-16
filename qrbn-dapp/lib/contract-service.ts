@@ -16,6 +16,7 @@ export class ContractService {
 				functionName: "balanceOf",
 				args: [address],
 			});
+			console.log(balance);
 			return balance;
 		} catch (error) {
 			console.error("Error getting QRBN balance:", error);
@@ -119,61 +120,23 @@ export class ContractService {
 
 			await Promise.all(
 				Array.from({ length: Number(totalAnimals) }).map(async (_, idx) => {
-					const [
-						id,
-						name,
-						animalType,
-						totalShares,
-						availableShares,
-						pricePerShare,
-						location,
-						image,
-						description,
-						breed,
-						weight,
-						age,
-						farmName,
-						sacrificeDate,
-						status,
-						vendorAddr,
-						createdAt,
-					] = (await this.publicClient.readContract({
+					const animal = (await this.publicClient.readContract({
 						address: CONTRACT_ADDRESSES.Qurban,
 						abi: QURBAN_ABI,
-						functionName: "s_animals",
+						functionName: "getAnimalById",
 						args: [BigInt(idx)],
-					})) as any[];
+					})) as Animal;
 
-					const animal = {
-						id,
-						name,
-						animalType,
-						totalShares,
-						availableShares,
-						pricePerShare,
-						location,
-						image,
-						description,
-						breed,
-						weight,
-						age,
-						farmName,
-						sacrificeDate,
-						status,
-						vendorAddr,
-						createdAt,
-					};
-
-					if (animalType === 0) {
+					if (animal.animalType === 0) {
 						animals.sheeps.push(animal);
 					}
-					if (animalType === 1) {
+					if (animal.animalType === 1) {
 						animals.cows.push(animal);
 					}
-					if (animalType === 2) {
+					if (animal.animalType === 2) {
 						animals.goats.push(animal);
 					}
-					if (animalType === 3) {
+					if (animal.animalType === 3) {
 						animals.camels.push(animal);
 					}
 				})
@@ -202,12 +165,12 @@ export class ContractService {
 
 	async getUserContributions(address: `0x${string}`) {
 		try {
-			const contributions = await this.publicClient.readContract({
+			const contributions = (await this.publicClient.readContract({
 				address: CONTRACT_ADDRESSES.Qurban,
 				abi: QURBAN_ABI,
-				functionName: "getUserContributions",
+				functionName: "getBuyerTransactionsCount",
 				args: [address],
-			});
+			})) as bigint;
 			return contributions;
 		} catch (error) {
 			console.error("Error getting user contributions:", error);
@@ -468,9 +431,9 @@ export class ContractService {
 			meetsTokenRequirement: qrbnBalance >= typeReqs.minQrbnTokens,
 			hasQurbanContribution: typeReqs.hasQurbanContribution,
 			hasNFT: typeReqs.hasNFT,
-			qrbnBalance: this.formatTokenAmount(qrbnBalance),
+			qrbnBalance: this.formatTokenAmount(qrbnBalance, 2),
 			nftCount: nftBalance.toString(),
-			contributionAmount: this.formatTokenAmount(contributions),
+			contributionAmount: contributions,
 		};
 	}
 }
