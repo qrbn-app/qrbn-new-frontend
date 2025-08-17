@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -35,13 +34,13 @@ export function PaymentModal({ amount, type, animalId, title, children }: Paymen
 	const [paymentStep, setPaymentStep] = useState<"select" | "confirm" | "processing" | "success">("select");
 	const [txHash, setTxHash] = useState("");
 	const [processingMessage, setProcessingMessage] = useState("Processing transaction...");
-	
+
 	// Tip states
 	const [includeTip, setIncludeTip] = useState(true); // Default checked (2.5%)
 	const [tipType, setTipType] = useState<"percentage" | "custom">("percentage");
 	const [tipPercentage, setTipPercentage] = useState(2.5); // Default 2.5%
 	const [customTipAmount, setCustomTipAmount] = useState("");
-	
+
 	const { balance, displayBalance } = useTokenBalance();
 	const { toast } = useToast();
 	const router = useRouter();
@@ -55,7 +54,7 @@ export function PaymentModal({ amount, type, animalId, title, children }: Paymen
 	// Calculate tip amount (only for zakat)
 	const calculateTipAmount = () => {
 		if (!includeTip || type === "qurban") return 0;
-		
+
 		if (tipType === "percentage") {
 			const baseAmount = Number(amount) / 10 ** 6; // Convert from wei to USDT
 			return (baseAmount * tipPercentage) / 100;
@@ -115,7 +114,7 @@ export function PaymentModal({ amount, type, animalId, title, children }: Paymen
 				setProcessingMessage("Processing Zakat donation...");
 				const zakatType = type === "zakat-maal" ? "maal" : "fitrah";
 				hash = await contracts.donateZakat(
-					Number(amountInWei) / 1000000, 
+					Number(amountInWei) / 1000000,
 					zakatType,
 					tipAmount, // Use calculated tip amount
 					"" // donorMessage - empty for now
@@ -131,10 +130,10 @@ export function PaymentModal({ amount, type, animalId, title, children }: Paymen
 			router.refresh();
 		} catch (error: any) {
 			console.error("Payment processing error:", error);
-			
+
 			// Check if it's an allowance error
 			const errorMessage = error?.message || error?.reason || error?.toString() || "";
-			
+
 			if (errorMessage.includes("insufficient allowance") || errorMessage.includes("ERC20: insufficient allowance")) {
 				toast({
 					variant: "destructive",
@@ -154,7 +153,7 @@ export function PaymentModal({ amount, type, animalId, title, children }: Paymen
 					description: "Please try again. The transaction may have been rejected.",
 				});
 			}
-			
+
 			setPaymentStep("select");
 		}
 	};
@@ -268,8 +267,8 @@ export function PaymentModal({ amount, type, animalId, title, children }: Paymen
 							<Card className="bg-[#14532d]/30 border-[#14532d]">
 								<CardContent className="p-4 space-y-4">
 									<div className="flex items-center space-x-2">
-										<Checkbox 
-											id="include-tip" 
+										<Checkbox
+											id="include-tip"
 											checked={includeTip}
 											onCheckedChange={(checked) => setIncludeTip(!!checked)}
 											className="border-[#f0fdf4]/30 data-[state=checked]:bg-[#d1b86a] data-[state=checked]:border-[#d1b86a]"
@@ -278,7 +277,7 @@ export function PaymentModal({ amount, type, animalId, title, children }: Paymen
 											Support platform development
 										</Label>
 									</div>
-									
+
 									{includeTip && (
 										<div className="space-y-3 ml-6">
 											<div className="flex items-center space-x-4">
@@ -292,11 +291,11 @@ export function PaymentModal({ amount, type, animalId, title, children }: Paymen
 														className="text-[#d1b86a] focus:ring-[#d1b86a]"
 													/>
 													<Label htmlFor="tip-percentage" className="text-[#f0fdf4]/80 text-sm">
-														2.5% ({((Number(amount) / 10 ** 6) * 2.5 / 100).toFixed(2)} USDT)
+														2.5% ({(((Number(amount) / 10 ** 6) * 2.5) / 100).toFixed(2)} USDT)
 													</Label>
 												</div>
 											</div>
-											
+
 											<div className="flex items-center space-x-4">
 												<div className="flex items-center space-x-2">
 													<input
@@ -326,7 +325,7 @@ export function PaymentModal({ amount, type, animalId, title, children }: Paymen
 													</div>
 												)}
 											</div>
-											
+
 											<div className="text-xs text-[#f0fdf4]/60">
 												Tips help us maintain and improve the platform. Thank you for your support! 💚
 											</div>
@@ -360,7 +359,6 @@ export function PaymentModal({ amount, type, animalId, title, children }: Paymen
 						<div>
 							<div className="text-lg font-semibold text-[#f0fdf4] mb-2">Processing Payment</div>
 							<div className="text-sm text-[#f0fdf4]/70 mb-4">{processingMessage}</div>
-							<Progress value={65} className="h-2" />
 						</div>
 						<div className="text-xs text-[#f0fdf4]/50">This may require two transactions: approve + donation</div>
 					</div>
