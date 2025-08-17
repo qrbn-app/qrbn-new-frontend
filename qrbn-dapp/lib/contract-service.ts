@@ -1,6 +1,6 @@
 import { PublicClient, WalletClient } from "viem";
-import { CONTRACT_ADDRESSES, QRBN_TOKEN_ABI, QRBN_GOV_ABI, QURBAN_NFT_ABI, ZAKAT_ABI, ZAKAT_NFT_ABI, USDT_ABI } from "./contracts";
-
+import { CONTRACT_ADDRESSES, QRBN_TOKEN_ABI, QRBN_GOV_ABI, QURBAN_NFT_ABI, ZAKAT_NFT_ABI, USDT_ABI } from "./contracts";
+import { ZAKAT_ABI } from "./abi/zakat";
 import { QURBAN_ABI } from "./abi/qurban";
 import { waitForTransactionReceipt } from "viem/actions";
 
@@ -178,75 +178,115 @@ export class ContractService {
 		}
 	}
 
-	// Zakat contract methods
-	async getCurrentZakatPool() {
+	// Zakat contract methods - Updated to match actual ABI
+	async getZakatPoolInfo() {
 		try {
-			const pool = await this.publicClient.readContract({
-				address: CONTRACT_ADDRESSES.Zakat,
-				abi: ZAKAT_ABI,
-				functionName: "getCurrentZakatPool",
-			});
-			return pool;
+			const [totalCollected, totalDistributed, availableBalance] = await Promise.all([
+				this.publicClient.readContract({
+					address: CONTRACT_ADDRESSES.Zakat,
+					abi: ZAKAT_ABI,
+					functionName: "s_totalCollectedZakat",
+				}),
+				this.publicClient.readContract({
+					address: CONTRACT_ADDRESSES.Zakat,
+					abi: ZAKAT_ABI,
+					functionName: "s_totalDistributedZakat",
+				}),
+				this.publicClient.readContract({
+					address: CONTRACT_ADDRESSES.Zakat,
+					abi: ZAKAT_ABI,
+					functionName: "s_availableZakatBalance",
+				})
+			]);
+
+			return {
+				totalCollected: this.formatTokenAmount(totalCollected as bigint, 6),
+				totalDistributed: this.formatTokenAmount(totalDistributed as bigint, 6),
+				availableBalance: this.formatTokenAmount(availableBalance as bigint, 6)
+			};
 		} catch (error) {
-			console.error("Error getting current Zakat pool:", error);
-			return BigInt(0);
+			console.error("Error getting Zakat pool info:", error);
+			throw error;
 		}
 	}
 
-	async getUserZakatContributions(address: `0x${string}`) {
+	async getUserZakatDonations(address: `0x${string}`) {
 		try {
-			const contributions = await this.publicClient.readContract({
+			const donationIds = await this.publicClient.readContract({
 				address: CONTRACT_ADDRESSES.Zakat,
 				abi: ZAKAT_ABI,
-				functionName: "getUserZakatContributions",
+				functionName: "getDonorDonations",
 				args: [address],
 			});
-			return contributions;
+			return donationIds;
 		} catch (error) {
-			console.error("Error getting user Zakat contributions:", error);
-			return BigInt(0);
+			console.error("Error getting user Zakat donations:", error);
+			return [];
 		}
 	}
 
-	async getNisabThreshold() {
+	async getZakatDonationInfo(donationId: bigint) {
 		try {
-			const threshold = await this.publicClient.readContract({
+			const donationInfo = await this.publicClient.readContract({
 				address: CONTRACT_ADDRESSES.Zakat,
 				abi: ZAKAT_ABI,
-				functionName: "nisabThreshold",
+				functionName: "getDonationInfo",
+				args: [donationId],
 			});
-			return threshold;
+			return donationInfo;
 		} catch (error) {
-			console.error("Error getting nisab threshold:", error);
-			return BigInt(0);
+			console.error("Error getting Zakat donation info:", error);
+			throw error;
 		}
 	}
 
-	async getZakatRate() {
+	async getZakatOrganizations() {
 		try {
-			const rate = await this.publicClient.readContract({
+			// Get total counts to determine how many organizations exist
+			const [totalDonations, totalDistributions, totalOrganizations] = await this.publicClient.readContract({
 				address: CONTRACT_ADDRESSES.Zakat,
 				abi: ZAKAT_ABI,
-				functionName: "zakatRate",
-			});
-			return rate;
+				functionName: "getTotalCounts",
+			}) as [bigint, bigint, bigint];
+
+			return {
+				totalDonations: Number(totalDonations),
+				totalDistributions: Number(totalDistributions),
+				totalOrganizations: Number(totalOrganizations)
+			};
 		} catch (error) {
-			console.error("Error getting Zakat rate:", error);
-			return BigInt(250); // Default 2.5% (250 out of 10000)
+			console.error("Error getting total counts:", error);
+			throw error;
 		}
 	}
 
-	async getFitrahAmount() {
+	async isOrganizationRegistered(organizationAddress: `0x${string}`) {
 		try {
-			const amount = await this.publicClient.readContract({
+			const isRegistered = await this.publicClient.readContract({
 				address: CONTRACT_ADDRESSES.Zakat,
 				abi: ZAKAT_ABI,
-				functionName: "fitrahAmount",
+				functionName: "isOrganizationRegistered",
+				args: [organizationAddress],
 			});
-			return amount;
+			return isRegistered;
 		} catch (error) {
-			console.error("Error getting Fitrah amount:", error);
-			return BigInt(0);
+			console.error("Error checking organization registration:", error);
+			return false;
+		}
+	}
+
+	async getOrganizationInfo(organizationAddress: `0x${string}`) {
+		try {
+			const orgInfo = await this.publicClient.readContract({
+				address: CONTRACT_ADDRESSES.Zakat,
+				abi: ZAKAT_ABI,
+				functionName: "getOrganizationInfo",
+				args: [organizationAddress],
+			});
+			return orgInfo;
+		} catch (error) {
+			console.error("Error getting organization info:", error);
+			throw error;
 		}
 	}
 
@@ -282,15 +322,27 @@ export class ContractService {
 		return trimmed ? `${whole}.${trimmed}` : whole.toString();
 	}
 
+	// Helper function to safely convert amount to Wei (avoiding floating point precision issues)
+	private toUSDTWei(amount: number): bigint {
+		// Convert to string with fixed decimals to avoid floating point issues
+		const amountStr = amount.toFixed(6);
+		const [whole, decimals = ""] = amountStr.split(".");
+		const paddedDecimals = decimals.padEnd(6, "0");
+		const totalStr = whole + paddedDecimals;
+		return BigInt(totalStr);
+	}
+
 	// USDT methods
 	async getUSDTBalance(address: `0x${string}`) {
 		try {
+			console.log("Fetching USDT balance for address:", address);
 			const balance = await this.publicClient.readContract({
 				address: CONTRACT_ADDRESSES.USDT,
 				abi: USDT_ABI,
 				functionName: "balanceOf",
 				args: [address],
 			});
+			console.log("USDT balance fetched:", balance);
 			return balance;
 		} catch (error) {
 			console.error("Error getting USDT balance:", error);
@@ -298,29 +350,24 @@ export class ContractService {
 		}
 	}
 
-	async approveUSDT(spender: `0x${string}`, amount: bigint) {
+	async approveUSDT(spender: `0x${string}`, amount: number): Promise<`0x${string}`> {
 		if (!this.walletClient) throw new Error("Wallet not connected");
+		
+		// Use helper function to safely convert to Wei
+		const amountInWei = this.toUSDTWei(amount);
 
-		try {
-			const account = this.walletClient.account;
-			if (!account) throw new Error("No account found");
+		const hash = await this.walletClient.writeContract({
+			address: CONTRACT_ADDRESSES.USDT,
+			abi: USDT_ABI,
+			functionName: "approve",
+			args: [spender, amountInWei],
+			account: this.walletClient.account!,
+			chain: this.walletClient.chain,
+		});
 
-			const hash = await this.walletClient.writeContract({
-				address: CONTRACT_ADDRESSES.USDT,
-				abi: USDT_ABI,
-				functionName: "approve",
-				args: [spender, amount],
-				account: account,
-				chain: this.walletClient.chain,
-			});
-			return hash;
-		} catch (error) {
-			console.error("Error approving USDT:", error);
-			throw error;
-		}
-	}
-
-	async getUSDTAllowance(owner: `0x${string}`, spender: `0x${string}`) {
+		await waitForTransactionReceipt(this.publicClient, { hash });
+		return hash;
+	}	async getUSDTAllowance(owner: `0x${string}`, spender: `0x${string}`) {
 		try {
 			const allowance = await this.publicClient.readContract({
 				address: CONTRACT_ADDRESSES.USDT,
@@ -348,7 +395,7 @@ export class ContractService {
 			const totalCost = shares * pricePerShare;
 			if (allowance < totalCost) {
 				// Need to approve first
-				const hash = await this.approveUSDT(CONTRACT_ADDRESSES.Qurban, totalCost);
+				const hash = await this.approveUSDT(CONTRACT_ADDRESSES.Qurban, Number(totalCost) / 10 ** 6);
 				await waitForTransactionReceipt(this.publicClient, { hash });
 			}
 
@@ -367,35 +414,131 @@ export class ContractService {
 		}
 	}
 
-	async donateZakat(amount: bigint, zakatType: "maal" | "fitrah") {
+	async donateZakat(
+		amount: number, 
+		zakatType: "maal" | "fitrah", 
+		tipAmount: number = 0, 
+		donorMessage: string = ""
+	): Promise<`0x${string}`> {
+		if (!this.walletClient) throw new Error("Wallet not connected");
+		
+		const account = this.walletClient.account!;
+		// Use helper function to safely convert to Wei
+		const amountInWei = this.toUSDTWei(amount);
+		const tipAmountInWei = this.toUSDTWei(tipAmount);
+		const zakatTypeEnum = zakatType === "maal" ? 0 : 1; // 0 = MAAL, 1 = FITRAH
+		const totalAmount = amount + tipAmount;
+
+		// Check USDT balance first
+		const balance = await this.getUSDTBalance(account.address);
+		const balanceNumber = Number(balance) / 10 ** 6;
+		if (balanceNumber < totalAmount) {
+			throw new Error("Insufficient USDT balance");
+		}
+
+		// Check current allowance
+		const currentAllowance = await this.getUSDTAllowance(account.address, CONTRACT_ADDRESSES.Zakat);
+		const allowanceNumber = Number(currentAllowance) / 10 ** 6;
+
+		// Approve if needed
+		if (allowanceNumber < totalAmount) {
+			await this.approveUSDT(CONTRACT_ADDRESSES.Zakat, totalAmount);
+		}
+
+		// Proceed with donation
+		const hash = await this.walletClient.writeContract({
+			address: CONTRACT_ADDRESSES.Zakat,
+			abi: ZAKAT_ABI,
+			functionName: "donateZakat",
+			args: [amountInWei, tipAmountInWei, zakatTypeEnum, donorMessage],
+			account,
+			chain: this.walletClient.chain,
+		});
+
+		await waitForTransactionReceipt(this.publicClient, { hash });
+		return hash;
+	}	// Organization registration methods
+	async registerZakatOrganization(
+		organizationAddress: `0x${string}`,
+		name: string,
+		contactInfo: string,
+		location: string,
+		description: string,
+		registrationNumber: string
+	) {
 		if (!this.walletClient) throw new Error("Wallet not connected");
 
 		try {
-			// First check and approve USDT if needed
-			const account = this.walletClient.account;
-			if (!account) throw new Error("No account found");
-
-			const allowance = await this.getUSDTAllowance(account.address, CONTRACT_ADDRESSES.Zakat);
-			if (allowance < amount) {
-				// Need to approve first
-				await this.approveUSDT(CONTRACT_ADDRESSES.Zakat, amount);
-			}
-
-			// Map zakat type to number (0 = maal, 1 = fitrah)
-			const zakatTypeNum = zakatType === "maal" ? 0 : 1;
-
 			const hash = await this.walletClient.writeContract({
 				address: CONTRACT_ADDRESSES.Zakat,
 				abi: ZAKAT_ABI,
-				functionName: "donateZakat",
-				args: [amount, zakatTypeNum],
-				account: account,
+				functionName: "registerZakatOrganization",
+				args: [organizationAddress, name, contactInfo, location, description, registrationNumber],
+				account: this.walletClient.account!,
 				chain: this.walletClient.chain,
 			});
 			return hash;
 		} catch (error) {
-			console.error("Error donating Zakat:", error);
+			console.error("Error registering Zakat organization:", error);
 			throw error;
+		}
+	}
+
+	// Distribution methods
+	async proposeDistribution(
+		organizationAddress: `0x${string}`,
+		requestedAmount: bigint,
+		beneficiaryCount: bigint,
+		distributionType: number, // 0 = EMERGENCY, 1 = REGULAR, 2 = SEASONAL
+		title: string,
+		description: string,
+		location: string
+	) {
+		if (!this.walletClient) throw new Error("Wallet not connected");
+
+		try {
+			const hash = await this.walletClient.writeContract({
+				address: CONTRACT_ADDRESSES.Zakat,
+				abi: ZAKAT_ABI,
+				functionName: "proposeDistribution",
+				args: [organizationAddress, requestedAmount, beneficiaryCount, distributionType, title, description, location],
+				account: this.walletClient.account!,
+				chain: this.walletClient.chain,
+			});
+			return hash;
+		} catch (error) {
+			console.error("Error proposing distribution:", error);
+			throw error;
+		}
+	}
+
+	async getDistributionInfo(distributionId: bigint) {
+		try {
+			const distributionInfo = await this.publicClient.readContract({
+				address: CONTRACT_ADDRESSES.Zakat,
+				abi: ZAKAT_ABI,
+				functionName: "getDistributionInfo",
+				args: [distributionId],
+			});
+			return distributionInfo;
+		} catch (error) {
+			console.error("Error getting distribution info:", error);
+			throw error;
+		}
+	}
+
+	async getDistributionsByStatus(status: number) {
+		try {
+			const distributions = await this.publicClient.readContract({
+				address: CONTRACT_ADDRESSES.Zakat,
+				abi: ZAKAT_ABI,
+				functionName: "getDistributionsByStatus",
+				args: [status],
+			});
+			return distributions;
+		} catch (error) {
+			console.error("Error getting distributions by status:", error);
+			return [];
 		}
 	}
 

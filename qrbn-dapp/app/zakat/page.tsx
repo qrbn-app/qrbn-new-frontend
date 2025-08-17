@@ -12,24 +12,23 @@ import { Calculator, Wallet, Heart, Users, Home, Loader2 } from "lucide-react"
 import { PaymentModal } from "@/components/payment-modal"
 import { useContracts } from "@/hooks/use-contracts"
 import { useAccount } from "wagmi"
+import axios from 'axios';
 
 export default function ZakatPage() {
   const [wealth, setWealth] = useState("")
   const [calculatedZakat, setCalculatedZakat] = useState(0)
   const [peopleCount, setPeopleCount] = useState("1")
   const [zakatFitrahTotal, setZakatFitrahTotal] = useState(2.33)
-  
-  // Contract data
-  const [nisabThreshold, setNisabThreshold] = useState<number>(5667) // Default fallback
-  const [zakatRate, setZakatRate] = useState<number>(2.5) // Default fallback
-  const [fitrahAmount, setFitrahAmount] = useState<number>(2.33) // Default fallback
+  const [nisabThreshold, setNisabThreshold] = useState(5667); // Default fallback value in USDT
+  const zakatRate = 2.5 // 2.5% zakat rate
+  const fitrahAmount = 2.33 // USDT per person for Zakat Fitrah
   const [zakatPool, setZakatPool] = useState<number>(0)
   const [loading, setLoading] = useState(false)
   
   const contracts = useContracts()
   const { isConnected } = useAccount()
 
-  // Load contract data on component mount
+  // Load contract data on component mount (only for pool data)
   useEffect(() => {
     loadContractData()
   }, [contracts, isConnected])
@@ -39,46 +38,46 @@ export default function ZakatPage() {
     
     setLoading(true)
     try {
-      const [nisab, rate, fitrah, pool] = await Promise.all([
-        contracts.getNisabThreshold(),
-        contracts.getZakatRate(),
-        contracts.getFitrahAmount(),
-        contracts.getCurrentZakatPool()
-      ])
-
-      // Convert from wei to USDT (assuming 6 decimals for USDT)
-      const nisabInUSDT = parseFloat(contracts.formatTokenAmount(nisab, 6))
-      const fitrahInUSDT = parseFloat(contracts.formatTokenAmount(fitrah, 6))
-      const poolInUSDT = parseFloat(contracts.formatTokenAmount(pool, 6))
-      // Zakat rate is likely stored as basis points (e.g., 250 = 2.5%)
-      const ratePercent = Number(rate) / 100 // Convert from basis points to percentage
-
-      setNisabThreshold(nisabInUSDT)
-      setZakatRate(ratePercent)
-      setFitrahAmount(fitrahInUSDT)
+      // Only load zakat pool data from contract
+      const pool = await contracts.getZakatPoolInfo()
+      
+      // Convert from contract format to USDT
+      const poolInUSDT = parseFloat(pool.availableBalance || '0')
       setZakatPool(poolInUSDT)
-      setZakatFitrahTotal(fitrahInUSDT * parseInt(peopleCount))
     } catch (error) {
       console.error('Error loading contract data:', error)
-      // Keep default values on error
+      // Set pool to 0 on error
+      setZakatPool(0)
     } finally {
       setLoading(false)
     }
   }
 
+  const validateInput = (value: number, min: number): boolean => {
+    return value >= min;
+  };
+
   const calculateZakat = () => {
-    const wealthAmount = Number.parseFloat(wealth)
-    if (wealthAmount >= nisabThreshold) {
-      const zakatAmount = wealthAmount * (zakatRate / 100)
-      setCalculatedZakat(zakatAmount)
-    } else {
-      setCalculatedZakat(0)
+    const wealthAmount = Number.parseFloat(wealth);
+    if (!validateInput(wealthAmount, nisabThreshold)) {
+      console.error('Invalid wealth input: below nisab threshold');
+      setCalculatedZakat(0);
+      return;
     }
+
+    const zakatAmount = wealthAmount * (zakatRate / 100);
+    setCalculatedZakat(zakatAmount);
   }
 
   const calculateZakatFitrah = (count: string) => {
-    const people = Number.parseInt(count) || 1
-    setZakatFitrahTotal(people * fitrahAmount)
+    const people = Number.parseInt(count) || 1;
+    if (!validateInput(people, 1)) {
+      console.error('Invalid people count input');
+      setZakatFitrahTotal(0);
+      return;
+    }
+
+    setZakatFitrahTotal(people * fitrahAmount);
   }
 
   return (
@@ -150,7 +149,6 @@ export default function ZakatPage() {
                       />
                       <p className="text-xs text-[#f0fdf4]/50 mt-1">
                         Minimum nisab: {nisabThreshold.toLocaleString()} USDT (equivalent to 85g gold)
-                        {loading && <Loader2 className="inline h-3 w-3 animate-spin ml-2" />}
                       </p>
                     </div>
 
@@ -159,13 +157,25 @@ export default function ZakatPage() {
                     </Button>
 
                     {calculatedZakat > 0 && (
-                      <div className="p-4 bg-[#14532d]/30 rounded-lg border border-[#d1b86a]/30">
+                      <div className="p-4 rounded-lg border border-[#d1b86a]/30">
                         <div className="text-center">
                           <p className="text-[#f0fdf4]/70 mb-2">Your Zakat Amount:</p>
                           <p className="text-3xl font-bold text-[#d1b86a]">
                             {calculatedZakat.toLocaleString("en-US")} USDT
                           </p>
                           <p className="text-xs text-[#f0fdf4]/50 mt-1">{zakatRate}% of wealth above nisab</p>
+                        </div>
+                      </div>
+                    )}
+
+                    {wealth && parseFloat(wealth) > 0 && parseFloat(wealth) < nisabThreshold && (
+                      <div className="p-4 bg-red-500/20 rounded-lg border border-red-500/30">
+                        <div className="text-center">
+                          <p className="text-red-200 text-sm mb-2">Wealth Below Nisab Threshold</p>
+                          <p className="text-red-100 text-xs">
+                            Your wealth ({parseFloat(wealth).toLocaleString()} USDT) is below the nisab threshold ({nisabThreshold.toLocaleString()} USDT). 
+                            Zakat is not obligatory for wealth below this amount.
+                          </p>
                         </div>
                       </div>
                     )}
@@ -190,7 +200,7 @@ export default function ZakatPage() {
                         <span className="text-[#d1b86a]">{calculatedZakat.toLocaleString("en-US")} USDT</span>
                       </div>
 
-                      <PaymentModal amount={calculatedZakat} type="zakat-maal" title="Zakat Maal Payment">
+                      <PaymentModal amount={BigInt(Math.floor(calculatedZakat * 1000000))} type="zakat-maal" title="Zakat Maal Payment">
                         <Button
                           className="w-full bg-[#14532d] hover:bg-[#1a3a1f] text-[#f0fdf4] glow-shadow"
                           disabled={calculatedZakat === 0}
@@ -216,7 +226,6 @@ export default function ZakatPage() {
                         <p className="text-3xl font-bold text-[#d1b86a]">{fitrahAmount.toFixed(2)} USDT</p>
                         <p className="text-xs text-[#f0fdf4]/50 mt-1">
                           Equivalent to 2.5kg rice
-                          {loading && <Loader2 className="inline h-3 w-3 animate-spin ml-2" />}
                         </p>
                       </div>
                     </div>
@@ -237,6 +246,17 @@ export default function ZakatPage() {
                         className="bg-[#14532d] border-[#14532d] text-[#f0fdf4] mt-2"
                       />
                     </div>
+
+                    {peopleCount && (parseInt(peopleCount) <= 0 || isNaN(parseInt(peopleCount))) && (
+                      <div className="p-4 bg-red-500/20 rounded-lg border border-red-500/30">
+                        <div className="text-center">
+                          <p className="text-red-200 text-sm mb-2">Invalid Number of People</p>
+                          <p className="text-red-100 text-xs">
+                            Please enter a valid number of people (minimum 1 person) for Zakat Fitrah calculation.
+                          </p>
+                        </div>
+                      </div>
+                    )}
 
                     <div className="space-y-4">
                       <div className="flex justify-between items-center">
@@ -259,12 +279,16 @@ export default function ZakatPage() {
                         <div className="text-xs text-[#f0fdf4]/50">Direct payment in USDT</div>
                       </div>
 
-                      <PaymentModal amount={zakatFitrahTotal} type="zakat-fitrah" title="Zakat Fitrah Payment">
-                        <Button className="w-full bg-[#14532d] hover:bg-[#1a3a1f] text-[#f0fdf4] glow-shadow">
+                      <PaymentModal amount={BigInt(Math.floor(zakatFitrahTotal * 1000000))} type="zakat-fitrah" title="Zakat Fitrah Payment">
+                        <Button 
+                          className="w-full bg-[#14532d] hover:bg-[#1a3a1f] text-[#f0fdf4] glow-shadow"
+                          disabled={zakatFitrahTotal <= 0 || parseInt(peopleCount) <= 0 || isNaN(parseInt(peopleCount))}
+                        >
                           <Wallet className="h-4 w-4 mr-2" />
                           Pay Zakat Fitrah
                         </Button>
                       </PaymentModal>
+
                     </div>
                   </CardContent>
                 </Card>

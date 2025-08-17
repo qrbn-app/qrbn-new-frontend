@@ -10,6 +10,9 @@ import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Wallet, ArrowRight, CheckCircle, Clock, ExternalLink, Loader2 } from "lucide-react";
 import { useContracts } from "@/hooks/use-contracts";
 import { useAccount } from "wagmi";
@@ -31,6 +34,14 @@ export function PaymentModal({ amount, type, animalId, title, children }: Paymen
 	const [selectedToken, setSelectedToken] = useState("usdt");
 	const [paymentStep, setPaymentStep] = useState<"select" | "confirm" | "processing" | "success">("select");
 	const [txHash, setTxHash] = useState("");
+	const [processingMessage, setProcessingMessage] = useState("Processing transaction...");
+	
+	// Tip states
+	const [includeTip, setIncludeTip] = useState(true); // Default checked (2.5%)
+	const [tipType, setTipType] = useState<"percentage" | "custom">("percentage");
+	const [tipPercentage, setTipPercentage] = useState(2.5); // Default 2.5%
+	const [customTipAmount, setCustomTipAmount] = useState("");
+	
 	const { balance, displayBalance } = useTokenBalance();
 	const { toast } = useToast();
 	const router = useRouter();
@@ -41,12 +52,28 @@ export function PaymentModal({ amount, type, animalId, title, children }: Paymen
 		usdt: { name: "USDT", balance: balance, icon: "💰" },
 	};
 
+	// Calculate tip amount (only for zakat)
+	const calculateTipAmount = () => {
+		if (!includeTip || type === "qurban") return 0;
+		
+		if (tipType === "percentage") {
+			const baseAmount = Number(amount) / 10 ** 6; // Convert from wei to USDT
+			return (baseAmount * tipPercentage) / 100;
+		} else {
+			return parseFloat(customTipAmount) || 0;
+		}
+	};
+
+	const tipAmount = calculateTipAmount();
+	const totalAmount = Number(amount) / 10 ** 6 + tipAmount;
+
 	const onContinuePayment = () => {
-		if (balance < amount) {
+		const requiredBalance = parseUnits(totalAmount.toString(), 6);
+		if (balance < requiredBalance) {
 			toast({
 				variant: "destructive",
 				title: "Error",
-				description: "You don't have enough balance",
+				description: "You don't have enough balance for the total amount including tip",
 			});
 			return;
 		}
@@ -56,23 +83,43 @@ export function PaymentModal({ amount, type, animalId, title, children }: Paymen
 	const processPayment = async () => {
 		if (!contracts || !address || !isConnected) {
 			console.error("Wallet not connected or contracts not available");
+			toast({
+				variant: "destructive",
+				title: "Error",
+				description: "Wallet not connected or contracts not available",
+			});
 			return;
 		}
 
 		setPaymentStep("processing");
+		setProcessingMessage("Checking USDT allowance...");
 
 		try {
-			// Convert amount to wei (USDT has 6 decimals)
-			const amountInWei = parseUnits(amount.toString(), 6);
+			// Amount is already in wei format from parent components
+			// - Qurban: selectedAnimalData.pricePerShare (already BigInt wei)
+			// - Zakat: BigInt(Math.floor(calculatedZakat * 1000000)) (already BigInt wei)
+			const amountInWei = amount;
+
+			console.log("PaymentModal - Processing payment:");
+			console.log("- Type:", type);
+			console.log("- Amount (wei):", amountInWei.toString());
+			console.log("- Amount (USDT):", Number(amountInWei) / 1000000);
 
 			let hash: `0x${string}`;
 
 			if (type === "qurban") {
+				setProcessingMessage("Processing Qurban purchase...");
 				hash = await contracts.purchaseAnimalShares(animalId!, BigInt(1), amountInWei);
 			} else {
-				// For zakat payments
+				// For zakat payments - the donateZakat method already handles approve internally
+				setProcessingMessage("Processing Zakat donation...");
 				const zakatType = type === "zakat-maal" ? "maal" : "fitrah";
-				hash = await contracts.donateZakat(amountInWei, zakatType);
+				hash = await contracts.donateZakat(
+					Number(amountInWei) / 1000000, 
+					zakatType,
+					tipAmount, // Use calculated tip amount
+					"" // donorMessage - empty for now
+				);
 			}
 
 			setTxHash(hash);
@@ -82,9 +129,32 @@ export function PaymentModal({ amount, type, animalId, title, children }: Paymen
 				description: "Thank you for your donation",
 			});
 			router.refresh();
-		} catch (error) {
+		} catch (error: any) {
 			console.error("Payment processing error:", error);
-			// Handle error - could add error state here
+			
+			// Check if it's an allowance error
+			const errorMessage = error?.message || error?.reason || error?.toString() || "";
+			
+			if (errorMessage.includes("insufficient allowance") || errorMessage.includes("ERC20: insufficient allowance")) {
+				toast({
+					variant: "destructive",
+					title: "Approval Required",
+					description: "Please approve USDT spending first. The transaction will handle this automatically.",
+				});
+			} else if (errorMessage.includes("insufficient balance")) {
+				toast({
+					variant: "destructive",
+					title: "Insufficient Balance",
+					description: "You don't have enough USDT balance for this transaction.",
+				});
+			} else {
+				toast({
+					variant: "destructive",
+					title: "Transaction Failed",
+					description: "Please try again. The transaction may have been rejected.",
+				});
+			}
+			
 			setPaymentStep("select");
 		}
 	};
@@ -92,6 +162,7 @@ export function PaymentModal({ amount, type, animalId, title, children }: Paymen
 	const resetModal = () => {
 		setPaymentStep("select");
 		setTxHash("");
+		setProcessingMessage("Processing transaction...");
 	};
 
 	const openInBlockExplorer = () => {
@@ -170,17 +241,100 @@ export function PaymentModal({ amount, type, animalId, title, children }: Paymen
 									<span className="text-[#f0fdf4]/70">Amount:</span>
 									<span className="text-[#d1b86a]">{displayTokenPrice(amount)} USDT</span>
 								</div>
+								{includeTip && tipAmount > 0 && (
+									<div className="flex justify-between">
+										<span className="text-[#f0fdf4]/70">Platform Tip:</span>
+										<span className="text-[#d1b86a]">+{tipAmount.toFixed(2)} USDT</span>
+									</div>
+								)}
 								<div className="flex justify-between">
 									<span className="text-[#f0fdf4]/70">Network:</span>
 									<Badge className="bg-[#14532d] text-[#d1b86a]">Lisk Sepolia</Badge>
 								</div>
 								<Separator className="bg-[#14532d]" />
+								<div className="flex justify-between font-semibold">
+									<span className="text-[#f0fdf4]">Total:</span>
+									<span className="text-[#d1b86a]">{totalAmount.toFixed(2)} USDT</span>
+								</div>
 								<div className="flex justify-between">
 									<span className="text-[#f0fdf4]/70">Estimated Gas Fee:</span>
 									<span className="text-[#f0fdf4]">~$0.01</span>
 								</div>
 							</CardContent>
 						</Card>
+
+						{/* Platform Tip Configuration - Only for Zakat */}
+						{(type === "zakat-maal" || type === "zakat-fitrah") && (
+							<Card className="bg-[#14532d]/30 border-[#14532d]">
+								<CardContent className="p-4 space-y-4">
+									<div className="flex items-center space-x-2">
+										<Checkbox 
+											id="include-tip" 
+											checked={includeTip}
+											onCheckedChange={(checked) => setIncludeTip(!!checked)}
+											className="border-[#f0fdf4]/30 data-[state=checked]:bg-[#d1b86a] data-[state=checked]:border-[#d1b86a]"
+										/>
+										<Label htmlFor="include-tip" className="text-[#f0fdf4] font-medium">
+											Support platform development
+										</Label>
+									</div>
+									
+									{includeTip && (
+										<div className="space-y-3 ml-6">
+											<div className="flex items-center space-x-4">
+												<div className="flex items-center space-x-2">
+													<input
+														type="radio"
+														id="tip-percentage"
+														name="tip-type"
+														checked={tipType === "percentage"}
+														onChange={() => setTipType("percentage")}
+														className="text-[#d1b86a] focus:ring-[#d1b86a]"
+													/>
+													<Label htmlFor="tip-percentage" className="text-[#f0fdf4]/80 text-sm">
+														2.5% ({((Number(amount) / 10 ** 6) * 2.5 / 100).toFixed(2)} USDT)
+													</Label>
+												</div>
+											</div>
+											
+											<div className="flex items-center space-x-4">
+												<div className="flex items-center space-x-2">
+													<input
+														type="radio"
+														id="tip-custom"
+														name="tip-type"
+														checked={tipType === "custom"}
+														onChange={() => setTipType("custom")}
+														className="text-[#d1b86a] focus:ring-[#d1b86a]"
+													/>
+													<Label htmlFor="tip-custom" className="text-[#f0fdf4]/80 text-sm">
+														Custom amount
+													</Label>
+												</div>
+												{tipType === "custom" && (
+													<div className="flex items-center space-x-2">
+														<Input
+															type="number"
+															placeholder="0.00"
+															value={customTipAmount}
+															onChange={(e) => setCustomTipAmount(e.target.value)}
+															className="w-20 h-8 bg-[#0f2419] border-[#14532d] text-[#f0fdf4] text-sm"
+															min="0"
+															step="0.01"
+														/>
+														<span className="text-[#f0fdf4]/70 text-sm">USDT</span>
+													</div>
+												)}
+											</div>
+											
+											<div className="text-xs text-[#f0fdf4]/60">
+												Tips help us maintain and improve the platform. Thank you for your support! 💚
+											</div>
+										</div>
+									)}
+								</CardContent>
+							</Card>
+						)}
 
 						<div className="flex space-x-3">
 							<Button
@@ -201,14 +355,14 @@ export function PaymentModal({ amount, type, animalId, title, children }: Paymen
 				{paymentStep === "processing" && (
 					<div className="space-y-6 text-center">
 						<div className="flex justify-center">
-							<Clock className="h-12 w-12 text-[#d1b86a] animate-spin" />
+							<Loader2 className="h-12 w-12 text-[#d1b86a] animate-spin" />
 						</div>
 						<div>
 							<div className="text-lg font-semibold text-[#f0fdf4] mb-2">Processing Payment</div>
-							<div className="text-sm text-[#f0fdf4]/70 mb-4">Please wait while we process your transaction on Lisk Sepolia</div>
+							<div className="text-sm text-[#f0fdf4]/70 mb-4">{processingMessage}</div>
 							<Progress value={65} className="h-2" />
 						</div>
-						<div className="text-xs text-[#f0fdf4]/50">This may take a few moments...</div>
+						<div className="text-xs text-[#f0fdf4]/50">This may require two transactions: approve + donation</div>
 					</div>
 				)}
 

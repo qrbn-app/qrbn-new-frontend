@@ -2,17 +2,17 @@ import { Address } from "viem";
 
 // Contract addresses on Lisk Sepolia
 export const CONTRACT_ADDRESSES = {
-	QrbnTimelock: "0xD480E4394b1Df72b39eAdBb0ce36ccB19dB5867C" as Address,
-	QrbnGov: "0x1057C3615610f1F1a90B8c6c094a9DDE3D70bC2B" as Address,
-	QrbnToken: "0x0061f6008E05935386E5Ad5b5A608EAd0D062698" as Address,
-	Qurban: "0x94c9dCb80Dc75484b0270152372aCcd2a318e609" as Address,
-	QurbanNFT: "0x6271C03042f41B8e08DDe8413a7d0db4597E51c1" as Address,
-	Zakat: "0x7cE0B440AcD36820c429bdfD9899a5e59D33BE5b" as Address,
-	ZakatNFT: "0x2A628BACF45cb6b9Dcf8305A2615693023068B1A" as Address,
-	QrbnTreasury: "0x841e2afAAfE341e172Ec1a080898D98302F6bb80" as Address,
+	QrbnTimelock: "0x66d4C161cf34E30fcfb11c5C46a823DFc1Db907D" as Address,
+	QrbnGov: "0xA9F9623b5bc0d128778B68aA0e47baec4096EcCD" as Address,
+	QrbnToken: "0xb6013ED2EdCEA2dFe53a73AaDaCf51757958F313" as Address,
+	Qurban: "0xd8cAF5471D4983d36bc736Cb07eA0523ab2E97c6" as Address,
+	QurbanNFT: "0x919D4352D661C14b93a38968170D2bd41454d5db" as Address,
+	Zakat: "0x55da968D4970D93cf26E9e3474C760AD447BeD36" as Address,
+	ZakatNFT: "0xeE2695Ee0Fc8F0f6190B074396eD95C6c56988fc" as Address,
+	QrbnTreasury: "0x227e71b5cB5E9C7B4183F5e1CaF1E08b40c7484F" as Address,
 	// USDT contract address on Lisk Sepolia (Update this with the actual USDT address)
 	// USDT: '0x05D032ac25d322df992303dCa074EE7392C117b9' as Address, // Replace with actual USDT on Lisk Sepolia
-	USDT: "0x20c8C81a2f599f77f09B426DE90Dbf26eD1a2c6E" as Address, // Replace with actual USDT on Lisk Sepolia --- IGNORE ---
+	USDT: "0xaEc207C35f5e6eD63E885928a324a5C7D74c56a8" as Address, // Replace with actual USDT on Lisk Sepolia --- IGNORE ---
 } as const;
 
 // Basic ERC20 ABI for QrbnToken
@@ -118,55 +118,6 @@ export const QURBAN_ABI = [
 		name: "contributeQurban",
 		outputs: [],
 		stateMutability: "nonpayable",
-		type: "function",
-	},
-] as const;
-
-// Basic Zakat contract ABI
-export const ZAKAT_ABI = [
-	{
-		inputs: [],
-		name: "getCurrentZakatPool",
-		outputs: [{ name: "", type: "uint256" }],
-		stateMutability: "view",
-		type: "function",
-	},
-	{
-		inputs: [{ name: "user", type: "address" }],
-		name: "getUserZakatContributions",
-		outputs: [{ name: "", type: "uint256" }],
-		stateMutability: "view",
-		type: "function",
-	},
-	{
-		inputs: [
-			{ name: "amount", type: "uint256" },
-			{ name: "zakatType", type: "uint8" },
-		],
-		name: "donateZakat",
-		outputs: [],
-		stateMutability: "nonpayable",
-		type: "function",
-	},
-	{
-		inputs: [],
-		name: "nisabThreshold",
-		outputs: [{ name: "", type: "uint256" }],
-		stateMutability: "view",
-		type: "function",
-	},
-	{
-		inputs: [],
-		name: "zakatRate",
-		outputs: [{ name: "", type: "uint256" }],
-		stateMutability: "view",
-		type: "function",
-	},
-	{
-		inputs: [],
-		name: "fitrahAmount",
-		outputs: [{ name: "", type: "uint256" }],
-		stateMutability: "view",
 		type: "function",
 	},
 ] as const;
