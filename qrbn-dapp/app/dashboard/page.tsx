@@ -163,15 +163,15 @@ export default function DashboardPage() {
 								title="Zakat Maal 2025"
 								date="2025-01-15"
 								type="Zakat"
-								tokenId="1001"
-								ipfsUrl="https://ipfs.io/ipfs/bafkreicgvqviadrsaxsqr2vsk5zjqsbrbmhyh3aq2jkgo2t53gkfjbqszq"
+								tokenId="1"
+								ipfsUrl="https://ipfs.io/ipfs/bafkreihfymc3stsqsjhvy2z2qcd6qlomjwjyd2o6fzgaldjjm3ytl3jrie"
 							/>
 							<NFTCertificateCard
 								title="Zakat Fitrah 2025"
 								date="2025-01-05"
 								type="Zakat"
-								tokenId="1002"
-								ipfsUrl="https://ipfs.io/ipfs/bafkreicrkhplq5hrxrcs5iwp5poqovpzqhxeakmrmggjc2jflwr5235vs4"
+								tokenId="1"
+								ipfsUrl="https://ipfs.io/ipfs/bafkreiev23if7tpf6nygprh2j23pw53mv4kztncb72vroytjuvwoc3pmby"
 							/>
 						</div>
 					</TabsContent>
