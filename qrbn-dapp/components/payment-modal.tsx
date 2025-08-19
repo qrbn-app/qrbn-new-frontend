@@ -23,7 +23,7 @@ import { useTokenBalance } from "@/hooks/use-token-balance";
 
 interface PaymentModalProps {
 	amount: bigint;
-	type: "zakat-maal" | "zakat-fitrah" | "qurban";
+	type: string;
 	title: string;
 	animalId?: bigint;
 	children: React.ReactNode;
