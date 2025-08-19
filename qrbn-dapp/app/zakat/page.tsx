@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -27,9 +28,11 @@ export default function ZakatPage() {
 	// Custom hooks
 	const { goldPriceUSD, nisabThreshold, goldPriceLoading, isUsingLiveData, fetchGoldPrice } = useGoldPrice();
 	const { islamicPaths, selectedIslamicPath, showAdvancedOptions, setShowAdvancedOptions, onSelectIslamicPath } = useIslamicPath();
-	const zakatCalculations = useZakatCalculations({ nisabThreshold, selectedIslamicPath });
+	const zakatCalculations = useZakatCalculations({ nisabThreshold, selectedIslamicPath, goldPriceUSD });
 	const zakatFitrah = useZakatFitrah();
 	const zakatContractData = useZakatContract();
+
+	// Gold input handled inside useZakatCalculations; we just pass grams
 
 	return (
 		<div className="min-h-screen islamic-pattern py-8 px-4">
@@ -308,6 +311,176 @@ export default function ZakatPage() {
 													</div>
 												</div>
 											</div>
+										) : zakatCalculations.selectedZakatType.id === "trade" ? (
+											<div className="space-y-6">
+												{/* Business Capital */}
+												<div>
+													<Label htmlFor="businessCapital" className="text-[#f0fdf4] font-semibold">
+														Business Capital Rotated for 1 Year*
+													</Label>
+													<Input
+														id="businessCapital"
+														type="number"
+														placeholder={`Enter business capital in ${currency}`}
+														value={zakatCalculations.businessCapital}
+														onChange={(e) => zakatCalculations.setBusinessCapital(e.target.value)}
+														className="bg-[#14532d] border-[#14532d] text-[#f0fdf4] mt-2"
+													/>
+												</div>
+
+												{/* Business Profit */}
+												<div>
+													<Label htmlFor="businessProfit" className="text-[#f0fdf4] font-semibold">
+														Profit for 1 Year*
+													</Label>
+													<Input
+														id="businessProfit"
+														type="number"
+														placeholder={`Enter business profit in ${currency}`}
+														value={zakatCalculations.businessProfit}
+														onChange={(e) => zakatCalculations.setBusinessProfit(e.target.value)}
+														className="bg-[#14532d] border-[#14532d] text-[#f0fdf4] mt-2"
+													/>
+												</div>
+
+												<details>
+													<summary>Show advanced options</summary>
+													<div className="space-y-6 mt-6">
+														{/* Trade Receivables */}
+														<div>
+															<Label htmlFor="tradeReceivables" className="text-[#f0fdf4] font-semibold">
+																Trade Receivables
+															</Label>
+															<Input
+																id="tradeReceivables"
+																type="number"
+																placeholder="Optional, if applicable"
+																value={zakatCalculations.tradeReceivables}
+																onChange={(e) => zakatCalculations.setTradeReceivables(e.target.value)}
+																className="bg-[#14532d] border-[#14532d] text-[#f0fdf4] mt-2"
+															/>
+														</div>
+
+														{/* Due Debts */}
+														<div>
+															<Label htmlFor="dueDepartments" className="text-[#f0fdf4] font-semibold">
+																Due Debts
+															</Label>
+															<Input
+																id="dueDepartments"
+																type="number"
+																placeholder="Optional, if applicable"
+																value={zakatCalculations.dueDepartments}
+																onChange={(e) => zakatCalculations.setDueDepartments(e.target.value)}
+																className="bg-[#14532d] border-[#14532d] text-[#f0fdf4] mt-2"
+															/>
+														</div>
+
+														{/* Business Losses */}
+														<div>
+															<Label htmlFor="businessLosses" className="text-[#f0fdf4] font-semibold">
+																Losses for 1 Year
+															</Label>
+															<Input
+																id="businessLosses"
+																type="number"
+																placeholder="Optional, if applicable"
+																value={zakatCalculations.businessLosses}
+																onChange={(e) => zakatCalculations.setBusinessLosses(e.target.value)}
+																className="bg-[#14532d] border-[#14532d] text-[#f0fdf4] mt-2"
+															/>
+														</div>
+													</div>
+												</details>
+
+												{/* Payment Obligation */}
+												<div className="p-4 bg-[#14532d]/30 rounded-lg">
+													<div className="text-[#f0fdf4] font-semibold mb-2">Payment Obligation</div>
+													<div className="text-red-400 text-sm">
+														{zakatCalculations.isObligatedToPay
+															? "Required to Pay Zakat"
+															: "Not Required to Pay Zakat, but Can Give Charity"}
+													</div>
+												</div>
+											</div>
+										) : zakatCalculations.selectedZakatType.id === "savings" ? (
+											<div className="space-y-6">
+												<div>
+													<Label htmlFor="savingsBalance" className="text-[#f0fdf4] font-semibold">
+														Savings Balance*
+													</Label>
+													<Input
+														id="savingsBalance"
+														type="number"
+														placeholder={`Enter your total liquid savings in ${currency}`}
+														value={zakatCalculations.savingsBalance}
+														onChange={(e) => zakatCalculations.setSavingsBalance(e.target.value)}
+														className="bg-[#14532d] border-[#14532d] text-[#f0fdf4] mt-2"
+													/>
+													<p className="text-xs text-[#f0fdf4]/50 mt-1">Include cash and liquid assets available for a full lunar year.</p>
+												</div>
+
+												<div className="flex items-center justify-between p-4 bg-[#14532d]/30 rounded-lg border border-[#14532d]">
+													<div>
+														<span className="text-[#f0fdf4] font-medium">Using conventional bank?</span>
+														<p className="text-xs text-[#f0fdf4]/60">If yes, interest will be excluded from the balance.</p>
+													</div>
+													<Switch
+														checked={zakatCalculations.isConventionalBank}
+														onCheckedChange={zakatCalculations.setIsConventionalBank}
+														className="data-[state=checked]:bg-[#d1b86a]"
+													/>
+												</div>
+
+												{zakatCalculations.isConventionalBank && (
+													<div>
+														<Label htmlFor="interestAmount" className="text-[#f0fdf4]">
+															Interest Amount Earned (last 12 months)
+														</Label>
+														<Input
+															id="interestAmount"
+															type="number"
+															placeholder={`Enter interest amount in ${currency}`}
+															value={zakatCalculations.interestAmount}
+															onChange={(e) => zakatCalculations.setInterestAmount(e.target.value)}
+															className="bg-[#14532d] border-[#14532d] text-[#f0fdf4] mt-2"
+														/>
+														<p className="text-xs text-[#f0fdf4]/50 mt-1">This amount will be excluded from the zakatable balance.</p>
+													</div>
+												)}
+
+												{/* months held removed */}
+
+												<div className="p-4 bg-[#14532d]/30 rounded-lg">
+													<div className="text-[#f0fdf4] font-semibold mb-2">Payment Obligation</div>
+													<div className="text-red-400 text-sm">
+														{zakatCalculations.isObligatedToPay ? "Required to Pay Zakat" : "Not Required to Pay Zakat, but Can Give Charity"}
+													</div>
+												</div>
+											</div>
+										) : zakatCalculations.selectedZakatType.id === "gold" ? (
+											<div>
+												<Label htmlFor="goldGrams" className="text-[#f0fdf4]">
+													Total Gold (grams)
+												</Label>
+												<Input
+													id="goldGrams"
+													type="number"
+													placeholder="Enter total gold in grams"
+													value={zakatCalculations.goldWeightGrams}
+													onChange={(e) => zakatCalculations.setGoldWeightGrams(e.target.value)}
+													className="bg-[#14532d] border-[#14532d] text-[#f0fdf4] mt-2"
+												/>
+												<p className="text-xs text-[#f0fdf4]/50 mt-1">
+													We auto-convert grams to {currency} using the live price.
+												</p>
+												<div className="p-4 bg-[#14532d]/30 rounded-lg mt-4">
+													<div className="text-[#f0fdf4] font-semibold mb-2">Payment Obligation</div>
+													<div className="text-red-400 text-sm">
+														{zakatCalculations.isObligatedToPay ? "Required to Pay Zakat" : "Not Required to Pay Zakat, but Can Give Charity"}
+													</div>
+												</div>
+											</div>
 										) : (
 											/* Other Zakat Types Interface */
 											<div>
@@ -322,8 +495,8 @@ export default function ZakatPage() {
 													className="bg-[#14532d] border-[#14532d] text-[#f0fdf4] mt-2"
 												/>
 												<p className="text-xs text-[#f0fdf4]/50 mt-1">
-													Minimum nisab: {zakatCalculations.getCurrentZakatType().nisabThreshold.toLocaleString()}{" "}
-													{zakatCalculations.getCurrentZakatType().unit} | Rate:{" "}
+													Minimum nisab: {zakatCalculations.getCurrentZakatType().nisabThreshold.toLocaleString()} {" "}
+													{zakatCalculations.getCurrentZakatType().unit} | Rate: {" "}
 													{zakatCalculations.getCurrentZakatType().rate}%
 												</p>
 											</div>
@@ -340,8 +513,11 @@ export default function ZakatPage() {
 													</p>
 													<p className="text-xs text-[#f0fdf4]/50 mt-1">
 														{zakatCalculations.getCurrentZakatType().rate}% of{" "}
-														{zakatCalculations.selectedZakatType.id === "income" ? "taxable income" : "wealth"} above
-														nisab
+														{zakatCalculations.selectedZakatType.id === "income" 
+															? "taxable income" 
+															: zakatCalculations.selectedZakatType.id === "trade"
+															? "trade assets after deductions"
+															: "wealth"} above nisab
 													</p>
 													{zakatCalculations.selectedZakatType.id === "income" &&
 														(() => {
@@ -363,8 +539,49 @@ export default function ZakatPage() {
 																		</span>
 																	)}
 																</div>
+																		
 															);
 														})()}
+													{zakatCalculations.selectedZakatType.id === "trade" &&
+														(() => {
+															const breakdown = zakatCalculations.getTradeBreakdown();
+															if (!breakdown) return null;
+
+															return (
+																<div className="mt-2 text-xs text-[#f0fdf4]/60">
+																	Capital: {formatCurrency(breakdown.businessCapital)}
+																	{breakdown.businessProfit > 0 && (
+																		<span> + Profit: {formatCurrency(breakdown.businessProfit)}</span>
+																	)}
+																	{breakdown.tradeReceivables > 0 && (
+																		<span> + Receivables: {formatCurrency(breakdown.tradeReceivables)}</span>
+																	)}
+																	{breakdown.dueDepartments > 0 && (
+																		<span className="text-red-300"> - Debts: {formatCurrency(breakdown.dueDepartments)}</span>
+																	)}
+																	{breakdown.businessLosses > 0 && (
+																		<span className="text-red-300"> - Losses: {formatCurrency(breakdown.businessLosses)}</span>
+																	)}
+																</div>
+															);
+														})()}
+												{zakatCalculations.selectedZakatType.id === "savings" &&
+													(() => {
+														const breakdown = zakatCalculations.getSavingsBreakdown?.();
+														if (!breakdown) return null;
+
+														return (
+															<div className="mt-2 text-xs text-[#f0fdf4]/60">
+																Savings: {formatCurrency(breakdown.balance)}
+																{breakdown.isConventionalBank && breakdown.interest > 0 && (
+																	<span className="text-red-300"> - Interest: {formatCurrency(breakdown.interest)}</span>
+																)}
+																<span> = Net: {formatCurrency(breakdown.netBalance)}</span>
+																{/* months held removed */}
+															</div>
+														);
+													})()}
+												{/* no gold-specific breakdown when using generic interface */}
 												</div>
 											</div>
 										)}
@@ -401,6 +618,65 @@ export default function ZakatPage() {
 														</div>
 													</div>
 											  )
+											: zakatCalculations.selectedZakatType.id === "trade"
+											? // For trade, check trade assets after deductions
+											  (zakatCalculations.businessCapital || zakatCalculations.businessProfit) &&
+											  (() => {
+													const breakdown = zakatCalculations.getTradeBreakdown();
+													return breakdown && breakdown.isBelowNisab;
+											  })() && (
+													<div className="p-4 bg-red-500/20 rounded-lg border border-red-500/30">
+														<div className="text-center">
+															<p className="text-red-200 text-sm mb-2">Trade Assets Below Nisab Threshold</p>
+															<p className="text-red-100 text-xs">
+																Your trade assets after deductions (
+																{(() => {
+																	const breakdown = zakatCalculations.getTradeBreakdown();
+																	return breakdown ? formatCurrency(breakdown.assetsAfterDeductions) : "0";
+																})()}
+																) is below the nisab threshold (
+																{formatCurrency(zakatCalculations.getCurrentZakatType().nisabThreshold)}
+																). Zakat is not obligatory for trade assets below this amount.
+															</p>
+														</div>
+													</div>
+											  )
+											: zakatCalculations.selectedZakatType.id === "savings"
+											? (() => {
+												const breakdown = zakatCalculations.getSavingsBreakdown?.();
+												if (!breakdown) return false as unknown as JSX.Element;
+												const shouldWarn = breakdown.isBelowNisab;
+												return (
+													shouldWarn && (
+														<div className="p-4 bg-red-500/20 rounded-lg border border-red-500/30">
+															<div className="text-center">
+																<p className="text-red-200 text-sm mb-2">Savings Below Nisab Threshold</p>
+																<p className="text-red-100 text-xs">
+																	Your net savings ({formatCurrency(breakdown.netBalance)}) are below the nisab threshold ({formatCurrency(zakatCalculations.getCurrentZakatType().nisabThreshold)}). Zakat is not obligatory below this amount.
+																</p>
+															</div>
+														</div>
+													)
+												);
+											})()
+											: zakatCalculations.selectedZakatType.id === "gold"
+											? (() => {
+												const breakdown = zakatCalculations.getGoldBreakdown?.();
+												if (!breakdown) return false as unknown as JSX.Element;
+												const shouldWarn = breakdown.isBelowNisab;
+												return (
+													shouldWarn && (
+														<div className="p-4 bg-red-500/20 rounded-lg border border-red-500/30">
+															<div className="text-center">
+																<p className="text-red-200 text-sm mb-2">Gold Value Below Nisab Threshold</p>
+																<p className="text-red-100 text-xs">
+																	Your gold value ({formatCurrency(breakdown.totalInCurrency)}) is below the nisab threshold ({formatCurrency(zakatCalculations.getCurrentZakatType().nisabThreshold)}). Zakat is not obligatory below this amount.
+																</p>
+															</div>
+														</div>
+													)
+												);
+											})()
 											: // For other types, check wealth input
 											  zakatCalculations.wealth &&
 											  parseFloat(zakatCalculations.wealth) > 0 &&
