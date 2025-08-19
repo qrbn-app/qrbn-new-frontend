@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { CheckCircle, Circle, Wallet, Award, Users, Star, MapPin, ScrollText } from "lucide-react";
 import { PaymentModal } from "@/components/payment-modal";
 import { useReadContract } from "@/hooks/use-read-contracts";
+import { useCurrency } from "@/components/providers/currency-provider";
 import { cn, displayTokenPrice, isAnimalSold } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -23,6 +24,7 @@ const dummyFeatures = ["Shariah certified", "Health verified", "Local sourced", 
 export default function QurbanPage() {
 	const [selectedAnimal, setSelectedAnimal] = useState<bigint>();
 	const [selectedCategory, setSelectedCategory] = useState<"goats" | "cows">("goats");
+	const { formatCurrency, convertToSelectedCurrency } = useCurrency();
 	const { data: qurbanAnimals, isLoading } = useReadContract((contracts) => ({
 		queryKey: ["qurbanAnimals"],
 		queryFn: () => contracts?.getQurbanAnimals(),
@@ -134,7 +136,9 @@ export default function QurbanPage() {
 													</div>
 
 													<div className="text-2xl font-bold text-[#d1b86a]">
-														{displayTokenPrice(animal.pricePerShare)} USDT
+														{formatCurrency(
+															convertToSelectedCurrency(parseFloat(displayTokenPrice(animal.pricePerShare)))
+														)}
 													</div>
 
 													<div className="space-y-2 text-sm">
@@ -233,7 +237,9 @@ export default function QurbanPage() {
 												<div>
 													<div className="text-sm text-[#f0fdf4]/70">Total Amount:</div>
 													<div className="text-2xl font-bold text-[#d1b86a]">
-														{displayTokenPrice(selectedAnimalData.pricePerShare)} USDT
+														{formatCurrency(
+															convertToSelectedCurrency(parseFloat(displayTokenPrice(selectedAnimalData.pricePerShare)))
+														)}
 													</div>
 												</div>
 

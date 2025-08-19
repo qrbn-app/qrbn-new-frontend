@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Navigation } from "@/components/navigation";
 import { WalletProvider } from "@/components/providers/web3-provider";
+import { CurrencyProvider } from "@/components/providers/currency-provider";
 import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -19,11 +20,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 		<html lang="en" className="dark">
 			<body className={inter.className}>
 				<WalletProvider>
-					<div className="min-h-screen bg-[#071a12] text-[#f0fdf4]">
-						<Navigation />
-						<main>{children}</main>
-					</div>
-					<Toaster />
+					<CurrencyProvider>
+						<div className="min-h-screen bg-[#071a12] text-[#f0fdf4]">
+							<Navigation />
+							<main>{children}</main>
+						</div>
+						<Toaster />
+					</CurrencyProvider>
 				</WalletProvider>
 			</body>
 		</html>
