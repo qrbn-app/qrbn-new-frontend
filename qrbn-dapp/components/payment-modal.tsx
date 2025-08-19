@@ -20,6 +20,7 @@ import { displayTokenPrice } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { useTokenBalance } from "@/hooks/use-token-balance";
+import { useCurrency } from "@/components/providers/currency-provider";
 
 interface PaymentModalProps {
 	amount: bigint;
@@ -42,6 +43,7 @@ export function PaymentModal({ amount, type, animalId, title, children }: Paymen
 	const [customTipAmount, setCustomTipAmount] = useState("");
 
 	const { balance, displayBalance } = useTokenBalance();
+	const { currency, exchangeRate } = useCurrency();
 	const { toast } = useToast();
 	const router = useRouter();
 	const contracts = useContracts();
@@ -51,20 +53,31 @@ export function PaymentModal({ amount, type, animalId, title, children }: Paymen
 		usdt: { name: "USDT", balance: balance, icon: "💰" },
 	};
 
+	// Convert amount to USD if it's in IDR
+	const getUSDAmount = () => {
+		const baseAmount = Number(amount) / 10 ** 6; // Convert from wei to token amount
+		if (currency === "IDRX" && exchangeRate > 0) {
+			// Convert IDR to USD
+			return baseAmount / exchangeRate;
+		}
+		return baseAmount; // Already in USD
+	};
+
+	const usdAmount = getUSDAmount();
+
 	// Calculate tip amount (only for zakat)
 	const calculateTipAmount = () => {
-		if (!includeTip || type === "qurban") return 0;
+		if (!includeTip || !type.startsWith("zakat-")) return 0;
 
 		if (tipType === "percentage") {
-			const baseAmount = Number(amount) / 10 ** 6; // Convert from wei to USDT
-			return (baseAmount * tipPercentage) / 100;
+			return (usdAmount * tipPercentage) / 100;
 		} else {
 			return parseFloat(customTipAmount) || 0;
 		}
 	};
 
 	const tipAmount = calculateTipAmount();
-	const totalAmount = Number(amount) / 10 ** 6 + tipAmount;
+	const totalAmount = usdAmount + tipAmount;
 
 	const onContinuePayment = () => {
 		const requiredBalance = parseUnits(totalAmount.toString(), 6);
@@ -94,27 +107,26 @@ export function PaymentModal({ amount, type, animalId, title, children }: Paymen
 		setProcessingMessage("Checking USDT allowance...");
 
 		try {
-			// Amount is already in wei format from parent components
-			// - Qurban: selectedAnimalData.pricePerShare (already BigInt wei)
-			// - Zakat: BigInt(Math.floor(calculatedZakat * 1000000)) (already BigInt wei)
-			const amountInWei = amount;
+			// For payments, we need to use USD amounts since the smart contract expects USD
+			const usdAmountInWei = BigInt(Math.floor(usdAmount * 1000000));
 
 			console.log("PaymentModal - Processing payment:");
 			console.log("- Type:", type);
-			console.log("- Amount (wei):", amountInWei.toString());
-			console.log("- Amount (USDT):", Number(amountInWei) / 1000000);
+			console.log("- Original amount (wei):", amount.toString());
+			console.log("- USD amount (wei):", usdAmountInWei.toString());
+			console.log("- USD amount (USDT):", usdAmount);
 
 			let hash: `0x${string}`;
 
 			if (type === "qurban") {
 				setProcessingMessage("Processing Qurban purchase...");
-				hash = await contracts.purchaseAnimalShares(animalId!, BigInt(1), amountInWei);
+				hash = await contracts.purchaseAnimalShares(animalId!, BigInt(1), usdAmountInWei);
 			} else {
 				// For zakat payments - the donateZakat method already handles approve internally
 				setProcessingMessage("Processing Zakat donation...");
-				const zakatType = type === "zakat-maal" ? "maal" : "fitrah";
+				const zakatType = type === "zakat-fitrah" ? "fitrah" : "maal";
 				hash = await contracts.donateZakat(
-					Number(amountInWei) / 1000000,
+					usdAmount, // Use USD amount directly
 					zakatType,
 					tipAmount, // Use calculated tip amount
 					"" // donorMessage - empty for now
@@ -188,7 +200,7 @@ export function PaymentModal({ amount, type, animalId, title, children }: Paymen
 					<div className="space-y-6">
 						<div className="text-center p-4 bg-[#14532d]/30 rounded-lg">
 							<div className="text-sm text-[#f0fdf4]/70 mb-1">{title}</div>
-							<div className="text-2xl font-bold text-[#d1b86a] mb-1">{displayTokenPrice(amount)} USDT</div>
+							<div className="text-2xl font-bold text-[#d1b86a] mb-1">{usdAmount.toFixed(2)} USDT</div>
 							<div className="text-xs text-[#f0fdf4]/50">Direct USDT payment</div>
 						</div>
 
@@ -238,7 +250,7 @@ export function PaymentModal({ amount, type, animalId, title, children }: Paymen
 								</div>
 								<div className="flex justify-between">
 									<span className="text-[#f0fdf4]/70">Amount:</span>
-									<span className="text-[#d1b86a]">{displayTokenPrice(amount)} USDT</span>
+									<span className="text-[#d1b86a]">{usdAmount.toFixed(2)} USDT</span>
 								</div>
 								{includeTip && tipAmount > 0 && (
 									<div className="flex justify-between">
@@ -263,7 +275,7 @@ export function PaymentModal({ amount, type, animalId, title, children }: Paymen
 						</Card>
 
 						{/* Platform Tip Configuration - Only for Zakat */}
-						{(type === "zakat-maal" || type === "zakat-fitrah") && (
+						{type.startsWith("zakat-") && (
 							<Card className="bg-[#14532d]/30 border-[#14532d]">
 								<CardContent className="p-4 space-y-4">
 									<div className="flex items-center space-x-2">
@@ -291,7 +303,7 @@ export function PaymentModal({ amount, type, animalId, title, children }: Paymen
 														className="text-[#d1b86a] focus:ring-[#d1b86a]"
 													/>
 													<Label htmlFor="tip-percentage" className="text-[#f0fdf4]/80 text-sm">
-														2.5% ({(((Number(amount) / 10 ** 6) * 2.5) / 100).toFixed(2)} USDT)
+														2.5% ({((usdAmount * 2.5) / 100).toFixed(2)} USDT)
 													</Label>
 												</div>
 											</div>
