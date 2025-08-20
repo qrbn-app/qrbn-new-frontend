@@ -258,6 +258,12 @@ export function PaymentModal({ amount, type, animalId, title, children }: Paymen
 										<span className="text-[#d1b86a]">+{tipAmount.toFixed(2)} USDT</span>
 									</div>
 								)}
+								{!type.startsWith("zakat-") && (
+									<div className="flex justify-between">
+										<span className="text-[#f0fdf4]/70">2.5% Fee (Included):</span>
+										<span className="text-[#d1b86a]">{usdAmount * 0.025} USDT</span>
+									</div>
+								)}
 								<div className="flex justify-between">
 									<span className="text-[#f0fdf4]/70">Network:</span>
 									<Badge className="bg-[#14532d] text-[#d1b86a]">Lisk Sepolia</Badge>
