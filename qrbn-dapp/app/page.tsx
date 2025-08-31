@@ -54,7 +54,7 @@ export default function HomePage() {
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-[#f0fdf4]">Choose Your Path</h2>
 
           <div className="grid md:grid-cols-2 gap-8">
-            <Link href="/zakat">
+            {/* <Link href="/zakat">
               <Card className="bg-[#0f2419] border-[#14532d] hover:border-[#d1b86a] transition-all duration-300 glow-shadow hover:scale-105 cursor-pointer">
                 <CardContent className="p-8 text-center">
                   <div className="text-6xl mb-6">🕋</div>
@@ -68,6 +68,23 @@ export default function HomePage() {
                     <div>• Impact tracking</div>
                   </div>
                 </CardContent>
+              </Card>
+            </Link> */}
+
+            <Link href="/aqiqah">
+              <Card className="bg-[#0f2419] border-[#14532d] hover:border-[#d1b86a] transition-all duration-300 glow-shadow hover:scale-105 cursor-pointer">
+              <CardContent className="p-8 text-center">
+                <div className="text-6xl mb-6">👶</div>
+                <h3 className="text-2xl font-bold mb-4 text-[#f0fdf4]">Aqiqah</h3>
+                <p className="text-[#f0fdf4]/70 mb-6">
+                Celebrate your child's birth with traditional Aqiqah sacrifice, tracked transparently on blockchain
+                </p>
+                <div className="space-y-2 text-sm text-[#d1b86a]">
+                <div>• 1 goat for girl, 2 for boy</div>
+                <div>• Distribution to community</div>
+                <div>• NFT birth certificate</div>
+                </div>
+              </CardContent>
               </Card>
             </Link>
 
