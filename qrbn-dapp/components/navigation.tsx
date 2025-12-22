@@ -72,6 +72,9 @@ export function Navigation() {
 						<Link href="/qurban" className="text-[#f0fdf4] hover:text-[#d1b86a] transition-colors">
 							Qurban
 						</Link>
+						<Link href="/vendor" className="text-[#f0fdf4] hover:text-[#d1b86a] transition-colors">
+							Vendor
+						</Link>
 						<Link href="/dashboard" className="text-[#f0fdf4] hover:text-[#d1b86a] transition-colors">
 							Dashboard
 						</Link>
@@ -188,6 +191,9 @@ export function Navigation() {
 						</Link>
 						<Link href="/qurban" className="block text-[#f0fdf4] hover:text-[#d1b86a]">
 							Qurban
+						</Link>
+						<Link href="/vendor" className="block text-[#f0fdf4] hover:text-[#d1b86a]">
+							Vendor
 						</Link>
 						<Link href="/dashboard" className="block text-[#f0fdf4] hover:text-[#d1b86a]">
 							Dashboard
