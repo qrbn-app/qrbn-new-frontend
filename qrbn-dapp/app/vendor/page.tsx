@@ -29,10 +29,14 @@ import {
   Eye,
   Edit,
   Trash2,
+  ShoppingCart,
+  DollarSign,
+  Package,
+  BarChart3,
 } from "lucide-react";
 import { useDIDIdentity } from "@/hooks/use-did-identity";
 import { useDIDRegistration } from "@/hooks/use-did-registration";
-import { VendorDIDData, RegisteredFarm, AnimalRegistryEntry, WaqfProposal } from "@/app/types/did-types";
+import { VendorDIDData, RegisteredFarm, AnimalRegistryEntry, WaqfProposal, LifecycleStage } from "@/app/types/did-types";
 
 export default function VendorDashboard() {
   const { address, isConnected } = useAccount();
@@ -158,10 +162,11 @@ export default function VendorDashboard() {
 
       {/* Main Content Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="farms">Farms ({vendorData.farms.length})</TabsTrigger>
           <TabsTrigger value="animals">Animal Registry</TabsTrigger>
+          <TabsTrigger value="marketplace">My Listings</TabsTrigger>
           <TabsTrigger value="proposals">Waqf Proposals</TabsTrigger>
         </TabsList>
 
@@ -175,6 +180,10 @@ export default function VendorDashboard() {
 
         <TabsContent value="animals" className="mt-6">
           <AnimalsTab vendorDID={vendorData.did} />
+        </TabsContent>
+
+        <TabsContent value="marketplace" className="mt-6">
+          <MarketplaceListingsTab vendorDID={vendorData.did} />
         </TabsContent>
 
         <TabsContent value="proposals" className="mt-6">
@@ -419,13 +428,154 @@ function FarmsTab({ farms }: { farms: RegisteredFarm[] }) {
 
 // Animals Tab
 function AnimalsTab({ vendorDID }: { vendorDID: string }) {
-  // Mock animal data
-  const mockAnimals: AnimalRegistryEntry[] = [];
+  // Mock animal data with marketplace status
+  const mockAnimals: (AnimalRegistryEntry & { marketplaceStatus?: "not_listed" | "listed" | "reserved" | "sold"; marketplacePrice?: number })[] = [
+    {
+      id: "animal-001",
+      tagId: "KMB-2024-001",
+      species: "kambing",
+      breed: "Etawa",
+      age: 18,
+      weight: 45,
+      gender: "jantan",
+      healthStatus: {
+        status: "healthy",
+        lastCheckup: new Date("2024-12-15"),
+      },
+      healthRecords: [],
+      farmId: "farm-001",
+      vendorDID,
+      lifecycle: {
+        raising: {
+          startDate: new Date("2023-06-20"),
+          expectedReadyDate: new Date("2024-12-01"),
+        },
+        ready: {
+          date: new Date("2024-12-01"),
+        },
+      },
+      currentStage: "ready",
+      halalCompliant: true,
+      images: [],
+      documents: [],
+      registeredAt: new Date("2023-06-20"),
+      updatedAt: new Date("2024-12-01"),
+      waqfFunded: true,
+      waqfProposalId: "prop-001",
+      marketplaceStatus: "listed",
+      marketplacePrice: 350,
+    },
+    {
+      id: "animal-002",
+      tagId: "SPI-2024-005",
+      species: "sapi",
+      breed: "Limosin",
+      age: 36,
+      weight: 520,
+      gender: "betina",
+      healthStatus: {
+        status: "healthy",
+        lastCheckup: new Date("2024-12-10"),
+      },
+      healthRecords: [],
+      farmId: "farm-001",
+      vendorDID,
+      lifecycle: {
+        raising: {
+          startDate: new Date("2022-01-05"),
+          expectedReadyDate: new Date("2024-11-15"),
+        },
+        ready: {
+          date: new Date("2024-11-15"),
+        },
+      },
+      currentStage: "ready",
+      halalCompliant: true,
+      images: [],
+      documents: [],
+      registeredAt: new Date("2022-01-05"),
+      updatedAt: new Date("2024-11-15"),
+      waqfFunded: true,
+      waqfProposalId: "prop-002",
+      marketplaceStatus: "reserved",
+      marketplacePrice: 2800,
+    },
+    {
+      id: "animal-003",
+      tagId: "KMB-2024-012",
+      species: "kambing",
+      breed: "Boer",
+      age: 16,
+      weight: 38,
+      gender: "jantan",
+      healthStatus: {
+        status: "healthy",
+        lastCheckup: new Date("2024-12-18"),
+      },
+      healthRecords: [],
+      farmId: "farm-001",
+      vendorDID,
+      lifecycle: {
+        raising: {
+          startDate: new Date("2023-08-25"),
+          expectedReadyDate: new Date("2024-12-15"),
+        },
+        ready: {
+          date: new Date("2024-12-15"),
+        },
+      },
+      currentStage: "ready",
+      halalCompliant: true,
+      images: [],
+      documents: [],
+      registeredAt: new Date("2023-08-25"),
+      updatedAt: new Date("2024-12-15"),
+      waqfFunded: false,
+      marketplaceStatus: "not_listed",
+    },
+  ];
+
+  const getMarketplaceBadge = (status?: string) => {
+    if (!status || status === "not_listed") {
+      return (
+        <Badge variant="outline" className="gap-1">
+          <Package className="h-3 w-3" />
+          Not Listed
+        </Badge>
+      );
+    }
+    const config = {
+      listed: { className: "bg-blue-600 text-white", icon: <ShoppingCart className="h-3 w-3" />, label: "On Marketplace" },
+      reserved: { className: "bg-yellow-600 text-white", icon: <Clock className="h-3 w-3" />, label: "Reserved" },
+      sold: { className: "bg-green-600 text-white", icon: <CheckCircle2 className="h-3 w-3" />, label: "Sold" },
+    };
+    const cfg = config[status as keyof typeof config];
+    return (
+      <Badge className={`gap-1 ${cfg.className}`}>
+        {cfg.icon}
+        {cfg.label}
+      </Badge>
+    );
+  };
+
+  const getLifecycleBadge = (status: string) => {
+    const config = {
+      raising: { variant: "secondary" as const, label: "Raising" },
+      ready: { variant: "default" as const, label: "Ready" },
+      listed: { variant: "default" as const, label: "Listed" },
+      sold: { variant: "outline" as const, label: "Sold" },
+      sacrificed: { variant: "outline" as const, label: "Sacrificed" },
+    };
+    return <Badge variant={config[status as keyof typeof config]?.variant || "secondary"}>{config[status as keyof typeof config]?.label || status}</Badge>;
+  };
 
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Animal Registry</h2>
+        <div>
+          <h2 className="text-2xl font-bold">Animal Registry</h2>
+          <p className="text-muted-foreground">Track all animals with marketplace integration</p>
+        </div>
         <Button>
           <Plus className="h-4 w-4 mr-2" />
           Register Animal
@@ -435,8 +585,7 @@ function AnimalsTab({ vendorDID }: { vendorDID: string }) {
       <Alert>
         <AlertCircle className="h-4 w-4" />
         <AlertDescription>
-          Animal registry allows you to track each animal with unique tag IDs. This ensures transparency and traceability
-          for waqf-funded animals.
+          Animals with &quot;ready&quot; status can be listed in the marketplace. Track lifecycle from raising to sale.
         </AlertDescription>
       </Alert>
 
@@ -449,9 +598,382 @@ function AnimalsTab({ vendorDID }: { vendorDID: string }) {
         </Card>
       ) : (
         <div className="grid gap-4">
-          {/* Animal cards would go here */}
-        </div>
+          {mockAnimals.map((animal) => (
+            <Card key={animal.id} className="hover:border-primary/50 transition-colors">
+              <CardHeader>
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <CardTitle className="text-lg">
+                        {animal.species === "kambing" ? "Kambing" : animal.species === "sapi" ? "Sapi" : "Domba"}{" "}
+                        {animal.breed}
+                      </CardTitle>
+                      {getLifecycleBadge(animal.currentStage)}
+                      {getMarketplaceBadge(animal.marketplaceStatus)}
+                    </div>
+                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                      <span className="flex items-center gap-1">
+                        <FileText className="h-3 w-3" />
+                        Tag: {animal.tagId}
+                      </span>
+                      <span>{animal.weight}kg</span>
+                      <span>{animal.age} months</span>
+                      {animal.marketplacePrice && (
+                        <span className="font-semibold text-foreground">${animal.marketplacePrice} USDT</span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    {animal.currentStage === "ready" && animal.marketplaceStatus === "not_listed" && (
+                      <Button size="sm" variant="default">
+                        <ShoppingCart className="h-3 w-3 mr-1" />
+                        List to Marketplace
+                      </Button>
+                    )}
+                    {animal.marketplaceStatus === "listed" && (
+                      <Button size="sm" variant="outline">
+                        <Eye className="h-3 w-3 mr-1" />
+                        View Listing
+                      </Button>
+                    )}
+                    <Button size="sm" variant="outline">
+                      <Edit className="h-3 w-3 mr-1" />
+                      Edit
+                    </Button>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                  <div>
+                    <Label className="text-muted-foreground">Health Status</Label>
+                    <p className="font-medium capitalize">{animal.healthStatus.status}</p>
+                  </div>
+                  <div>
+                    <Label className="text-muted-foreground">Farm ID</Label>
+                    <p className="font-medium">{animal.farmId}</p>
+                  </div>
+                  <div>
+                    <Label className="text-muted-foreground">Registered</Label>
+                    <p className="font-medium">{animal.registeredAt.toLocaleDateString()}</p>
+                  </div>
+                  <div>
+                    <Label className="text-muted-foreground">Waqf Funded</Label>
+                    <p className="font-medium">
+                      {animal.waqfFunded ? (
+                        <span className="text-green-600 flex items-center gap-1">
+                          <CheckCircle2 className="h-3 w-3" />
+                          Yes
+                        </span>
+                      ) : (
+                        <span className="text-muted-foreground">No</span>
+                      )}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}\n        </div>
       )}
+    </div>
+  );
+}
+
+// Marketplace Listings Tab
+function MarketplaceListingsTab({ vendorDID }: { vendorDID: string }) {
+  // Mock marketplace listings data
+  const [listings, setListings] = useState([
+    {
+      id: "listing-001",
+      animalId: "animal-001",
+      tagId: "KMB-2024-001",
+      species: "kambing" as const,
+      breed: "Etawa",
+      weight: 45,
+      age: 18,
+      price: 350,
+      status: "listed" as const,
+      listedDate: new Date("2024-12-15"),
+      views: 24,
+      interested: 3,
+    },
+    {
+      id: "listing-002",
+      animalId: "animal-002",
+      tagId: "SPI-2024-005",
+      species: "sapi" as const,
+      breed: "Limosin",
+      weight: 520,
+      age: 36,
+      price: 2800,
+      status: "reserved" as const,
+      listedDate: new Date("2024-12-10"),
+      reservedDate: new Date("2024-12-20"),
+      views: 45,
+      interested: 8,
+      customerDID: "did:tawf:0xcustomer1",
+    },
+    {
+      id: "listing-003",
+      animalId: "animal-003",
+      tagId: "KMB-2024-008",
+      species: "kambing" as const,
+      breed: "Boer",
+      weight: 52,
+      age: 20,
+      price: 400,
+      status: "sold" as const,
+      listedDate: new Date("2024-11-28"),
+      soldDate: new Date("2024-12-18"),
+      views: 67,
+      interested: 12,
+      customerDID: "did:tawf:0xcustomer2",
+      revenue: 400,
+    },
+  ]);
+
+  const totalRevenue = listings
+    .filter(l => l.status === "sold")
+    .reduce((sum, l) => sum + (l.revenue || 0), 0);
+  const activeListings = listings.filter(l => l.status === "listed").length;
+  const reservedListings = listings.filter(l => l.status === "reserved").length;
+  const totalSold = listings.filter(l => l.status === "sold").length;
+
+  const getStatusBadge = (status: "listed" | "reserved" | "sold") => {
+    const config = {
+      listed: { variant: "default" as const, label: "Active", className: "bg-blue-600" },
+      reserved: { variant: "secondary" as const, label: "Reserved", className: "bg-yellow-600" },
+      sold: { variant: "outline" as const, label: "Sold", className: "bg-green-600 text-white" },
+    };
+    return (
+      <Badge variant={config[status].variant} className={config[status].className}>
+        {config[status].label}
+      </Badge>
+    );
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="text-2xl font-bold">My Marketplace Listings</h2>
+          <p className="text-muted-foreground">Manage your animals listed in the Qurban marketplace</p>
+        </div>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              List New Animal
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>List Animal to Marketplace</DialogTitle>
+              <DialogDescription>
+                Select an animal from your registry to list in the Qurban marketplace
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <Alert>
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>
+                  Only animals with &quot;ready&quot; status can be listed. Go to Animal Registry to prepare animals.
+                </AlertDescription>
+              </Alert>
+              <div className="text-center py-4">
+                <p className="text-sm text-muted-foreground mb-4">
+                  This feature requires integration with your animal registry
+                </p>
+                <Button variant="outline">Go to Animal Registry</Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
+
+      {/* Performance Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card>
+          <CardHeader className="pb-3">
+            <CardDescription>Active Listings</CardDescription>
+            <CardTitle className="text-3xl flex items-center gap-2">
+              <ShoppingCart className="h-6 w-6 text-blue-600" />
+              {activeListings}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-xs text-muted-foreground">Available for purchase</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-3">
+            <CardDescription>Reserved</CardDescription>
+            <CardTitle className="text-3xl flex items-center gap-2">
+              <Clock className="h-6 w-6 text-yellow-600" />
+              {reservedListings}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-xs text-muted-foreground">Pending confirmation</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-3">
+            <CardDescription>Total Sold</CardDescription>
+            <CardTitle className="text-3xl flex items-center gap-2">
+              <CheckCircle2 className="h-6 w-6 text-green-600" />
+              {totalSold}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-xs text-muted-foreground">All time</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-3">
+            <CardDescription>Total Revenue</CardDescription>
+            <CardTitle className="text-3xl flex items-center gap-2">
+              <DollarSign className="h-6 w-6 text-emerald-600" />
+              ${totalRevenue}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-xs text-muted-foreground">USDT earned</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Listings Table */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Current Listings</CardTitle>
+          <CardDescription>Track performance and manage your marketplace animals</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {listings.length === 0 ? (
+            <div className="text-center py-12">
+              <Package className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+              <p className="text-muted-foreground mb-4">No animals listed yet</p>
+              <Button>List Your First Animal</Button>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {listings.map((listing) => (
+                <div
+                  key={listing.id}
+                  className="border rounded-lg p-4 hover:bg-accent/50 transition-colors"
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h3 className="font-semibold">
+                          {listing.species === "kambing" ? "Kambing" : listing.species === "sapi" ? "Sapi" : "Domba"}{" "}
+                          {listing.breed}
+                        </h3>
+                        {getStatusBadge(listing.status)}
+                      </div>
+                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                        <span className="flex items-center gap-1">
+                          <FileText className="h-3 w-3" />
+                          Tag: {listing.tagId}
+                        </span>
+                        <span>{listing.weight}kg</span>
+                        <span>{listing.age} months</span>
+                        <span className="font-semibold text-foreground">${listing.price} USDT</span>
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      {listing.status === "listed" && (
+                        <>
+                          <Button variant="outline" size="sm">
+                            <Edit className="h-3 w-3 mr-1" />
+                            Edit Price
+                          </Button>
+                          <Button variant="outline" size="sm">
+                            <XCircle className="h-3 w-3 mr-1" />
+                            Unlist
+                          </Button>
+                        </>
+                      )}
+                      <Button variant="outline" size="sm">
+                        <Eye className="h-3 w-3 mr-1" />
+                        Details
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Performance Stats */}
+                  <div className="flex items-center gap-6 pt-3 border-t">
+                    <div className="flex items-center gap-2 text-sm">
+                      <Eye className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-muted-foreground">Views:</span>
+                      <span className="font-medium">{listing.views}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm">
+                      <Award className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-muted-foreground">Interested:</span>
+                      <span className="font-medium">{listing.interested}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm">
+                      <Calendar className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-muted-foreground">Listed:</span>
+                      <span className="font-medium">{listing.listedDate.toLocaleDateString()}</span>
+                    </div>
+                    {listing.status === "reserved" && listing.reservedDate && (
+                      <div className="flex items-center gap-2 text-sm">
+                        <Clock className="h-4 w-4 text-yellow-600" />
+                        <span className="text-muted-foreground">Reserved:</span>
+                        <span className="font-medium">{listing.reservedDate.toLocaleDateString()}</span>
+                      </div>
+                    )}
+                    {listing.status === "sold" && listing.soldDate && (
+                      <div className="flex items-center gap-2 text-sm">
+                        <CheckCircle2 className="h-4 w-4 text-green-600" />
+                        <span className="text-muted-foreground">Sold:</span>
+                        <span className="font-medium">{listing.soldDate.toLocaleDateString()}</span>
+                        <span className="ml-2 font-semibold text-green-600">${listing.revenue} USDT</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Quick Actions */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <BarChart3 className="h-5 w-5" />
+            Listing Tips
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ul className="space-y-2 text-sm text-muted-foreground">
+            <li className="flex items-start gap-2">
+              <CheckCircle2 className="h-4 w-4 mt-0.5 text-green-600" />
+              <span>Animals with health certificates get 3x more views</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <CheckCircle2 className="h-4 w-4 mt-0.5 text-green-600" />
+              <span>Include clear photos and detailed descriptions to increase interest</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <CheckCircle2 className="h-4 w-4 mt-0.5 text-green-600" />
+              <span>Competitive pricing based on weight and breed attracts more buyers</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <CheckCircle2 className="h-4 w-4 mt-0.5 text-green-600" />
+              <span>Respond quickly to inquiries to improve your vendor rating</span>
+            </li>
+          </ul>
+        </CardContent>
+      </Card>
     </div>
   );
 }
