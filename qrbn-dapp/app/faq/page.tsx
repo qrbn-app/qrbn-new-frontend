@@ -47,24 +47,42 @@ const faqData: FAQItem[] = [
     category: "Getting Started"
   },
 
-  // Zakat
+  // Waqf
   {
-    id: "what-is-zakat",
-    question: "What is Zakat and how does it work on QRBN?",
-    answer: "Zakat is one of the Five Pillars of Islam, requiring Muslims to donate 2.5% of their wealth annually to help those in need. On QRBN, you can calculate your Zakat automatically and donate using USDT, with full transparency of how funds are distributed to verified recipients.",
-    category: "Zakat"
+    id: "what-is-waqf",
+    question: "What is Waqf for Kurban Farms?",
+    answer: "Waqf is an Islamic endowment where assets are permanently dedicated for charitable purposes. On QRBN, your waqf contribution supports verified kurban farms, helping farmers raise quality animals for qurban sacrifices while creating sustainable livelihoods and community impact.",
+    category: "Waqf"
   },
   {
-    id: "zakat-calculation",
-    question: "How is my Zakat calculated?",
-    answer: "Our smart contract automatically calculates 2.5% of your eligible wealth. You input your assets (cash, gold, silver, investments) and the system calculates the exact Zakat amount. The calculation follows traditional Islamic jurisprudence.",
-    category: "Zakat"
+    id: "how-waqf-works",
+    question: "How does Waqf for farms work on QRBN?",
+    answer: "You can browse verified farms and contribute directly to the ones you trust. Farms undergo off-chain pre-verification, then on-chain verification by DAO and Sharia Council. Your contribution helps farmers with operations, animal raising, and infrastructure. You receive an NFT certificate as proof of your waqf.",
+    category: "Waqf"
   },
   {
-    id: "zakat-recipients",
-    question: "Who receives my Zakat donations?",
-    answer: "Zakat is distributed to the eight categories mentioned in the Quran: the poor, the needy, Zakat administrators, those whose hearts are to be reconciled, slaves seeking freedom, debtors, those fighting in the way of Allah, and travelers in need. All recipients are verified through our partner organizations.",
-    category: "Zakat"
+    id: "waqf-fees-explained",
+    question: "What are the fees for Waqf contributions and are they Shariah compliant?",
+    answer: "Yes, all fees are Shariah compliant and transparently disclosed. There are two types: (1) Nazhir Management Fee (5-10%) for farm operations, coordination, reporting - this follows Indonesian Islamic finance regulations where nazhir (waqf manager) can receive up to 20% based on role complexity. (2) Service Fees (~$6 USDT) for platform tech, verification, NFT certificates, and monitoring. All fees are clearly separated from the waqf corpus per Islamic principles.",
+    category: "Waqf"
+  },
+  {
+    id: "waqf-nazhir-fee",
+    question: "What is the Nazhir fee and why is it charged?",
+    answer: "The Nazhir is the waqf manager who maintains and operates the endowment. In Indonesian Islamic finance regulation, nazhir fees of 5-10% (up to 20% for complex roles) are explicitly allowed in classical and modern fiqh. This fee covers: acting as fiduciary manager, operating the farm, coordinating slaughter and distribution, reporting and auditing, and administrative overhead.",
+    category: "Waqf"
+  },
+  {
+    id: "platform-revenue-waqf",
+    question: "How does QRBN make money if waqf is a permanent endowment?",
+    answer: "Very important: QRBN earns revenue from activities OUTSIDE the waqf corpus. These include: marketplace fees from qurban buyers (separate from waqf), premium verification services for farms, corporate qurban programs, data and reporting services, and future sukuk structuring. Platform revenue is completely separate from waqf contributions and does not affect the endowment.",
+    category: "Waqf"
+  },
+  {
+    id: "waqf-farm-verification",
+    question: "How are farms verified for waqf eligibility?",
+    answer: "Farms go through a multi-stage process: (1) Pre-verification - Farmers submit applications with documentation, undergoing initial off-chain screening. (2) Off-chain Verification - Platform team verifies credentials, certifications, and track record. (3) On-chain Verification - DAO and Sharia Council approve the farm on blockchain. (4) Active Recipient Status - Farm becomes eligible to receive waqf contributions with full transparency.",
+    category: "Waqf"
   },
 
   // Qurban
@@ -97,7 +115,7 @@ const faqData: FAQItem[] = [
   {
     id: "earning-tokens",
     question: "How do I earn QRBN tokens?",
-    answer: "You earn QRBN tokens by: making Zakat donations (1 QRBN per 1 USDT), participating in Qurban offerings, referring new users, participating in DAO governance, and completing certain platform milestones.",
+    answer: "You earn QRBN tokens by: making Waqf contributions (1 QRBN per 1 USDT), participating in Qurban offerings, referring new users, participating in DAO governance, and completing certain platform milestones.",
     category: "Tokens & Rewards"
   },
   {
@@ -172,7 +190,7 @@ const categories = Array.from(new Set(faqData.map(item => item.category)))
 
 const categoryIcons: Record<string, React.ReactNode> = {
   "Getting Started": <HelpCircle className="h-5 w-5" />,
-  "Zakat": <Heart className="h-5 w-5" />,
+  "Waqf": <Heart className="h-5 w-5" />,
   "Qurban": <Utensils className="h-5 w-5" />,
   "Tokens & Rewards": <Coins className="h-5 w-5" />,
   "DAO & Governance": <Users className="h-5 w-5" />,

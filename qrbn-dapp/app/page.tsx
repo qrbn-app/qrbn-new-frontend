@@ -54,18 +54,18 @@ export default function HomePage() {
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-[#f0fdf4]">Choose Your Path</h2>
 
           <div className="grid md:grid-cols-2 gap-8">
-            <Link href="/zakat">
+            <Link href="/waqf">
               <Card className="bg-[#0f2419] border-[#14532d] hover:border-[#d1b86a] transition-all duration-300 glow-shadow hover:scale-105 cursor-pointer">
                 <CardContent className="p-8 text-center">
                   <div className="text-6xl mb-6">🕋</div>
-                  <h3 className="text-2xl font-bold mb-4 text-[#f0fdf4]">Zakat</h3>
+                  <h3 className="text-2xl font-bold mb-4 text-[#f0fdf4]">Waqf</h3>
                   <p className="text-[#f0fdf4]/70 mb-6">
-                    Fulfill your religious obligation with transparent, blockchain-verified Zakat payments in USDT
+                    Support kurban farms through Islamic endowment (waqf) with transparent blockchain verification
                   </p>
                   <div className="space-y-2 text-sm text-[#d1b86a]">
-                    <div>• Zakat Maal & Zakat Fitrah</div>
-                    <div>• Built-in calculator</div>
-                    <div>• Impact tracking</div>
+                    <div>• Support verified farms</div>
+                    <div>• Sustainable impact</div>
+                    <div>• NFT certificates</div>
                   </div>
                 </CardContent>
               </Card>

@@ -63,8 +63,11 @@ export function Navigation() {
 					</Link>
 
 					<div className="hidden md:flex items-center space-x-8">
-						<Link href="/zakat" className="text-[#f0fdf4] hover:text-[#d1b86a] transition-colors">
-							Zakat
+						<Link href="/waqf" className="text-[#f0fdf4] hover:text-[#d1b86a] transition-colors">
+							Waqf
+						</Link>
+						<Link href="/waqf-farms" className="text-[#f0fdf4] hover:text-[#d1b86a] transition-colors">
+							Waqf Farms
 						</Link>
 						<Link href="/qurban" className="text-[#f0fdf4] hover:text-[#d1b86a] transition-colors">
 							Qurban
@@ -177,8 +180,11 @@ export function Navigation() {
 
 				{isOpen && (
 					<div className="md:hidden py-4 space-y-4">
-						<Link href="/zakat" className="block text-[#f0fdf4] hover:text-[#d1b86a]">
-							Zakat
+						<Link href="/waqf" className="block text-[#f0fdf4] hover:text-[#d1b86a]">
+							Waqf
+						</Link>
+						<Link href="/waqf-farms" className="block text-[#f0fdf4] hover:text-[#d1b86a]">
+							Waqf Farms
 						</Link>
 						<Link href="/qurban" className="block text-[#f0fdf4] hover:text-[#d1b86a]">
 							Qurban
