@@ -31,7 +31,7 @@ const faqData: FAQItem[] = [
   {
     id: "what-is-qrbn",
     question: "What is QRBN.app?",
-    answer: "QRBN.app is a blockchain-based Islamic finance platform that enables transparent and efficient donations for Zakat and Qurban (sacrificial offerings). We use smart contracts to ensure full transparency and proper distribution of funds according to Islamic principles.",
+    answer: "QRBN.app is TAWF Foundation's blockchain platform for transparent Qurban offerings and Waqf contributions to sustainable Qurban farms. We use smart contracts to ensure full transparency and Shariah compliance in supporting ethical livestock farming and community impact.",
     category: "Getting Started"
   },
   {
@@ -206,22 +206,22 @@ export default function FAQPage() {
     : faqData
 
   return (
-    <div className="min-h-screen islamic-pattern py-8 px-4">
+    <div className="min-h-screen bg-tawf-sand/30 py-12 px-4">
       <div className="max-w-4xl mx-auto">
         {/* Header Section */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-[#f0fdf4] mb-4">Frequently Asked Questions</h1>
-          <p className="text-[#f0fdf4]/70 max-w-2xl mx-auto">
-            Everything you need to know about using QRBN.app for Islamic donations, 
+          <h1 className="text-4xl md:text-5xl font-heading font-medium text-tawf-green mb-4">Frequently Asked Questions</h1>
+          <p className="text-tawf-muted max-w-2xl mx-auto">
+            Everything you need to know about QRBN.app for Qurban and Waqf contributions, 
             DAO governance, and blockchain-based religious observance.
           </p>
         </div>
 
         {/* Category Filter */}
-        <Card className="bg-[#0f2419] border-[#14532d] mb-8">
+        <Card className="bg-white border-tawf-green/10 rounded-2xl mb-8">
           <CardHeader>
-            <CardTitle className="text-[#f0fdf4] flex items-center gap-2">
-              <BookOpen className="h-5 w-5 text-[#d1b86a]" />
+            <CardTitle className="text-tawf-green font-heading flex items-center gap-2">
+              <BookOpen className="h-5 w-5 text-tawf-gold" />
               Browse by Category
             </CardTitle>
           </CardHeader>
@@ -229,10 +229,10 @@ export default function FAQPage() {
             <div className="flex flex-wrap gap-2">
               <Badge
                 variant={selectedCategory === null ? "default" : "secondary"}
-                className={`cursor-pointer transition-colors ${
+                className={`cursor-pointer transition-colors rounded-full ${
                   selectedCategory === null 
-                    ? "bg-[#d1b86a] text-[#071a12] hover:bg-[#d1b86a]/90" 
-                    : "bg-[#14532d] text-[#f0fdf4] hover:bg-[#1a3a1f]"
+                    ? "bg-tawf-gold text-white hover:bg-tawf-gold/90" 
+                    : "bg-tawf-sand/50 text-tawf-ink hover:bg-tawf-sand"
                 }`}
                 onClick={() => setSelectedCategory(null)}
               >
@@ -242,10 +242,10 @@ export default function FAQPage() {
                 <Badge
                   key={category}
                   variant={selectedCategory === category ? "default" : "secondary"}
-                  className={`cursor-pointer transition-colors flex items-center gap-1 ${
+                  className={`cursor-pointer transition-colors flex items-center gap-1 rounded-full ${
                     selectedCategory === category 
-                      ? "bg-[#d1b86a] text-[#071a12] hover:bg-[#d1b86a]/90" 
-                      : "bg-[#14532d] text-[#f0fdf4] hover:bg-[#1a3a1f]"
+                      ? "bg-tawf-gold text-white hover:bg-tawf-gold/90" 
+                      : "bg-tawf-sand/50 text-tawf-ink hover:bg-tawf-sand"
                   }`}
                   onClick={() => setSelectedCategory(category)}
                 >
@@ -258,24 +258,24 @@ export default function FAQPage() {
         </Card>
 
         {/* FAQ Accordion */}
-        <Card className="bg-[#0f2419] border-[#14532d] mb-8">
+        <Card className="bg-white border-tawf-green/10 rounded-2xl mb-8">
           <CardContent className="p-6">
             <Accordion type="single" collapsible className="space-y-4">
               {filteredFAQs.map((faq) => (
                 <AccordionItem 
                   key={faq.id} 
                   value={faq.id}
-                  className="border-[#14532d] bg-[#14532d]/20 rounded-lg px-4"
+                  className="border-tawf-green/10 bg-tawf-sand/30 rounded-xl px-4"
                 >
-                  <AccordionTrigger className="text-[#f0fdf4] hover:text-[#d1b86a] text-left">
+                  <AccordionTrigger className="text-tawf-ink hover:text-tawf-gold text-left">
                     <div className="flex items-start gap-3">
-                      <Badge variant="outline" className="bg-[#14532d] text-[#d1b86a] border-[#d1b86a]/30 shrink-0">
+                      <Badge variant="outline" className="bg-tawf-green/10 text-tawf-green border-tawf-green/20 shrink-0 rounded-full">
                         {faq.category}
                       </Badge>
                       <span>{faq.question}</span>
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className="text-[#f0fdf4]/70 pt-4 pl-16">
+                  <AccordionContent className="text-tawf-muted pt-4 pl-16">
                     {faq.answer}
                   </AccordionContent>
                 </AccordionItem>
@@ -284,42 +284,46 @@ export default function FAQPage() {
           </CardContent>
         </Card>
 
-        <Separator className="bg-[#14532d] my-8" />
+        <Separator className="bg-tawf-green/10 my-8" />
 
         {/* Additional Help Section */}
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-[#f0fdf4] mb-4">Still Need Help?</h2>
-          <p className="text-[#f0fdf4]/70 mb-6">
+          <h2 className="text-2xl md:text-3xl font-heading font-medium text-tawf-green mb-4">Still Need Help?</h2>
+          <p className="text-tawf-muted mb-6">
             Can't find the answer you're looking for? Get in touch with our support team.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
-            <Card className="bg-[#0f2419] border-[#14532d]">
+            <Card className="bg-white border-tawf-green/10 rounded-2xl hover:shadow-lg transition-shadow">
               <CardContent className="p-6 text-center">
-                <BookOpen className="h-8 w-8 text-[#d1b86a] mx-auto mb-3" />
-                <h3 className="text-[#f0fdf4] font-semibold mb-2">Documentation</h3>
-                <p className="text-[#f0fdf4]/70 text-sm mb-4">
+                <div className="w-12 h-12 bg-tawf-gold/10 rounded-xl flex items-center justify-center mx-auto mb-3">
+                  <BookOpen className="h-6 w-6 text-tawf-gold" />
+                </div>
+                <h3 className="text-tawf-green font-heading font-semibold mb-2">Documentation</h3>
+                <p className="text-tawf-muted text-sm mb-4">
                   Comprehensive guides and technical documentation
                 </p>
                 <button 
                   onClick={() => window.open("/docs", "_blank")}
-                  className="inline-flex items-center gap-2 text-[#d1b86a] hover:text-[#d1b86a]/80 text-sm"
+                  className="inline-flex items-center gap-2 text-tawf-gold hover:text-tawf-gold/80 text-sm font-medium"
                 >
                   View Docs <ExternalLink className="h-3 w-3" />
                 </button>
               </CardContent>
             </Card>
 
-            <Card className="bg-[#0f2419] border-[#14532d]">
+            <Card className="bg-white border-tawf-green/10 rounded-2xl hover:shadow-lg transition-shadow">
               <CardContent className="p-6 text-center">
-                <Users className="h-8 w-8 text-[#d1b86a] mx-auto mb-3" />
-                <h3 className="text-[#f0fdf4] font-semibold mb-2">Community Support</h3>
-                <p className="text-[#f0fdf4]/70 text-sm mb-4">
+                <div className="w-12 h-12 bg-tawf-green/10 rounded-xl flex items-center justify-center mx-auto mb-3">
+                  <Users className="h-6 w-6 text-tawf-green" />
+                </div>
+                <h3 className="text-tawf-green font-heading font-semibold mb-2">Community Support</h3>
+                <p className="text-tawf-muted text-sm mb-4">
                   Join our Discord community for help and discussions
                 </p>
                 <button 
                   onClick={() => window.open("https://discord.gg/UGzzJ8aR4x", "_blank")}
-                  className="inline-flex items-center gap-2 text-[#d1b86a] hover:text-[#d1b86a]/80 text-sm"
+                  className="inline-flex items-center gap-2 text-tawf-gold hover:text-tawf-gold/80 text-sm font-medium"
                 >
                   Join Discord <ExternalLink className="h-3 w-3" />
                 </button>

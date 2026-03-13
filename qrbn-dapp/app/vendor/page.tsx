@@ -12,14 +12,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
-import { Progress } from "@/components/ui/progress";
-import { 
-  CheckCircle2, 
-  XCircle, 
-  Clock, 
-  Building2, 
-  User, 
-  FileText, 
+import {
+  CheckCircle2,
+  XCircle,
+  Clock,
+  Building2,
+  User,
+  FileText,
   Plus,
   TrendingUp,
   Award,
@@ -42,7 +41,7 @@ export default function VendorDashboard() {
   const { address, isConnected } = useAccount();
   const { fetchVendorIdentity, loading: identityLoading } = useDIDIdentity(address);
   const { registerVendor, requestFarmRegistration, registering } = useDIDRegistration();
-  
+
   const [vendorData, setVendorData] = useState<VendorDIDData | null>(null);
   const [activeTab, setActiveTab] = useState("overview");
 
@@ -55,15 +54,15 @@ export default function VendorDashboard() {
   if (!isConnected) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <Card>
+        <Card className="border-tawf-green/10 bg-white">
           <CardHeader>
-            <CardTitle>Vendor Dashboard</CardTitle>
-            <CardDescription>Connect your wallet to access vendor features</CardDescription>
+            <CardTitle className="text-tawf-green font-heading">Vendor Dashboard</CardTitle>
+            <CardDescription className="text-tawf-muted">Connect your wallet to access vendor features</CardDescription>
           </CardHeader>
           <CardContent>
-            <Alert>
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>
+            <Alert className="border-tawf-green/20 bg-tawf-green/5">
+              <AlertCircle className="h-4 w-4 text-tawf-green" />
+              <AlertDescription className="text-tawf-ink">
                 Please connect your wallet to view your vendor dashboard.
               </AlertDescription>
             </Alert>
@@ -76,11 +75,11 @@ export default function VendorDashboard() {
   if (identityLoading) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <Card>
+        <Card className="border-tawf-green/10 bg-white">
           <CardContent className="py-12">
             <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-              <p className="text-muted-foreground">Loading vendor data...</p>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-tawf-green mx-auto mb-4"></div>
+              <p className="text-tawf-muted">Loading vendor data...</p>
             </div>
           </CardContent>
         </Card>
@@ -93,65 +92,67 @@ export default function VendorDashboard() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-12">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2">Vendor Dashboard</h1>
-        <p className="text-muted-foreground">Manage your farms, animals, and waqf proposals</p>
+        <h1 className="text-4xl md:text-5xl font-heading font-medium text-tawf-green mb-2">Vendor Dashboard</h1>
+        <p className="text-tawf-muted">Manage your farms, animals, and waqf proposals</p>
       </div>
 
       {/* DID Verification Status */}
-      <Card className="mb-6">
+      <Card className="mb-8 border-tawf-green/10 bg-white">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="flex items-center gap-2">
-                <Building2 className="h-5 w-5" />
+              <CardTitle className="flex items-center gap-3 text-tawf-green font-heading">
+                <div className="w-10 h-10 bg-tawf-green/10 rounded-full flex items-center justify-center">
+                  <Building2 className="h-5 w-5 text-tawf-green" />
+                </div>
                 {vendorData.businessInfo.businessName}
               </CardTitle>
-              <CardDescription className="mt-1">
+              <CardDescription className="mt-2 text-tawf-muted">
                 DID: {vendorData.did}
               </CardDescription>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               {vendorData.verified ? (
-                <Badge variant="default" className="gap-1">
+                <Badge className="bg-tawf-green/10 text-tawf-green border-0 gap-1">
                   <CheckCircle2 className="h-3 w-3" />
                   Verified
                 </Badge>
               ) : (
-                <Badge variant="secondary" className="gap-1">
+                <Badge className="bg-tawf-muted/20 text-tawf-muted border-0 gap-1">
                   <Clock className="h-3 w-3" />
                   Pending Verification
                 </Badge>
               )}
-              <Badge variant="outline">
+              <Badge variant="outline" className="border-tawf-green/20 text-tawf-ink">
                 Reputation: {vendorData.reputationScore}
               </Badge>
             </div>
           </div>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <MetricCard
-              icon={<TrendingUp className="h-4 w-4" />}
+              icon={<TrendingUp className="h-5 w-5 text-tawf-gold" />}
               label="Rating"
               value={`${vendorData.vendorMetrics.rating}/5.0`}
               subtext={`${vendorData.vendorMetrics.totalReviews} reviews`}
             />
             <MetricCard
-              icon={<Award className="h-4 w-4" />}
+              icon={<Award className="h-5 w-5 text-tawf-gold" />}
               label="Animals Sold"
               value={vendorData.vendorMetrics.totalAnimalsSold.toString()}
               subtext="Total lifetime"
             />
             <MetricCard
-              icon={<CheckCircle2 className="h-4 w-4" />}
+              icon={<CheckCircle2 className="h-5 w-5 text-tawf-green" />}
               label="Waqf Approved"
               value={vendorData.vendorMetrics.totalWaqfProposalsApproved.toString()}
               subtext={`${vendorData.vendorMetrics.totalWaqfProposalsRejected} rejected`}
             />
             <MetricCard
-              icon={<Clock className="h-4 w-4" />}
+              icon={<Clock className="h-5 w-5 text-tawf-green" />}
               label="Response Time"
               value={`${vendorData.vendorMetrics.averageResponseTime}h`}
               subtext="Average"
@@ -162,12 +163,12 @@ export default function VendorDashboard() {
 
       {/* Main Content Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="farms">Farms ({vendorData.farms.length})</TabsTrigger>
-          <TabsTrigger value="animals">Animal Registry</TabsTrigger>
-          <TabsTrigger value="marketplace">My Listings</TabsTrigger>
-          <TabsTrigger value="proposals">Waqf Proposals</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-5 bg-tawf-sand/50 border border-tawf-green/10 rounded-xl p-1">
+          <TabsTrigger value="overview" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-tawf-green">Overview</TabsTrigger>
+          <TabsTrigger value="farms" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-tawf-green">Farms ({vendorData.farms.length})</TabsTrigger>
+          <TabsTrigger value="animals" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-tawf-green">Animal Registry</TabsTrigger>
+          <TabsTrigger value="marketplace" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-tawf-green">My Listings</TabsTrigger>
+          <TabsTrigger value="proposals" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-tawf-green">Waqf Proposals</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="mt-6">
@@ -200,60 +201,62 @@ function VendorRegistrationFlow({ address }: { address: `0x${string}` }) {
   const { registerVendor, registering } = useDIDRegistration();
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-3xl">
-      <Card>
+    <div className="container mx-auto px-4 py-12 max-w-3xl">
+      <Card className="border-tawf-green/10 bg-white">
         <CardHeader>
-          <CardTitle>Become a Verified Vendor</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-tawf-green font-heading text-2xl">Become a Verified Vendor</CardTitle>
+          <CardDescription className="text-tawf-muted">
             Register your farm business to access vendor features
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <Alert>
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription>
+          <Alert className="border-tawf-green/20 bg-tawf-green/5">
+            <AlertCircle className="h-4 w-4 text-tawf-green" />
+            <AlertDescription className="text-tawf-ink">
               You need a verified TAWF DID to become a vendor. Complete the registration process to get started.
             </AlertDescription>
           </Alert>
 
-          <div className="space-y-4">
-            <div className="flex items-center gap-4">
-              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground">
+          <div className="space-y-6">
+            <div className="flex items-center gap-6">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-tawf-green text-tawf-sand font-heading font-semibold">
                 1
               </div>
               <div className="flex-1">
-                <h3 className="font-semibold">DID Registration</h3>
-                <p className="text-sm text-muted-foreground">Create your decentralized identity</p>
+                <h3 className="font-heading font-semibold text-tawf-green">DID Registration</h3>
+                <p className="text-sm text-tawf-muted">Create your decentralized identity</p>
               </div>
-              <CheckCircle2 className="h-5 w-5 text-green-500" />
+              <div className="w-8 h-8 bg-tawf-green/10 rounded-full flex items-center justify-center">
+                <CheckCircle2 className="h-5 w-5 text-tawf-green" />
+              </div>
             </div>
 
-            <Separator />
+            <Separator className="bg-tawf-green/10" />
 
-            <div className="flex items-center gap-4">
-              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-muted">
+            <div className="flex items-center gap-6">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-tawf-muted/20 text-tawf-muted font-heading font-semibold">
                 2
               </div>
               <div className="flex-1">
-                <h3 className="font-semibold">Business Verification</h3>
-                <p className="text-sm text-muted-foreground">Submit business documents for verification</p>
+                <h3 className="font-heading font-semibold text-tawf-ink">Business Verification</h3>
+                <p className="text-sm text-tawf-muted">Submit business documents for verification</p>
               </div>
             </div>
 
-            <Separator />
+            <Separator className="bg-tawf-green/10" />
 
-            <div className="flex items-center gap-4">
-              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-muted">
+            <div className="flex items-center gap-6">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-tawf-muted/20 text-tawf-muted font-heading font-semibold">
                 3
               </div>
               <div className="flex-1">
-                <h3 className="font-semibold">Farm Registration</h3>
-                <p className="text-sm text-muted-foreground">Register your farm locations</p>
+                <h3 className="font-heading font-semibold text-tawf-ink">Farm Registration</h3>
+                <p className="text-sm text-tawf-muted">Register your farm locations</p>
               </div>
             </div>
           </div>
 
-          <Button className="w-full" size="lg">
+          <Button className="w-full rounded-full" size="lg">
             Start Vendor Registration
           </Button>
         </CardContent>
@@ -266,33 +269,33 @@ function VendorRegistrationFlow({ address }: { address: `0x${string}` }) {
 function OverviewTab({ vendorData }: { vendorData: VendorDIDData }) {
   return (
     <div className="grid gap-6">
-      <Card>
+      <Card className="border-tawf-green/10 bg-white">
         <CardHeader>
-          <CardTitle>Business Information</CardTitle>
+          <CardTitle className="text-tawf-green font-heading">Business Information</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+        <CardContent className="space-y-5">
+          <div className="grid grid-cols-2 gap-6">
             <div>
-              <Label className="text-muted-foreground">Business Name</Label>
-              <p className="font-medium">{vendorData.businessInfo.businessName}</p>
+              <Label className="text-tawf-muted">Business Name</Label>
+              <p className="font-heading font-medium text-tawf-ink">{vendorData.businessInfo.businessName}</p>
             </div>
             <div>
-              <Label className="text-muted-foreground">Business Type</Label>
-              <p className="font-medium capitalize">{vendorData.businessInfo.businessType}</p>
+              <Label className="text-tawf-muted">Business Type</Label>
+              <p className="font-heading font-medium capitalize text-tawf-ink">{vendorData.businessInfo.businessType}</p>
             </div>
             <div>
-              <Label className="text-muted-foreground">Registration Number</Label>
-              <p className="font-medium">{vendorData.businessInfo.registrationNumber}</p>
+              <Label className="text-tawf-muted">Registration Number</Label>
+              <p className="font-heading font-medium text-tawf-ink">{vendorData.businessInfo.registrationNumber}</p>
             </div>
             <div>
-              <Label className="text-muted-foreground">Contact</Label>
-              <p className="font-medium">{vendorData.businessInfo.email}</p>
+              <Label className="text-tawf-muted">Contact</Label>
+              <p className="font-heading font-medium text-tawf-ink">{vendorData.businessInfo.email}</p>
             </div>
           </div>
-          <Separator />
+          <Separator className="bg-tawf-green/10" />
           <div>
-            <Label className="text-muted-foreground">Address</Label>
-            <p className="font-medium">
+            <Label className="text-tawf-muted">Address</Label>
+            <p className="font-heading font-medium text-tawf-ink">
               {vendorData.businessInfo.businessAddress.street}, {vendorData.businessInfo.businessAddress.city},{" "}
               {vendorData.businessInfo.businessAddress.province} {vendorData.businessInfo.businessAddress.postalCode}
             </p>
@@ -300,9 +303,9 @@ function OverviewTab({ vendorData }: { vendorData: VendorDIDData }) {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="border-tawf-green/10 bg-white">
         <CardHeader>
-          <CardTitle>Credentials</CardTitle>
+          <CardTitle className="text-tawf-green font-heading">Credentials</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
@@ -328,19 +331,19 @@ function OverviewTab({ vendorData }: { vendorData: VendorDIDData }) {
 // Farms Tab
 function FarmsTab({ farms }: { farms: RegisteredFarm[] }) {
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Registered Farms</h2>
+        <h2 className="text-2xl font-heading font-semibold text-tawf-green">Registered Farms</h2>
         <Dialog>
           <DialogTrigger asChild>
-            <Button>
+            <Button className="rounded-full">
               <Plus className="h-4 w-4 mr-2" />
               Register New Farm
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="border-tawf-green/10">
             <DialogHeader>
-              <DialogTitle>Register New Farm</DialogTitle>
+              <DialogTitle className="text-tawf-green font-heading">Register New Farm</DialogTitle>
               <DialogDescription>
                 Add a new farm location to your vendor profile
               </DialogDescription>
@@ -348,72 +351,72 @@ function FarmsTab({ farms }: { farms: RegisteredFarm[] }) {
             <div className="space-y-4">
               <div>
                 <Label>Farm Name</Label>
-                <Input placeholder="e.g., Peternakan Berkah Malang" />
+                <Input placeholder="e.g., Peternakan Berkah Malang" className="border-tawf-green/20" />
               </div>
               <div>
                 <Label>Location</Label>
-                <Input placeholder="City, Province" />
+                <Input placeholder="City, Province" className="border-tawf-green/20" />
               </div>
               <div>
                 <Label>Farm Size (hectares)</Label>
-                <Input type="number" placeholder="10" />
+                <Input type="number" placeholder="10" className="border-tawf-green/20" />
               </div>
               <div>
                 <Label>Animal Capacity</Label>
-                <Input type="number" placeholder="200" />
+                <Input type="number" placeholder="200" className="border-tawf-green/20" />
               </div>
-              <Button className="w-full">Submit for Verification</Button>
+              <Button className="w-full rounded-full">Submit for Verification</Button>
             </div>
           </DialogContent>
         </Dialog>
       </div>
 
-      <div className="grid gap-4">
+      <div className="grid gap-6">
         {farms.map((farm) => (
-          <Card key={farm.farmId}>
+          <Card key={farm.farmId} className="border-tawf-green/10 bg-white">
             <CardHeader>
               <div className="flex items-start justify-between">
                 <div>
-                  <CardTitle className="flex items-center gap-2">
+                  <CardTitle className="flex items-center gap-2 text-tawf-green font-heading">
                     {farm.farmName}
                     {farm.verified && (
-                      <Badge variant="default" className="gap-1">
+                      <Badge className="bg-tawf-green/10 text-tawf-green border-0 gap-1">
                         <CheckCircle2 className="h-3 w-3" />
                         Verified
                       </Badge>
                     )}
                   </CardTitle>
-                  <CardDescription className="flex items-center gap-2 mt-1">
+                  <CardDescription className="flex items-center gap-2 mt-2 text-tawf-muted">
                     <MapPin className="h-3 w-3" />
                     {farm.location}
                   </CardDescription>
                 </div>
-                <Badge variant={farm.status === "active" ? "default" : "secondary"}>
+                <Badge className={farm.status === "active" ? "bg-tawf-green/10 text-tawf-green border-0" : "bg-tawf-muted/20 text-tawf-muted border-0"}>
                   {farm.status}
                 </Badge>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-3 gap-6">
                 <div>
-                  <Label className="text-muted-foreground">Total Animals</Label>
-                  <p className="text-2xl font-bold">{farm.totalAnimals}</p>
+                  <Label className="text-tawf-muted">Total Animals</Label>
+                  <p className="text-2xl font-heading font-bold text-tawf-green">{farm.totalAnimals}</p>
                 </div>
                 <div>
-                  <Label className="text-muted-foreground">Waqf Received</Label>
-                  <p className="text-2xl font-bold">Rp {(farm.totalWaqfReceived / 1000000).toFixed(1)}M</p>
+                  <Label className="text-tawf-muted">Waqf Received</Label>
+                  <p className="text-2xl font-heading font-bold text-tawf-gold">Rp {(farm.totalWaqfReceived / 1000000).toFixed(1)}M</p>
                 </div>
                 <div>
-                  <Label className="text-muted-foreground">Registered</Label>
-                  <p className="text-sm">{new Date(farm.registeredAt).toLocaleDateString()}</p>
+                  <Label className="text-tawf-muted">Registered</Label>
+                  <p className="text-sm text-tawf-ink">{new Date(farm.registeredAt).toLocaleDateString()}</p>
                 </div>
               </div>
-              <div className="flex gap-2 mt-4">
-                <Button variant="outline" size="sm">
+              <div className="flex gap-3 mt-6">
+                <Button variant="outline" size="sm" className="rounded-full border-tawf-green/20 text-tawf-green hover:bg-tawf-green/10">
                   <Eye className="h-4 w-4 mr-2" />
                   View Details
                 </Button>
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" className="rounded-full border-tawf-green/20 text-tawf-green hover:bg-tawf-green/10">
                   <Edit className="h-4 w-4 mr-2" />
                   Edit
                 </Button>
@@ -538,16 +541,16 @@ function AnimalsTab({ vendorDID }: { vendorDID: string }) {
   const getMarketplaceBadge = (status?: string) => {
     if (!status || status === "not_listed") {
       return (
-        <Badge variant="outline" className="gap-1">
+        <Badge variant="outline" className="gap-1 border-tawf-green/20 text-tawf-ink">
           <Package className="h-3 w-3" />
           Not Listed
         </Badge>
       );
     }
     const config = {
-      listed: { className: "bg-blue-600 text-white", icon: <ShoppingCart className="h-3 w-3" />, label: "On Marketplace" },
-      reserved: { className: "bg-yellow-600 text-white", icon: <Clock className="h-3 w-3" />, label: "Reserved" },
-      sold: { className: "bg-green-600 text-white", icon: <CheckCircle2 className="h-3 w-3" />, label: "Sold" },
+      listed: { className: "bg-tawf-green text-tawf-sand border-0", icon: <ShoppingCart className="h-3 w-3" />, label: "On Marketplace" },
+      reserved: { className: "bg-tawf-gold text-tawf-sand border-0", icon: <Clock className="h-3 w-3" />, label: "Reserved" },
+      sold: { className: "bg-tawf-muted text-tawf-sand border-0", icon: <CheckCircle2 className="h-3 w-3" />, label: "Sold" },
     };
     const cfg = config[status as keyof typeof config];
     return (
@@ -570,48 +573,48 @@ function AnimalsTab({ vendorDID }: { vendorDID: string }) {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold">Animal Registry</h2>
-          <p className="text-muted-foreground">Track all animals with marketplace integration</p>
+          <h2 className="text-2xl font-heading font-semibold text-tawf-green">Animal Registry</h2>
+          <p className="text-tawf-muted">Track all animals with marketplace integration</p>
         </div>
-        <Button>
+        <Button className="rounded-full">
           <Plus className="h-4 w-4 mr-2" />
           Register Animal
         </Button>
       </div>
 
-      <Alert>
-        <AlertCircle className="h-4 w-4" />
-        <AlertDescription>
+      <Alert className="border-tawf-green/20 bg-tawf-green/5">
+        <AlertCircle className="h-4 w-4 text-tawf-green" />
+        <AlertDescription className="text-tawf-ink">
           Animals with &quot;ready&quot; status can be listed in the marketplace. Track lifecycle from raising to sale.
         </AlertDescription>
       </Alert>
 
       {mockAnimals.length === 0 ? (
-        <Card>
+        <Card className="border-tawf-green/10 bg-white">
           <CardContent className="py-12 text-center">
-            <p className="text-muted-foreground">No animals registered yet</p>
-            <Button className="mt-4">Register Your First Animal</Button>
+            <p className="text-tawf-muted mb-4">No animals registered yet</p>
+            <Button className="rounded-full">Register Your First Animal</Button>
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-4">
+        <div className="grid gap-6">
           {mockAnimals.map((animal) => (
-            <Card key={animal.id} className="hover:border-primary/50 transition-colors">
+            <Card key={animal.id} className="border-tawf-green/10 bg-white hover:border-tawf-gold/30 transition-colors">
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <CardTitle className="text-lg">
+                      <CardTitle className="text-lg text-tawf-green font-heading">
                         {animal.species === "kambing" ? "Kambing" : animal.species === "sapi" ? "Sapi" : "Domba"}{" "}
                         {animal.breed}
                       </CardTitle>
                       {getLifecycleBadge(animal.currentStage)}
                       {getMarketplaceBadge(animal.marketplaceStatus)}
                     </div>
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-4 text-sm text-tawf-muted">
                       <span className="flex items-center gap-1">
                         <FileText className="h-3 w-3" />
                         Tag: {animal.tagId}
@@ -619,24 +622,24 @@ function AnimalsTab({ vendorDID }: { vendorDID: string }) {
                       <span>{animal.weight}kg</span>
                       <span>{animal.age} months</span>
                       {animal.marketplacePrice && (
-                        <span className="font-semibold text-foreground">${animal.marketplacePrice} USDT</span>
+                        <span className="font-heading font-semibold text-tawf-gold">${animal.marketplacePrice} USDT</span>
                       )}
                     </div>
                   </div>
                   <div className="flex gap-2">
                     {animal.currentStage === "ready" && animal.marketplaceStatus === "not_listed" && (
-                      <Button size="sm" variant="default">
+                      <Button size="sm" className="rounded-full">
                         <ShoppingCart className="h-3 w-3 mr-1" />
                         List to Marketplace
                       </Button>
                     )}
                     {animal.marketplaceStatus === "listed" && (
-                      <Button size="sm" variant="outline">
+                      <Button size="sm" variant="outline" className="rounded-full border-tawf-green/20 text-tawf-green">
                         <Eye className="h-3 w-3 mr-1" />
                         View Listing
                       </Button>
                     )}
-                    <Button size="sm" variant="outline">
+                    <Button size="sm" variant="outline" className="rounded-full border-tawf-green/20 text-tawf-green">
                       <Edit className="h-3 w-3 mr-1" />
                       Edit
                     </Button>
@@ -646,34 +649,35 @@ function AnimalsTab({ vendorDID }: { vendorDID: string }) {
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                   <div>
-                    <Label className="text-muted-foreground">Health Status</Label>
-                    <p className="font-medium capitalize">{animal.healthStatus.status}</p>
+                    <Label className="text-tawf-muted">Health Status</Label>
+                    <p className="font-heading font-medium capitalize text-tawf-ink">{animal.healthStatus.status}</p>
                   </div>
                   <div>
-                    <Label className="text-muted-foreground">Farm ID</Label>
-                    <p className="font-medium">{animal.farmId}</p>
+                    <Label className="text-tawf-muted">Farm ID</Label>
+                    <p className="font-heading font-medium text-tawf-ink">{animal.farmId}</p>
                   </div>
                   <div>
-                    <Label className="text-muted-foreground">Registered</Label>
-                    <p className="font-medium">{animal.registeredAt.toLocaleDateString()}</p>
+                    <Label className="text-tawf-muted">Registered</Label>
+                    <p className="font-heading font-medium text-tawf-ink">{animal.registeredAt.toLocaleDateString()}</p>
                   </div>
                   <div>
-                    <Label className="text-muted-foreground">Waqf Funded</Label>
-                    <p className="font-medium">
+                    <Label className="text-tawf-muted">Waqf Funded</Label>
+                    <p className="font-heading font-medium">
                       {animal.waqfFunded ? (
-                        <span className="text-green-600 flex items-center gap-1">
+                        <span className="text-tawf-green flex items-center gap-1">
                           <CheckCircle2 className="h-3 w-3" />
                           Yes
                         </span>
                       ) : (
-                        <span className="text-muted-foreground">No</span>
+                        <span className="text-tawf-muted">No</span>
                       )}
                     </p>
                   </div>
                 </div>
               </CardContent>
             </Card>
-          ))}\n        </div>
+          ))}
+        </div>
       )}
     </div>
   );
@@ -741,9 +745,9 @@ function MarketplaceListingsTab({ vendorDID }: { vendorDID: string }) {
 
   const getStatusBadge = (status: "listed" | "reserved" | "sold") => {
     const config = {
-      listed: { variant: "default" as const, label: "Active", className: "bg-blue-600" },
-      reserved: { variant: "secondary" as const, label: "Reserved", className: "bg-yellow-600" },
-      sold: { variant: "outline" as const, label: "Sold", className: "bg-green-600 text-white" },
+      listed: { variant: "default" as const, label: "Active", className: "bg-tawf-green text-tawf-sand" },
+      reserved: { variant: "secondary" as const, label: "Reserved", className: "bg-tawf-gold text-tawf-sand" },
+      sold: { variant: "outline" as const, label: "Sold", className: "border-tawf-green/20 text-tawf-green" },
     };
     return (
       <Badge variant={config[status].variant} className={config[status].className}>
@@ -756,35 +760,35 @@ function MarketplaceListingsTab({ vendorDID }: { vendorDID: string }) {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold">My Marketplace Listings</h2>
-          <p className="text-muted-foreground">Manage your animals listed in the Qurban marketplace</p>
+          <h2 className="text-2xl font-heading font-semibold text-tawf-green">My Marketplace Listings</h2>
+          <p className="text-tawf-muted">Manage your animals listed in the Qurban marketplace</p>
         </div>
         <Dialog>
           <DialogTrigger asChild>
-            <Button>
+            <Button className="rounded-full">
               <Plus className="h-4 w-4 mr-2" />
               List New Animal
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="border-tawf-green/10">
             <DialogHeader>
-              <DialogTitle>List Animal to Marketplace</DialogTitle>
+              <DialogTitle className="text-tawf-green font-heading">List Animal to Marketplace</DialogTitle>
               <DialogDescription>
                 Select an animal from your registry to list in the Qurban marketplace
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
-              <Alert>
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription>
+              <Alert className="border-tawf-green/20 bg-tawf-green/5">
+                <AlertCircle className="h-4 w-4 text-tawf-green" />
+                <AlertDescription className="text-tawf-ink">
                   Only animals with &quot;ready&quot; status can be listed. Go to Animal Registry to prepare animals.
                 </AlertDescription>
               </Alert>
               <div className="text-center py-4">
-                <p className="text-sm text-muted-foreground mb-4">
+                <p className="text-sm text-tawf-muted mb-4">
                   This feature requires integration with your animal registry
                 </p>
-                <Button variant="outline">Go to Animal Registry</Button>
+                <Button variant="outline" className="rounded-full border-tawf-green/20 text-tawf-green">Go to Animal Registry</Button>
               </div>
             </div>
           </DialogContent>
@@ -792,113 +796,113 @@ function MarketplaceListingsTab({ vendorDID }: { vendorDID: string }) {
       </div>
 
       {/* Performance Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <Card className="border-tawf-green/10 bg-white">
           <CardHeader className="pb-3">
-            <CardDescription>Active Listings</CardDescription>
-            <CardTitle className="text-3xl flex items-center gap-2">
-              <ShoppingCart className="h-6 w-6 text-blue-600" />
+            <CardDescription className="text-tawf-muted">Active Listings</CardDescription>
+            <CardTitle className="text-3xl flex items-center gap-2 text-tawf-green font-heading">
+              <ShoppingCart className="h-6 w-6" />
               {activeListings}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-xs text-muted-foreground">Available for purchase</p>
+            <p className="text-xs text-tawf-muted">Available for purchase</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-tawf-green/10 bg-white">
           <CardHeader className="pb-3">
-            <CardDescription>Reserved</CardDescription>
-            <CardTitle className="text-3xl flex items-center gap-2">
-              <Clock className="h-6 w-6 text-yellow-600" />
+            <CardDescription className="text-tawf-muted">Reserved</CardDescription>
+            <CardTitle className="text-3xl flex items-center gap-2 text-tawf-gold font-heading">
+              <Clock className="h-6 w-6" />
               {reservedListings}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-xs text-muted-foreground">Pending confirmation</p>
+            <p className="text-xs text-tawf-muted">Pending confirmation</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-tawf-green/10 bg-white">
           <CardHeader className="pb-3">
-            <CardDescription>Total Sold</CardDescription>
-            <CardTitle className="text-3xl flex items-center gap-2">
-              <CheckCircle2 className="h-6 w-6 text-green-600" />
+            <CardDescription className="text-tawf-muted">Total Sold</CardDescription>
+            <CardTitle className="text-3xl flex items-center gap-2 text-tawf-green font-heading">
+              <CheckCircle2 className="h-6 w-6" />
               {totalSold}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-xs text-muted-foreground">All time</p>
+            <p className="text-xs text-tawf-muted">All time</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-tawf-green/10 bg-white">
           <CardHeader className="pb-3">
-            <CardDescription>Total Revenue</CardDescription>
-            <CardTitle className="text-3xl flex items-center gap-2">
-              <DollarSign className="h-6 w-6 text-emerald-600" />
+            <CardDescription className="text-tawf-muted">Total Revenue</CardDescription>
+            <CardTitle className="text-3xl flex items-center gap-2 text-tawf-green font-heading">
+              <DollarSign className="h-6 w-6" />
               ${totalRevenue}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-xs text-muted-foreground">USDT earned</p>
+            <p className="text-xs text-tawf-muted">USDT earned</p>
           </CardContent>
         </Card>
       </div>
 
       {/* Listings Table */}
-      <Card>
+      <Card className="border-tawf-green/10 bg-white">
         <CardHeader>
-          <CardTitle>Current Listings</CardTitle>
-          <CardDescription>Track performance and manage your marketplace animals</CardDescription>
+          <CardTitle className="text-tawf-green font-heading">Current Listings</CardTitle>
+          <CardDescription className="text-tawf-muted">Track performance and manage your marketplace animals</CardDescription>
         </CardHeader>
         <CardContent>
           {listings.length === 0 ? (
             <div className="text-center py-12">
-              <Package className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-              <p className="text-muted-foreground mb-4">No animals listed yet</p>
-              <Button>List Your First Animal</Button>
+              <Package className="h-12 w-12 mx-auto text-tawf-muted mb-4" />
+              <p className="text-tawf-muted mb-4">No animals listed yet</p>
+              <Button className="rounded-full">List Your First Animal</Button>
             </div>
           ) : (
             <div className="space-y-4">
               {listings.map((listing) => (
                 <div
                   key={listing.id}
-                  className="border rounded-lg p-4 hover:bg-accent/50 transition-colors"
+                  className="border border-tawf-green/10 rounded-2xl p-5 hover:bg-tawf-sand/50 transition-colors"
                 >
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <h3 className="font-semibold">
+                        <h3 className="font-heading font-semibold text-tawf-green">
                           {listing.species === "kambing" ? "Kambing" : listing.species === "sapi" ? "Sapi" : "Domba"}{" "}
                           {listing.breed}
                         </h3>
                         {getStatusBadge(listing.status)}
                       </div>
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                      <div className="flex items-center gap-4 text-sm text-tawf-muted">
                         <span className="flex items-center gap-1">
                           <FileText className="h-3 w-3" />
                           Tag: {listing.tagId}
                         </span>
                         <span>{listing.weight}kg</span>
                         <span>{listing.age} months</span>
-                        <span className="font-semibold text-foreground">${listing.price} USDT</span>
+                        <span className="font-heading font-semibold text-tawf-gold">${listing.price} USDT</span>
                       </div>
                     </div>
                     <div className="flex gap-2">
                       {listing.status === "listed" && (
                         <>
-                          <Button variant="outline" size="sm">
+                          <Button variant="outline" size="sm" className="rounded-full border-tawf-green/20 text-tawf-green">
                             <Edit className="h-3 w-3 mr-1" />
                             Edit Price
                           </Button>
-                          <Button variant="outline" size="sm">
+                          <Button variant="outline" size="sm" className="rounded-full border-tawf-green/20 text-tawf-green">
                             <XCircle className="h-3 w-3 mr-1" />
                             Unlist
                           </Button>
                         </>
                       )}
-                      <Button variant="outline" size="sm">
+                      <Button variant="outline" size="sm" className="rounded-full border-tawf-green/20 text-tawf-green">
                         <Eye className="h-3 w-3 mr-1" />
                         Details
                       </Button>
@@ -906,35 +910,35 @@ function MarketplaceListingsTab({ vendorDID }: { vendorDID: string }) {
                   </div>
 
                   {/* Performance Stats */}
-                  <div className="flex items-center gap-6 pt-3 border-t">
+                  <div className="flex items-center gap-6 pt-4 border-t border-tawf-green/10">
                     <div className="flex items-center gap-2 text-sm">
-                      <Eye className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-muted-foreground">Views:</span>
-                      <span className="font-medium">{listing.views}</span>
+                      <Eye className="h-4 w-4 text-tawf-muted" />
+                      <span className="text-tawf-muted">Views:</span>
+                      <span className="font-heading font-medium text-tawf-ink">{listing.views}</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm">
-                      <Award className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-muted-foreground">Interested:</span>
-                      <span className="font-medium">{listing.interested}</span>
+                      <Award className="h-4 w-4 text-tawf-muted" />
+                      <span className="text-tawf-muted">Interested:</span>
+                      <span className="font-heading font-medium text-tawf-ink">{listing.interested}</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm">
-                      <Calendar className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-muted-foreground">Listed:</span>
-                      <span className="font-medium">{listing.listedDate.toLocaleDateString()}</span>
+                      <Calendar className="h-4 w-4 text-tawf-muted" />
+                      <span className="text-tawf-muted">Listed:</span>
+                      <span className="font-heading font-medium text-tawf-ink">{listing.listedDate.toLocaleDateString()}</span>
                     </div>
                     {listing.status === "reserved" && listing.reservedDate && (
                       <div className="flex items-center gap-2 text-sm">
-                        <Clock className="h-4 w-4 text-yellow-600" />
-                        <span className="text-muted-foreground">Reserved:</span>
-                        <span className="font-medium">{listing.reservedDate.toLocaleDateString()}</span>
+                        <Clock className="h-4 w-4 text-tawf-gold" />
+                        <span className="text-tawf-muted">Reserved:</span>
+                        <span className="font-heading font-medium text-tawf-ink">{listing.reservedDate.toLocaleDateString()}</span>
                       </div>
                     )}
                     {listing.status === "sold" && listing.soldDate && (
                       <div className="flex items-center gap-2 text-sm">
-                        <CheckCircle2 className="h-4 w-4 text-green-600" />
-                        <span className="text-muted-foreground">Sold:</span>
-                        <span className="font-medium">{listing.soldDate.toLocaleDateString()}</span>
-                        <span className="ml-2 font-semibold text-green-600">${listing.revenue} USDT</span>
+                        <CheckCircle2 className="h-4 w-4 text-tawf-green" />
+                        <span className="text-tawf-muted">Sold:</span>
+                        <span className="font-heading font-medium text-tawf-ink">{listing.soldDate.toLocaleDateString()}</span>
+                        <span className="ml-2 font-heading font-semibold text-tawf-green">${listing.revenue} USDT</span>
                       </div>
                     )}
                   </div>
@@ -946,29 +950,37 @@ function MarketplaceListingsTab({ vendorDID }: { vendorDID: string }) {
       </Card>
 
       {/* Quick Actions */}
-      <Card>
+      <Card className="border-tawf-green/10 bg-white">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <BarChart3 className="h-5 w-5" />
+          <CardTitle className="flex items-center gap-2 text-tawf-green font-heading">
+            <BarChart3 className="h-5 w-5 text-tawf-gold" />
             Listing Tips
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <ul className="space-y-2 text-sm text-muted-foreground">
-            <li className="flex items-start gap-2">
-              <CheckCircle2 className="h-4 w-4 mt-0.5 text-green-600" />
+          <ul className="space-y-3 text-sm text-tawf-muted">
+            <li className="flex items-start gap-3">
+              <div className="w-6 h-6 bg-tawf-green/10 rounded-full flex items-center justify-center flex-shrink-0">
+                <CheckCircle2 className="h-3 w-3 text-tawf-green" />
+              </div>
               <span>Animals with health certificates get 3x more views</span>
             </li>
-            <li className="flex items-start gap-2">
-              <CheckCircle2 className="h-4 w-4 mt-0.5 text-green-600" />
+            <li className="flex items-start gap-3">
+              <div className="w-6 h-6 bg-tawf-green/10 rounded-full flex items-center justify-center flex-shrink-0">
+                <CheckCircle2 className="h-3 w-3 text-tawf-green" />
+              </div>
               <span>Include clear photos and detailed descriptions to increase interest</span>
             </li>
-            <li className="flex items-start gap-2">
-              <CheckCircle2 className="h-4 w-4 mt-0.5 text-green-600" />
+            <li className="flex items-start gap-3">
+              <div className="w-6 h-6 bg-tawf-green/10 rounded-full flex items-center justify-center flex-shrink-0">
+                <CheckCircle2 className="h-3 w-3 text-tawf-green" />
+              </div>
               <span>Competitive pricing based on weight and breed attracts more buyers</span>
             </li>
-            <li className="flex items-start gap-2">
-              <CheckCircle2 className="h-4 w-4 mt-0.5 text-green-600" />
+            <li className="flex items-start gap-3">
+              <div className="w-6 h-6 bg-tawf-green/10 rounded-full flex items-center justify-center flex-shrink-0">
+                <CheckCircle2 className="h-3 w-3 text-tawf-green" />
+              </div>
               <span>Respond quickly to inquiries to improve your vendor rating</span>
             </li>
           </ul>
@@ -981,26 +993,26 @@ function MarketplaceListingsTab({ vendorDID }: { vendorDID: string }) {
 // Proposals Tab
 function ProposalsTab({ vendorDID }: { vendorDID: string }) {
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Waqf Proposals</h2>
-        <Button>
+        <h2 className="text-2xl font-heading font-semibold text-tawf-green">Waqf Proposals</h2>
+        <Button className="rounded-full">
           <Plus className="h-4 w-4 mr-2" />
           Create Proposal
         </Button>
       </div>
 
-      <Alert>
-        <AlertDescription>
+      <Alert className="border-tawf-green/20 bg-tawf-green/5">
+        <AlertDescription className="text-tawf-ink">
           Submit waqf proposals to request funding for raising animals. Proposals go through dual-gate approval:
           Community DAO vote + ZK Sharia Council review.
         </AlertDescription>
       </Alert>
 
-      <Card>
+      <Card className="border-tawf-green/10 bg-white">
         <CardContent className="py-12 text-center">
-          <p className="text-muted-foreground">No proposals yet</p>
-          <Button className="mt-4">Create Your First Proposal</Button>
+          <p className="text-tawf-muted">No proposals yet</p>
+          <Button className="mt-4 rounded-full">Create Your First Proposal</Button>
         </CardContent>
       </Card>
     </div>
@@ -1010,12 +1022,12 @@ function ProposalsTab({ vendorDID }: { vendorDID: string }) {
 // Helper Components
 function MetricCard({ icon, label, value, subtext }: { icon: React.ReactNode; label: string; value: string; subtext: string }) {
   return (
-    <div className="flex items-start gap-3">
-      <div className="p-2 bg-muted rounded-lg">{icon}</div>
+    <div className="flex items-start gap-4 bg-tawf-sand/30 rounded-2xl p-5">
+      <div className="p-3 bg-white rounded-xl shadow-sm">{icon}</div>
       <div>
-        <p className="text-sm text-muted-foreground">{label}</p>
-        <p className="text-2xl font-bold">{value}</p>
-        <p className="text-xs text-muted-foreground">{subtext}</p>
+        <p className="text-sm text-tawf-muted uppercase tracking-wider">{label}</p>
+        <p className="text-2xl font-heading font-bold text-tawf-green">{value}</p>
+        <p className="text-xs text-tawf-muted">{subtext}</p>
       </div>
     </div>
   );
@@ -1023,17 +1035,17 @@ function MetricCard({ icon, label, value, subtext }: { icon: React.ReactNode; la
 
 function CredentialItem({ name, status, issuedAt }: { name: string; status: string; issuedAt: Date }) {
   return (
-    <div className="flex items-center justify-between p-3 border rounded-lg">
+    <div className="flex items-center justify-between p-4 border border-tawf-green/10 rounded-xl bg-tawf-sand/30">
       <div className="flex items-center gap-3">
-        <FileText className="h-5 w-5 text-muted-foreground" />
+        <FileText className="h-5 w-5 text-tawf-green" />
         <div>
-          <p className="font-medium">{name}</p>
-          <p className="text-sm text-muted-foreground">
+          <p className="font-heading font-medium text-tawf-ink">{name}</p>
+          <p className="text-sm text-tawf-muted">
             Issued: {new Date(issuedAt).toLocaleDateString()}
           </p>
         </div>
       </div>
-      <Badge variant="default" className="gap-1">
+      <Badge className="bg-tawf-green/10 text-tawf-green border-0 gap-1">
         <CheckCircle2 className="h-3 w-3" />
         {status}
       </Badge>

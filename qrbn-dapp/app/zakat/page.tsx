@@ -39,8 +39,8 @@ export default function ZakatPage() {
 			<div className="max-w-6xl mx-auto">
 				{/* Header */}
 				<div className="text-center mb-8">
-					<h1 className="text-4xl font-bold text-[#f0fdf4] mb-4">Zakat Donation</h1>
-					<p className="text-[#f0fdf4]/70">Fulfill your religious obligation with transparency</p>
+					<h1 className="text-4xl font-bold text-[tawf-ink] mb-4">Zakat Donation</h1>
+					<p className="text-[tawf-ink]/70">Fulfill your religious obligation with transparency</p>
 				</div>
 
 				<div className="grid lg:grid-cols-3 gap-8">
@@ -49,40 +49,40 @@ export default function ZakatPage() {
 						{/* Advanced Options */}
 						{/* <div className="mb-6">
 							<div className="flex items-center justify-between">
-								<h3 className="text-lg font-semibold text-[#f0fdf4]">Islamic Jurisprudence Settings</h3>
+								<h3 className="text-lg font-semibold text-[tawf-ink]">Islamic Jurisprudence Settings</h3>
 								<Button
 									variant="ghost"
 									size="sm"
 									onClick={() => setShowAdvancedOptions(!showAdvancedOptions)}
-									className="text-[#d1b86a] hover:bg-[#14532d]/20"
+									className="text-[tawf-gold] hover:bg-[tawf-green/10]/20"
 								>
 									{showAdvancedOptions ? "Hide Advanced" : "Show Advanced"}
 								</Button>
 							</div>
 
 							{showAdvancedOptions && (
-								<Card className="mt-4 bg-[#0f2419] border-[#14532d]">
+								<Card className="mt-4 bg-[white] border-[tawf-green/10]">
 									<CardContent className="pt-6">
 										<div>
-											<Label htmlFor="islamicPath" className="text-[#f0fdf4]">
+											<Label htmlFor="islamicPath" className="text-[tawf-ink]">
 												Islamic Jurisprudence School
 											</Label>
 											<Select value={selectedIslamicPath.id} onValueChange={onSelectIslamicPath}>
-												<SelectTrigger className="bg-[#14532d] border-[#14532d] text-[#f0fdf4] mt-2">
+												<SelectTrigger className="bg-[tawf-green/10] border-[tawf-green/10] text-[tawf-ink] mt-2">
 													<SelectValue>{selectedIslamicPath.name}</SelectValue>
 												</SelectTrigger>
-												<SelectContent className="bg-[#0f2419] border-[#14532d]">
+												<SelectContent className="bg-[white] border-[tawf-green/10]">
 													{islamicPaths.map((path) => (
-														<SelectItem key={path.id} value={path.id} className="text-[#f0fdf4] hover:bg-[#14532d]">
+														<SelectItem key={path.id} value={path.id} className="text-[tawf-ink] hover:bg-[tawf-green/10]">
 															<div>
 																<div className="font-medium">{path.name}</div>
-																<div className="text-xs text-[#f0fdf4]/60">{path.description}</div>
+																<div className="text-xs text-[tawf-ink]/60">{path.description}</div>
 															</div>
 														</SelectItem>
 													))}
 												</SelectContent>
 											</Select>
-											<p className="text-xs text-[#f0fdf4]/50 mt-2">
+											<p className="text-xs text-[tawf-ink]/50 mt-2">
 												Different Islamic schools may have slight variations in zakat calculations and interpretations.
 											</p>
 										</div>
@@ -92,11 +92,11 @@ export default function ZakatPage() {
 						</div> */}
 
 						<Tabs defaultValue="maal" className="space-y-6">
-							<TabsList className="grid w-full grid-cols-2 bg-[#0f2419] border border-[#14532d]">
-								<TabsTrigger value="maal" className="data-[state=active]:bg-[#14532d] data-[state=active]:text-[#d1b86a]">
+							<TabsList className="grid w-full grid-cols-2 bg-[white] border border-[tawf-green/10]">
+								<TabsTrigger value="maal" className="data-[state=active]:bg-[tawf-green/10] data-[state=active]:text-[tawf-gold]">
 									Wealth Zakat
 								</TabsTrigger>
-								<TabsTrigger value="fitrah" className="data-[state=active]:bg-[#14532d] data-[state=active]:text-[#d1b86a]">
+								<TabsTrigger value="fitrah" className="data-[state=active]:bg-[tawf-green/10] data-[state=active]:text-[tawf-gold]">
 									Fitrah Zakat
 								</TabsTrigger>
 							</TabsList>
@@ -104,11 +104,11 @@ export default function ZakatPage() {
 							<TabsContent value="maal">
 								{/* Gold Price and Nisab Information */}
 								<div className="mb-6">
-									<Card className="bg-[#0f2419] border-[#14532d]">
+									<Card className="bg-[white] border-[tawf-green/10]">
 										<CardContent className="pt-6">
 											<div className="flex items-center justify-between mb-4">
-												<h3 className="text-lg font-semibold text-[#f0fdf4] flex items-center">
-													<Wallet className="h-5 w-5 mr-2 text-[#d1b86a]" />
+												<h3 className="text-lg font-semibold text-[tawf-ink] flex items-center">
+													<Wallet className="h-5 w-5 mr-2 text-[tawf-gold]" />
 													Live Nisab Threshold
 												</h3>
 												<Button
@@ -116,7 +116,7 @@ export default function ZakatPage() {
 													size="sm"
 													onClick={fetchGoldPrice}
 													disabled={goldPriceLoading}
-													className="text-[#d1b86a] hover:bg-[#14532d]/20"
+													className="text-[tawf-gold] hover:bg-[tawf-green/10]/20"
 												>
 													{goldPriceLoading ? (
 														<>
@@ -130,9 +130,9 @@ export default function ZakatPage() {
 											</div>
 
 											<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-												<div className="text-center p-3 bg-[#14532d]/30 rounded-lg border border-[#14532d]">
-													<div className="text-sm text-[#f0fdf4]/60">Current Gold Price</div>
-													<div className="text-lg font-semibold text-[#d1b86a]">${goldPriceUSD.toFixed(2)}/oz</div>
+												<div className="text-center p-3 bg-[tawf-green/10]/30 rounded-lg border border-[tawf-green/10]">
+													<div className="text-sm text-[tawf-ink]/60">Current Gold Price</div>
+													<div className="text-lg font-semibold text-[tawf-gold]">${goldPriceUSD.toFixed(2)}/oz</div>
 													{/* {!isUsingLiveData && (
 														<Badge variant="secondary" className="mt-1 text-xs bg-yellow-600/20 text-yellow-300">
 															Fallback
@@ -144,21 +144,21 @@ export default function ZakatPage() {
 														</Badge>
 													)}
 												</div>{" "}
-												<div className="text-center p-3 bg-[#14532d]/30 rounded-lg border border-[#14532d]">
-													<div className="text-sm text-[#f0fdf4]/60">Nisab (85g Gold)</div>
-													<div className="text-lg font-semibold text-[#d1b86a]">
+												<div className="text-center p-3 bg-[tawf-green/10]/30 rounded-lg border border-[tawf-green/10]">
+													<div className="text-sm text-[tawf-ink]/60">Nisab (85g Gold)</div>
+													<div className="text-lg font-semibold text-[tawf-gold]">
 														{formatCurrency(convertToSelectedCurrency(nisabThreshold))}
 													</div>
 												</div>
-												<div className="text-center p-3 bg-[#14532d]/30 rounded-lg border border-[#14532d]">
-													<div className="text-sm text-[#f0fdf4]/60">Zakat Rate</div>
-													<div className="text-lg font-semibold text-[#d1b86a]">
+												<div className="text-center p-3 bg-[tawf-green/10]/30 rounded-lg border border-[tawf-green/10]">
+													<div className="text-sm text-[tawf-ink]/60">Zakat Rate</div>
+													<div className="text-lg font-semibold text-[tawf-gold]">
 														{zakatCalculations.getCurrentZakatType().rate}%
 													</div>
 												</div>
 											</div>
 
-											<p className="text-xs text-[#f0fdf4]/50 mt-4 text-center">
+											<p className="text-xs text-[tawf-ink]/50 mt-4 text-center">
 												Nisab threshold is calculated based on {isUsingLiveData ? "live" : "fallback"} gold prices (85 grams
 												of gold) {isUsingLiveData ? "and updates every 5 minutes" : "from goldapi.io"}. Values are displayed
 												in {currency} for your convenience.
@@ -166,31 +166,31 @@ export default function ZakatPage() {
 										</CardContent>
 									</Card>
 								</div>
-								<Card className="bg-[#0f2419] border-[#14532d]">
+								<Card className="bg-[white] border-[tawf-green/10]">
 									<CardHeader>
-										<CardTitle className="text-[#f0fdf4] flex items-center">
-											<Calculator className="h-5 w-5 mr-2 text-[#d1b86a]" />
+										<CardTitle className="text-[tawf-ink] flex items-center">
+											<Calculator className="h-5 w-5 mr-2 text-[tawf-gold]" />
 											Wealth Zakat Calculator
 										</CardTitle>
 									</CardHeader>
 									<CardContent className="space-y-6">
 										<div>
-											<Label htmlFor="zakatType" className="text-[#f0fdf4]">
+											<Label htmlFor="zakatType" className="text-[tawf-ink]">
 												Zakat Type
 											</Label>
 											<Select
 												value={zakatCalculations.selectedZakatType.id}
 												onValueChange={zakatCalculations.onSelectZakatType}
 											>
-												<SelectTrigger className="bg-[#14532d] border-[#14532d] text-[#f0fdf4] mt-2 text-left">
+												<SelectTrigger className="bg-[tawf-green/10] border-[tawf-green/10] text-[tawf-ink] mt-2 text-left">
 													<div>{zakatCalculations.selectedZakatType.name}</div>
 												</SelectTrigger>
-												<SelectContent className="bg-[#0f2419] border-[#14532d]">
+												<SelectContent className="bg-[white] border-[tawf-green/10]">
 													{zakatCalculations.zakatTypes.map((type) => (
-														<SelectItem key={type.id} value={type.id} className="text-[#f0fdf4] hover:bg-[#14532d]">
+														<SelectItem key={type.id} value={type.id} className="text-[tawf-ink] hover:bg-[tawf-green/10]">
 															<div>
 																<div className="font-medium">{type.name}</div>
-																<div className="text-xs text-[#f0fdf4]/60">{type.description}</div>
+																<div className="text-xs text-[tawf-ink]/60">{type.description}</div>
 															</div>
 														</SelectItem>
 													))}
@@ -203,7 +203,7 @@ export default function ZakatPage() {
 											<div className="space-y-6">
 												{/* Income Type Selection */}
 												<div>
-													<Label className="text-[#f0fdf4] font-semibold mb-3 block">Income Calculation Period</Label>
+													<Label className="text-[tawf-ink] font-semibold mb-3 block">Income Calculation Period</Label>
 													<RadioGroup
 														value={zakatCalculations.incomeType}
 														onValueChange={zakatCalculations.setIncomeType}
@@ -213,15 +213,15 @@ export default function ZakatPage() {
 															<RadioGroupItem
 																value="monthly"
 																id="monthly"
-																className="border-[#d1b86a] text-[#d1b86a]"
+																className="border-[tawf-gold] text-[tawf-gold]"
 															/>
-															<Label htmlFor="monthly" className="text-[#f0fdf4] cursor-pointer">
+															<Label htmlFor="monthly" className="text-[tawf-ink] cursor-pointer">
 																Monthly
 															</Label>
 														</div>
 														<div className="flex items-center space-x-2">
-															<RadioGroupItem value="yearly" id="yearly" className="border-[#d1b86a] text-[#d1b86a]" />
-															<Label htmlFor="yearly" className="text-[#f0fdf4] cursor-pointer">
+															<RadioGroupItem value="yearly" id="yearly" className="border-[tawf-gold] text-[tawf-gold]" />
+															<Label htmlFor="yearly" className="text-[tawf-ink] cursor-pointer">
 																Yearly
 															</Label>
 														</div>
@@ -230,7 +230,7 @@ export default function ZakatPage() {
 
 												{/* Monthly Income */}
 												<div>
-													<Label htmlFor="monthlyIncome" className="text-[#f0fdf4] font-semibold">
+													<Label htmlFor="monthlyIncome" className="text-[tawf-ink] font-semibold">
 														{zakatCalculations.incomeType === "monthly" ? "Monthly Income" : "Yearly Income"}*
 													</Label>
 													<Input
@@ -243,7 +243,7 @@ export default function ZakatPage() {
 														}
 														value={zakatCalculations.monthlyIncome}
 														onChange={(e) => zakatCalculations.setMonthlyIncome(e.target.value)}
-														className="bg-[#14532d] border-[#14532d] text-[#f0fdf4] mt-2"
+														className="bg-[tawf-green/10] border-[tawf-green/10] text-[tawf-ink] mt-2"
 													/>
 												</div>
 
@@ -252,7 +252,7 @@ export default function ZakatPage() {
 													<div className="space-y-6 mt-6">
 														{/* Other Income */}
 														<div>
-															<Label htmlFor="otherIncome" className="text-[#f0fdf4] font-semibold">
+															<Label htmlFor="otherIncome" className="text-[tawf-ink] font-semibold">
 																Additional Income (Bonus, Benefits)
 															</Label>
 															<Input
@@ -261,7 +261,7 @@ export default function ZakatPage() {
 																placeholder="Optional, if applicable"
 																value={zakatCalculations.otherIncome}
 																onChange={(e) => zakatCalculations.setOtherIncome(e.target.value)}
-																className="bg-[#14532d] border-[#14532d] text-[#f0fdf4] mt-2"
+																className="bg-[tawf-green/10] border-[tawf-green/10] text-[tawf-ink] mt-2"
 															/>
 														</div>
 
@@ -282,7 +282,7 @@ export default function ZakatPage() {
 														{/* Expense Input - Only show when deductions are on */}
 														{zakatCalculations.hasDeductions && (
 															<div>
-																<Label htmlFor="expenses" className="text-[#f0fdf4]">
+																<Label htmlFor="expenses" className="text-[tawf-ink]">
 																	Expenses ({currency})
 																</Label>
 																<Input
@@ -291,9 +291,9 @@ export default function ZakatPage() {
 																	placeholder={`Enter your expenses in ${currency}`}
 																	value={zakatCalculations.expenses}
 																	onChange={(e) => zakatCalculations.setExpenses(e.target.value)}
-																	className="bg-[#14532d] border-[#14532d] text-[#f0fdf4] mt-2"
+																	className="bg-[tawf-green/10] border-[tawf-green/10] text-[tawf-ink] mt-2"
 																/>
-																<p className="text-xs text-[#f0fdf4]/50 mt-1">
+																<p className="text-xs text-[tawf-ink]/50 mt-1">
 																	Optional: Enter your work-related or other deductible expenses
 																</p>
 															</div>
@@ -302,8 +302,8 @@ export default function ZakatPage() {
 												</details>
 
 												{/* Payment Obligation */}
-												<div className="p-4 bg-[#14532d]/30 rounded-lg">
-													<div className="text-[#f0fdf4] font-semibold mb-2">Payment Obligation</div>
+												<div className="p-4 bg-[tawf-green/10]/30 rounded-lg">
+													<div className="text-[tawf-ink] font-semibold mb-2">Payment Obligation</div>
 													<div className="text-red-400 text-sm">
 														{zakatCalculations.isObligatedToPay
 															? "Required to Pay Zakat"
@@ -315,7 +315,7 @@ export default function ZakatPage() {
 											<div className="space-y-6">
 												{/* Business Capital */}
 												<div>
-													<Label htmlFor="businessCapital" className="text-[#f0fdf4] font-semibold">
+													<Label htmlFor="businessCapital" className="text-[tawf-ink] font-semibold">
 														Business Capital Rotated for 1 Year*
 													</Label>
 													<Input
@@ -324,13 +324,13 @@ export default function ZakatPage() {
 														placeholder={`Enter business capital in ${currency}`}
 														value={zakatCalculations.businessCapital}
 														onChange={(e) => zakatCalculations.setBusinessCapital(e.target.value)}
-														className="bg-[#14532d] border-[#14532d] text-[#f0fdf4] mt-2"
+														className="bg-[tawf-green/10] border-[tawf-green/10] text-[tawf-ink] mt-2"
 													/>
 												</div>
 
 												{/* Business Profit */}
 												<div>
-													<Label htmlFor="businessProfit" className="text-[#f0fdf4] font-semibold">
+													<Label htmlFor="businessProfit" className="text-[tawf-ink] font-semibold">
 														Profit for 1 Year*
 													</Label>
 													<Input
@@ -339,7 +339,7 @@ export default function ZakatPage() {
 														placeholder={`Enter business profit in ${currency}`}
 														value={zakatCalculations.businessProfit}
 														onChange={(e) => zakatCalculations.setBusinessProfit(e.target.value)}
-														className="bg-[#14532d] border-[#14532d] text-[#f0fdf4] mt-2"
+														className="bg-[tawf-green/10] border-[tawf-green/10] text-[tawf-ink] mt-2"
 													/>
 												</div>
 
@@ -348,7 +348,7 @@ export default function ZakatPage() {
 													<div className="space-y-6 mt-6">
 														{/* Trade Receivables */}
 														<div>
-															<Label htmlFor="tradeReceivables" className="text-[#f0fdf4] font-semibold">
+															<Label htmlFor="tradeReceivables" className="text-[tawf-ink] font-semibold">
 																Trade Receivables
 															</Label>
 															<Input
@@ -357,13 +357,13 @@ export default function ZakatPage() {
 																placeholder="Optional, if applicable"
 																value={zakatCalculations.tradeReceivables}
 																onChange={(e) => zakatCalculations.setTradeReceivables(e.target.value)}
-																className="bg-[#14532d] border-[#14532d] text-[#f0fdf4] mt-2"
+																className="bg-[tawf-green/10] border-[tawf-green/10] text-[tawf-ink] mt-2"
 															/>
 														</div>
 
 														{/* Due Debts */}
 														<div>
-															<Label htmlFor="dueDepartments" className="text-[#f0fdf4] font-semibold">
+															<Label htmlFor="dueDepartments" className="text-[tawf-ink] font-semibold">
 																Due Debts
 															</Label>
 															<Input
@@ -372,13 +372,13 @@ export default function ZakatPage() {
 																placeholder="Optional, if applicable"
 																value={zakatCalculations.dueDepartments}
 																onChange={(e) => zakatCalculations.setDueDepartments(e.target.value)}
-																className="bg-[#14532d] border-[#14532d] text-[#f0fdf4] mt-2"
+																className="bg-[tawf-green/10] border-[tawf-green/10] text-[tawf-ink] mt-2"
 															/>
 														</div>
 
 														{/* Business Losses */}
 														<div>
-															<Label htmlFor="businessLosses" className="text-[#f0fdf4] font-semibold">
+															<Label htmlFor="businessLosses" className="text-[tawf-ink] font-semibold">
 																Losses for 1 Year
 															</Label>
 															<Input
@@ -387,15 +387,15 @@ export default function ZakatPage() {
 																placeholder="Optional, if applicable"
 																value={zakatCalculations.businessLosses}
 																onChange={(e) => zakatCalculations.setBusinessLosses(e.target.value)}
-																className="bg-[#14532d] border-[#14532d] text-[#f0fdf4] mt-2"
+																className="bg-[tawf-green/10] border-[tawf-green/10] text-[tawf-ink] mt-2"
 															/>
 														</div>
 													</div>
 												</details>
 
 												{/* Payment Obligation */}
-												<div className="p-4 bg-[#14532d]/30 rounded-lg">
-													<div className="text-[#f0fdf4] font-semibold mb-2">Payment Obligation</div>
+												<div className="p-4 bg-[tawf-green/10]/30 rounded-lg">
+													<div className="text-[tawf-ink] font-semibold mb-2">Payment Obligation</div>
 													<div className="text-red-400 text-sm">
 														{zakatCalculations.isObligatedToPay
 															? "Required to Pay Zakat"
@@ -406,7 +406,7 @@ export default function ZakatPage() {
 										) : zakatCalculations.selectedZakatType.id === "savings" ? (
 											<div className="space-y-6">
 												<div>
-													<Label htmlFor="savingsBalance" className="text-[#f0fdf4] font-semibold">
+													<Label htmlFor="savingsBalance" className="text-[tawf-ink] font-semibold">
 														Savings Balance*
 													</Label>
 													<Input
@@ -415,26 +415,26 @@ export default function ZakatPage() {
 														placeholder={`Enter your total liquid savings in ${currency}`}
 														value={zakatCalculations.savingsBalance}
 														onChange={(e) => zakatCalculations.setSavingsBalance(e.target.value)}
-														className="bg-[#14532d] border-[#14532d] text-[#f0fdf4] mt-2"
+														className="bg-[tawf-green/10] border-[tawf-green/10] text-[tawf-ink] mt-2"
 													/>
-													<p className="text-xs text-[#f0fdf4]/50 mt-1">Include cash and liquid assets available for a full lunar year.</p>
+													<p className="text-xs text-[tawf-ink]/50 mt-1">Include cash and liquid assets available for a full lunar year.</p>
 												</div>
 
-												<div className="flex items-center justify-between p-4 bg-[#14532d]/30 rounded-lg border border-[#14532d]">
+												<div className="flex items-center justify-between p-4 bg-[tawf-green/10]/30 rounded-lg border border-[tawf-green/10]">
 													<div>
-														<span className="text-[#f0fdf4] font-medium">Using conventional bank?</span>
-														<p className="text-xs text-[#f0fdf4]/60">If yes, interest will be excluded from the balance.</p>
+														<span className="text-[tawf-ink] font-medium">Using conventional bank?</span>
+														<p className="text-xs text-[tawf-ink]/60">If yes, interest will be excluded from the balance.</p>
 													</div>
 													<Switch
 														checked={zakatCalculations.isConventionalBank}
 														onCheckedChange={zakatCalculations.setIsConventionalBank}
-														className="data-[state=checked]:bg-[#d1b86a]"
+														className="data-[state=checked]:bg-[tawf-gold]"
 													/>
 												</div>
 
 												{zakatCalculations.isConventionalBank && (
 													<div>
-														<Label htmlFor="interestAmount" className="text-[#f0fdf4]">
+														<Label htmlFor="interestAmount" className="text-[tawf-ink]">
 															Interest Amount Earned (last 12 months)
 														</Label>
 														<Input
@@ -443,16 +443,16 @@ export default function ZakatPage() {
 															placeholder={`Enter interest amount in ${currency}`}
 															value={zakatCalculations.interestAmount}
 															onChange={(e) => zakatCalculations.setInterestAmount(e.target.value)}
-															className="bg-[#14532d] border-[#14532d] text-[#f0fdf4] mt-2"
+															className="bg-[tawf-green/10] border-[tawf-green/10] text-[tawf-ink] mt-2"
 														/>
-														<p className="text-xs text-[#f0fdf4]/50 mt-1">This amount will be excluded from the zakatable balance.</p>
+														<p className="text-xs text-[tawf-ink]/50 mt-1">This amount will be excluded from the zakatable balance.</p>
 													</div>
 												)}
 
 												{/* months held removed */}
 
-												<div className="p-4 bg-[#14532d]/30 rounded-lg">
-													<div className="text-[#f0fdf4] font-semibold mb-2">Payment Obligation</div>
+												<div className="p-4 bg-[tawf-green/10]/30 rounded-lg">
+													<div className="text-[tawf-ink] font-semibold mb-2">Payment Obligation</div>
 													<div className="text-red-400 text-sm">
 														{zakatCalculations.isObligatedToPay ? "Required to Pay Zakat" : "Not Required to Pay Zakat, but Can Give Charity"}
 													</div>
@@ -460,7 +460,7 @@ export default function ZakatPage() {
 											</div>
 										) : zakatCalculations.selectedZakatType.id === "gold" ? (
 											<div>
-												<Label htmlFor="goldGrams" className="text-[#f0fdf4]">
+												<Label htmlFor="goldGrams" className="text-[tawf-ink]">
 													Total Gold (grams)
 												</Label>
 												<Input
@@ -469,13 +469,13 @@ export default function ZakatPage() {
 													placeholder="Enter total gold in grams"
 													value={zakatCalculations.goldWeightGrams}
 													onChange={(e) => zakatCalculations.setGoldWeightGrams(e.target.value)}
-													className="bg-[#14532d] border-[#14532d] text-[#f0fdf4] mt-2"
+													className="bg-[tawf-green/10] border-[tawf-green/10] text-[tawf-ink] mt-2"
 												/>
-												<p className="text-xs text-[#f0fdf4]/50 mt-1">
+												<p className="text-xs text-[tawf-ink]/50 mt-1">
 													We auto-convert grams to {currency} using the live price.
 												</p>
-												<div className="p-4 bg-[#14532d]/30 rounded-lg mt-4">
-													<div className="text-[#f0fdf4] font-semibold mb-2">Payment Obligation</div>
+												<div className="p-4 bg-[tawf-green/10]/30 rounded-lg mt-4">
+													<div className="text-[tawf-ink] font-semibold mb-2">Payment Obligation</div>
 													<div className="text-red-400 text-sm">
 														{zakatCalculations.isObligatedToPay ? "Required to Pay Zakat" : "Not Required to Pay Zakat, but Can Give Charity"}
 													</div>
@@ -484,7 +484,7 @@ export default function ZakatPage() {
 										) : (
 											/* Other Zakat Types Interface */
 											<div>
-												<Label htmlFor="wealth" className="text-[#f0fdf4]">
+												<Label htmlFor="wealth" className="text-[tawf-ink]">
 													Total Wealth Yearly ({zakatCalculations.getCurrentZakatType().unit})
 												</Label>
 												<Input
@@ -492,9 +492,9 @@ export default function ZakatPage() {
 													type="number"
 													value={zakatCalculations.wealth}
 													onChange={(e) => zakatCalculations.setWealth(e.target.value)}
-													className="bg-[#14532d] border-[#14532d] text-[#f0fdf4] mt-2"
+													className="bg-[tawf-green/10] border-[tawf-green/10] text-[tawf-ink] mt-2"
 												/>
-												<p className="text-xs text-[#f0fdf4]/50 mt-1">
+												<p className="text-xs text-[tawf-ink]/50 mt-1">
 													Minimum nisab: {zakatCalculations.getCurrentZakatType().nisabThreshold.toLocaleString()} {" "}
 													{zakatCalculations.getCurrentZakatType().unit} | Rate: {" "}
 													{zakatCalculations.getCurrentZakatType().rate}%
@@ -503,15 +503,15 @@ export default function ZakatPage() {
 										)}
 
 										{zakatCalculations.calculatedZakat > 0 && (
-											<div className="p-4 rounded-lg border border-[#d1b86a]/30">
+											<div className="p-4 rounded-lg border border-[tawf-gold]/30">
 												<div className="text-center">
-													<p className="text-[#f0fdf4]/70 mb-2">
+													<p className="text-[tawf-ink]/70 mb-2">
 														Your {zakatCalculations.getCurrentZakatType().name} Amount:
 													</p>
-													<p className="text-3xl font-bold text-[#d1b86a]">
+													<p className="text-3xl font-bold text-[tawf-gold]">
 														{formatCurrency(zakatCalculations.calculatedZakat)}
 													</p>
-													<p className="text-xs text-[#f0fdf4]/50 mt-1">
+													<p className="text-xs text-[tawf-ink]/50 mt-1">
 														{zakatCalculations.getCurrentZakatType().rate}% of{" "}
 														{zakatCalculations.selectedZakatType.id === "income" 
 															? "taxable income" 
@@ -525,7 +525,7 @@ export default function ZakatPage() {
 															if (!breakdown) return null;
 
 															return (
-																<div className="mt-2 text-xs text-[#f0fdf4]/60">
+																<div className="mt-2 text-xs text-[tawf-ink]/60">
 																	{zakatCalculations.incomeType === "monthly"
 																		? `Monthly: ${formatCurrency(breakdown.primaryIncome)}`
 																		: `Yearly: ${formatCurrency(breakdown.primaryIncome)}`}
@@ -548,7 +548,7 @@ export default function ZakatPage() {
 															if (!breakdown) return null;
 
 															return (
-																<div className="mt-2 text-xs text-[#f0fdf4]/60">
+																<div className="mt-2 text-xs text-[tawf-ink]/60">
 																	Capital: {formatCurrency(breakdown.businessCapital)}
 																	{breakdown.businessProfit > 0 && (
 																		<span> + Profit: {formatCurrency(breakdown.businessProfit)}</span>
@@ -571,7 +571,7 @@ export default function ZakatPage() {
 														if (!breakdown) return null;
 
 														return (
-															<div className="mt-2 text-xs text-[#f0fdf4]/60">
+															<div className="mt-2 text-xs text-[tawf-ink]/60">
 																Savings: {formatCurrency(breakdown.balance)}
 																{breakdown.isConventionalBank && breakdown.interest > 0 && (
 																	<span className="text-red-300"> - Interest: {formatCurrency(breakdown.interest)}</span>
@@ -701,7 +701,7 @@ export default function ZakatPage() {
 												title={`${zakatCalculations.getCurrentZakatType().name} Payment`}
 											>
 												<Button
-													className="w-full bg-[#14532d] hover:bg-[#1a3a1f] text-[#f0fdf4] glow-shadow"
+													className="w-full bg-[tawf-green/10] hover:bg-[#1a3a1f] text-[tawf-ink] glow-shadow"
 													disabled={zakatCalculations.calculatedZakat === 0}
 												>
 													<Wallet className="h-4 w-4 mr-2" />
@@ -714,23 +714,23 @@ export default function ZakatPage() {
 							</TabsContent>
 
 							<TabsContent value="fitrah">
-								<Card className="bg-[#0f2419] border-[#14532d]">
+								<Card className="bg-[white] border-[tawf-green/10]">
 									<CardHeader>
-										<CardTitle className="text-[#f0fdf4]">Fitrah Zakat</CardTitle>
+										<CardTitle className="text-[tawf-ink]">Fitrah Zakat</CardTitle>
 									</CardHeader>
 									<CardContent className="space-y-6">
-										<div className="p-4 bg-[#14532d]/30 rounded-lg border border-[#d1b86a]/30">
+										<div className="p-4 bg-[tawf-green/10]/30 rounded-lg border border-[tawf-gold]/30">
 											<div className="text-center">
-												<p className="text-[#f0fdf4]/70 mb-2">Fitrah Zakat per person:</p>
-												<p className="text-3xl font-bold text-[#d1b86a]">
+												<p className="text-[tawf-ink]/70 mb-2">Fitrah Zakat per person:</p>
+												<p className="text-3xl font-bold text-[tawf-gold]">
 													{formatCurrency(zakatFitrah.fitrahAmountInCurrency)}
 												</p>
-												<p className="text-xs text-[#f0fdf4]/50 mt-1">Equivalent to 2.5kg rice</p>
+												<p className="text-xs text-[tawf-ink]/50 mt-1">Equivalent to 2.5kg rice</p>
 											</div>
 										</div>
 
 										<div>
-											<Label htmlFor="people" className="text-[#f0fdf4]">
+											<Label htmlFor="people" className="text-[tawf-ink]">
 												Number of People
 											</Label>
 											<Input
@@ -739,7 +739,7 @@ export default function ZakatPage() {
 												placeholder="Enter number of people"
 												value={zakatFitrah.peopleCount}
 												onChange={(e) => zakatFitrah.setPeopleCount(e.target.value)}
-												className="bg-[#14532d] border-[#14532d] text-[#f0fdf4] mt-2"
+												className="bg-[tawf-green/10] border-[tawf-green/10] text-[tawf-ink] mt-2"
 												min="1"
 											/>
 										</div>
@@ -757,17 +757,17 @@ export default function ZakatPage() {
 
 										<div className="space-y-4">
 											<div className="flex justify-between items-center">
-												<span className="text-[#f0fdf4]/70">Per person:</span>
-												<span className="text-[#f0fdf4]">{formatCurrency(zakatFitrah.fitrahAmountInCurrency)}</span>
+												<span className="text-[tawf-ink]/70">Per person:</span>
+												<span className="text-[tawf-ink]">{formatCurrency(zakatFitrah.fitrahAmountInCurrency)}</span>
 											</div>
 											<div className="flex justify-between items-center">
-												<span className="text-[#f0fdf4]/70">Number of people:</span>
-												<span className="text-[#f0fdf4]">{zakatFitrah.peopleCount || 0}</span>
+												<span className="text-[tawf-ink]/70">Number of people:</span>
+												<span className="text-[tawf-ink]">{zakatFitrah.peopleCount || 0}</span>
 											</div>
-											<Separator className="bg-[#14532d]" />
+											<Separator className="bg-[tawf-green/10]" />
 											<div className="flex justify-between items-center text-lg font-semibold">
-												<span className="text-[#f0fdf4]">Total:</span>
-												<span className="text-[#d1b86a]">{formatCurrency(zakatFitrah.totalFitrahAmount)}</span>
+												<span className="text-[tawf-ink]">Total:</span>
+												<span className="text-[tawf-gold]">{formatCurrency(zakatFitrah.totalFitrahAmount)}</span>
 											</div>
 
 											<PaymentModal
@@ -776,7 +776,7 @@ export default function ZakatPage() {
 												title="Zakat Fitrah Payment"
 											>
 												<Button
-													className="w-full bg-[#14532d] hover:bg-[#1a3a1f] text-[#f0fdf4] glow-shadow"
+													className="w-full bg-[tawf-green/10] hover:bg-[#1a3a1f] text-[tawf-ink] glow-shadow"
 													disabled={!zakatFitrah.canPay}
 												>
 													<Wallet className="h-4 w-4 mr-2" />
@@ -794,120 +794,120 @@ export default function ZakatPage() {
 					<div className="space-y-6">
 						{/* Zakat Pool Status */}
 						{isConnected && (
-							<Card className="bg-[#0f2419] border-[#14532d]">
+							<Card className="bg-[white] border-[tawf-green/10]">
 								<CardHeader>
-									<CardTitle className="text-[#f0fdf4] text-sm">Zakat Pool Status</CardTitle>
+									<CardTitle className="text-[tawf-ink] text-sm">Zakat Pool Status</CardTitle>
 								</CardHeader>
 								<CardContent>
 									<div className="space-y-3 text-sm">
 										<div className="flex items-center justify-between">
-											<span className="text-[#f0fdf4]/70">Current Pool:</span>
-											<span className="text-[#d1b86a] font-semibold">
+											<span className="text-[tawf-ink]/70">Current Pool:</span>
+											<span className="text-[tawf-gold] font-semibold">
 												{zakatContractData.loading
 													? "Loading..."
 													: formatCurrency(convertToSelectedCurrency(zakatContractData.zakatPool))}
 											</span>
 										</div>
 										<div className="flex items-center justify-between">
-											<span className="text-[#f0fdf4]/70">Selected Type:</span>
-											<span className="text-[#f0fdf4] text-xs">{zakatCalculations.getCurrentZakatType().name}</span>
+											<span className="text-[tawf-ink]/70">Selected Type:</span>
+											<span className="text-[tawf-ink] text-xs">{zakatCalculations.getCurrentZakatType().name}</span>
 										</div>
 										<div className="flex items-center justify-between">
-											<span className="text-[#f0fdf4]/70">Nisab Threshold:</span>
-											<span className="text-[#f0fdf4]">
+											<span className="text-[tawf-ink]/70">Nisab Threshold:</span>
+											<span className="text-[tawf-ink]">
 												{formatCurrency(zakatCalculations.getCurrentZakatType().nisabThreshold)}{" "}
 												{zakatCalculations.getCurrentZakatType().unit}
 											</span>
 										</div>
 										<div className="flex items-center justify-between">
-											<span className="text-[#f0fdf4]/70">Zakat Rate:</span>
-											<span className="text-[#f0fdf4]">{zakatCalculations.getCurrentZakatType().rate}%</span>
+											<span className="text-[tawf-ink]/70">Zakat Rate:</span>
+											<span className="text-[tawf-ink]">{zakatCalculations.getCurrentZakatType().rate}%</span>
 										</div>
 										<div className="flex items-center justify-between">
-											<span className="text-[#f0fdf4]/70">Fitrah Amount:</span>
-											<span className="text-[#f0fdf4]">{formatCurrency(zakatFitrah.fitrahAmountInCurrency)}</span>
+											<span className="text-[tawf-ink]/70">Fitrah Amount:</span>
+											<span className="text-[tawf-ink]">{formatCurrency(zakatFitrah.fitrahAmountInCurrency)}</span>
 										</div>
 									</div>
 								</CardContent>
 							</Card>
 						)}
 
-						<Card className="bg-[#0f2419] border-[#14532d]">
+						<Card className="bg-[white] border-[tawf-green/10]">
 							<CardHeader>
-								<CardTitle className="text-[#f0fdf4] text-sm">Impact Areas</CardTitle>
+								<CardTitle className="text-[tawf-ink] text-sm">Impact Areas</CardTitle>
 							</CardHeader>
 							<CardContent>
 								<div className="space-y-4">
-									<div className="flex items-center p-3 bg-[#14532d]/30 rounded-lg">
-										<Heart className="h-5 w-5 text-[#d1b86a] mr-3" />
+									<div className="flex items-center p-3 bg-[tawf-green/10]/30 rounded-lg">
+										<Heart className="h-5 w-5 text-[tawf-gold] mr-3" />
 										<div>
-											<div className="text-sm font-medium text-[#f0fdf4]">Orphans</div>
-											<div className="text-xs text-[#f0fdf4]/60">Supporting orphaned children</div>
+											<div className="text-sm font-medium text-[tawf-ink]">Orphans</div>
+											<div className="text-xs text-[tawf-ink]/60">Supporting orphaned children</div>
 										</div>
 									</div>
 
-									<div className="flex items-center p-3 bg-[#14532d]/30 rounded-lg">
-										<Users className="h-5 w-5 text-[#d1b86a] mr-3" />
+									<div className="flex items-center p-3 bg-[tawf-green/10]/30 rounded-lg">
+										<Users className="h-5 w-5 text-[tawf-gold] mr-3" />
 										<div>
-											<div className="text-sm font-medium text-[#f0fdf4]">Refugees</div>
-											<div className="text-xs text-[#f0fdf4]/60">Helping displaced families</div>
+											<div className="text-sm font-medium text-[tawf-ink]">Refugees</div>
+											<div className="text-xs text-[tawf-ink]/60">Helping displaced families</div>
 										</div>
 									</div>
 
-									<div className="flex items-center p-3 bg-[#14532d]/30 rounded-lg">
-										<Home className="h-5 w-5 text-[#d1b86a] mr-3" />
+									<div className="flex items-center p-3 bg-[tawf-green/10]/30 rounded-lg">
+										<Home className="h-5 w-5 text-[tawf-gold] mr-3" />
 										<div>
-											<div className="text-sm font-medium text-[#f0fdf4]">Local Aid</div>
-											<div className="text-xs text-[#f0fdf4]/60">Community support programs</div>
+											<div className="text-sm font-medium text-[tawf-ink]">Local Aid</div>
+											<div className="text-xs text-[tawf-ink]/60">Community support programs</div>
 										</div>
 									</div>
 								</div>
 							</CardContent>
 						</Card>
 
-						<Card className="bg-[#0f2419] border-[#14532d]">
+						<Card className="bg-[white] border-[tawf-green/10]">
 							<CardHeader>
-								<CardTitle className="text-[#f0fdf4] text-sm">Transparency Guarantee</CardTitle>
+								<CardTitle className="text-[tawf-ink] text-sm">Transparency Guarantee</CardTitle>
 							</CardHeader>
 							<CardContent>
 								<div className="space-y-3">
 									<div className="flex items-center">
-										<Badge className="bg-[#14532d] text-[#d1b86a] mr-2">✓</Badge>
-										<span className="text-xs text-[#f0fdf4]/70">Blockchain verified</span>
+										<Badge className="bg-[tawf-green/10] text-[tawf-gold] mr-2">✓</Badge>
+										<span className="text-xs text-[tawf-ink]/70">Blockchain verified</span>
 									</div>
 									<div className="flex items-center">
-										<Badge className="bg-[#14532d] text-[#d1b86a] mr-2">✓</Badge>
-										<span className="text-xs text-[#f0fdf4]/70">Real-time tracking</span>
+										<Badge className="bg-[tawf-green/10] text-[tawf-gold] mr-2">✓</Badge>
+										<span className="text-xs text-[tawf-ink]/70">Real-time tracking</span>
 									</div>
 									<div className="flex items-center">
-										<Badge className="bg-[#14532d] text-[#d1b86a] mr-2">✓</Badge>
-										<span className="text-xs text-[#f0fdf4]/70">Impact reports</span>
+										<Badge className="bg-[tawf-green/10] text-[tawf-gold] mr-2">✓</Badge>
+										<span className="text-xs text-[tawf-ink]/70">Impact reports</span>
 									</div>
 									<div className="flex items-center">
-										<Badge className="bg-[#14532d] text-[#d1b86a] mr-2">✓</Badge>
-										<span className="text-xs text-[#f0fdf4]/70">NFT certificates</span>
+										<Badge className="bg-[tawf-green/10] text-[tawf-gold] mr-2">✓</Badge>
+										<span className="text-xs text-[tawf-ink]/70">NFT certificates</span>
 									</div>
 								</div>
 							</CardContent>
 						</Card>
 
-						<Card className="bg-[#0f2419] border-[#14532d]">
+						<Card className="bg-[white] border-[tawf-green/10]">
 							<CardHeader>
-								<CardTitle className="text-[#f0fdf4] text-sm">Global Impact</CardTitle>
+								<CardTitle className="text-[tawf-ink] text-sm">Global Impact</CardTitle>
 							</CardHeader>
 							<CardContent>
 								<div className="space-y-3 text-sm">
 									<div className="flex items-center justify-between">
-										<span className="text-[#f0fdf4]/70">Total Donated:</span>
-										<span className="text-[#d1b86a] font-semibold">2.4B IDR</span>
+										<span className="text-[tawf-ink]/70">Total Donated:</span>
+										<span className="text-[tawf-gold] font-semibold">2.4B IDR</span>
 									</div>
 									<div className="flex items-center justify-between">
-										<span className="text-[#f0fdf4]/70">Families Helped:</span>
-										<span className="text-[#d1b86a] font-semibold">3,247</span>
+										<span className="text-[tawf-ink]/70">Families Helped:</span>
+										<span className="text-[tawf-gold] font-semibold">3,247</span>
 									</div>
 									<div className="flex items-center justify-between">
-										<span className="text-[#f0fdf4]/70">Active Donors:</span>
-										<span className="text-[#d1b86a] font-semibold">1,856</span>
+										<span className="text-[tawf-ink]/70">Active Donors:</span>
+										<span className="text-[tawf-gold] font-semibold">1,856</span>
 									</div>
 								</div>
 							</CardContent>

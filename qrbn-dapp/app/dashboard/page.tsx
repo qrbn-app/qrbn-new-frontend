@@ -10,74 +10,82 @@ import { ContractDemo } from "@/components/contract-demo";
 
 export default function DashboardPage() {
 	return (
-		<div className="min-h-screen islamic-pattern py-8 px-4">
+		<div className="min-h-screen bg-tawf-sand/30 py-12 px-4">
 			<div className="max-w-7xl mx-auto">
 				{/* Header */}
 				<div className="mb-8">
-					<h1 className="text-4xl font-bold text-[#f0fdf4] mb-4">Dashboard</h1>
-					<p className="text-[#f0fdf4]/70">Track your donations and community impact</p>
+					<h1 className="text-4xl md:text-5xl font-heading font-medium text-tawf-green mb-2">Dashboard</h1>
+					<p className="text-tawf-muted">Track your donations and community impact</p>
 				</div>
 
 				{/* Stats Cards */}
 				<div className="grid md:grid-cols-4 gap-6 mb-8">
-					<Card className="bg-[#0f2419] border-[#14532d]">
+					<Card className="bg-white border-tawf-green/10 rounded-2xl hover:shadow-lg transition-shadow">
 						<CardContent className="p-6">
-							<div className="flex items-center justify-between">
-								<div>
-									<p className="text-[#f0fdf4]/70 text-sm">Total Donated</p>
-									<p className="text-2xl font-bold text-[#d1b86a]">5947 USDT</p>
+							<div className="flex items-start gap-4">
+								<div className="w-12 h-12 bg-tawf-green/10 rounded-xl flex items-center justify-center flex-shrink-0">
+									<TrendingUp className="h-6 w-6 text-tawf-green" />
 								</div>
-								<TrendingUp className="h-8 w-8 text-[#d1b86a]" />
+								<div className="flex-1">
+									<p className="text-tawf-muted text-sm mb-1">Total Donated</p>
+									<p className="text-2xl font-heading font-bold text-tawf-green">5947 USDT</p>
+								</div>
 							</div>
 						</CardContent>
 					</Card>
 
-					<Card className="bg-[#0f2419] border-[#14532d]">
+					<Card className="bg-white border-tawf-green/10 rounded-2xl hover:shadow-lg transition-shadow">
 						<CardContent className="p-6">
-							<div className="flex items-center justify-between">
-								<div>
-									<p className="text-[#f0fdf4]/70 text-sm">NFT Certificates</p>
-									<p className="text-2xl font-bold text-[#d1b86a]">2</p>
+							<div className="flex items-start gap-4">
+								<div className="w-12 h-12 bg-tawf-gold/10 rounded-xl flex items-center justify-center flex-shrink-0">
+									<Award className="h-6 w-6 text-tawf-gold" />
 								</div>
-								<Award className="h-8 w-8 text-[#d1b86a]" />
+								<div className="flex-1">
+									<p className="text-tawf-muted text-sm mb-1">NFT Certificates</p>
+									<p className="text-2xl font-heading font-bold text-tawf-gold">2</p>
+								</div>
 							</div>
 						</CardContent>
 					</Card>
 
-					<Card className="bg-[#0f2419] border-[#14532d]">
+					<Card className="bg-white border-tawf-green/10 rounded-2xl hover:shadow-lg transition-shadow">
 						<CardContent className="p-6">
-							<div className="flex items-center justify-between">
-								<div>
-									<p className="text-[#f0fdf4]/70 text-sm">Families Helped</p>
-									<p className="text-2xl font-bold text-[#d1b86a]">20</p>
+							<div className="flex items-start gap-4">
+								<div className="w-12 h-12 bg-tawf-green/10 rounded-xl flex items-center justify-center flex-shrink-0">
+									<Users className="h-6 w-6 text-tawf-green" />
 								</div>
-								<Users className="h-8 w-8 text-[#d1b86a]" />
+								<div className="flex-1">
+									<p className="text-tawf-muted text-sm mb-1">Families Helped</p>
+									<p className="text-2xl font-heading font-bold text-tawf-green">20</p>
+								</div>
 							</div>
 						</CardContent>
 					</Card>
 
-					<Card className="bg-[#0f2419] border-[#14532d]">
+					<Card className="bg-white border-tawf-green/10 rounded-2xl hover:shadow-lg transition-shadow">
 						<CardContent className="p-6">
-							<div className="flex items-center justify-between">
-								<div>
-									<p className="text-[#f0fdf4]/70 text-sm">DAO Votes</p>
-									<p className="text-2xl font-bold text-[#d1b86a]">4</p>
+							<div className="flex items-start gap-4">
+								<div className="w-12 h-12 bg-tawf-gold/10 rounded-xl flex items-center justify-center flex-shrink-0">
+									<Vote className="h-6 w-6 text-tawf-gold" />
 								</div>
-								<Vote className="h-8 w-8 text-[#d1b86a]" />
+								<div className="flex-1">
+									<p className="text-tawf-muted text-sm mb-1">DAO Votes</p>
+									<p className="text-2xl font-heading font-bold text-tawf-gold">4</p>
+								</div>
 							</div>
 						</CardContent>
 					</Card>
 				</div>
 
 				<Tabs defaultValue="history" className="space-y-6">
-					<TabsList className="grid w-full grid-cols-3 bg-[#0f2419] border border-[#14532d]">
-						<TabsTrigger value="history" className="data-[state=active]:bg-[#14532d] data-[state=active]:text-[#d1b86a]">
+					<TabsList className="grid w-full grid-cols-3 bg-tawf-sand/50 border border-tawf-green/10 rounded-xl p-1">
+						<TabsTrigger value="history" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-tawf-green">
 							Donation History
 						</TabsTrigger>
-						<TabsTrigger value="certificates" className="data-[state=active]:bg-[#14532d] data-[state=active]:text-[#d1b86a]">
+						<TabsTrigger value="certificates" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-tawf-green">
 							NFT Certificates
 						</TabsTrigger>
-						<TabsTrigger value="contracts" className="data-[state=active]:bg-[#14532d] data-[state=active]:text-[#d1b86a]">
+						<TabsTrigger value="contracts" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-tawf-green">
 							Contract Data
 						</TabsTrigger>
 					</TabsList>
@@ -85,9 +93,9 @@ export default function DashboardPage() {
 					<TabsContent value="history">
 						<div className="grid lg:grid-cols-3 gap-6">
 							<div className="lg:col-span-2 space-y-4">
-								<Card className="bg-[#0f2419] border-[#14532d]">
+								<Card className="bg-white border-tawf-green/10 rounded-2xl">
 									<CardHeader>
-										<CardTitle className="text-[#f0fdf4]">Recent Donations</CardTitle>
+										<CardTitle className="text-tawf-green font-heading">Recent Donations</CardTitle>
 									</CardHeader>
 									<CardContent>
 										<div className="space-y-4">
@@ -95,21 +103,14 @@ export default function DashboardPage() {
 												{ type: "Zakat Maal", amount: "5667 USDT", date: "2025-08-18", status: "Completed" },
 												{ type: "Qurban - Goat", amount: "280 USDT", date: "2025-08-18", status: "Completed" },
 											].map((donation, index) => (
-												<div key={index} className="flex items-center justify-between p-4 bg-[#14532d]/30 rounded-lg">
+												<div key={index} className="flex items-center justify-between p-5 bg-tawf-sand/30 rounded-xl hover:bg-tawf-sand/50 transition-colors">
 													<div>
-														<div className="font-medium text-[#f0fdf4]">{donation.type}</div>
-														<div className="text-sm text-[#f0fdf4]/60">{donation.date}</div>
+														<div className="font-heading font-medium text-tawf-ink">{donation.type}</div>
+														<div className="text-sm text-tawf-muted">{donation.date}</div>
 													</div>
 													<div className="text-right">
-														<div className="font-semibold text-[#d1b86a]">{donation.amount}</div>
-														<Badge
-															variant={donation.status === "Completed" ? "default" : "secondary"}
-															className={
-																donation.status === "Completed"
-																	? "bg-[#14532d] text-[#d1b86a]"
-																	: "bg-[#d1b86a]/20 text-[#d1b86a]"
-															}
-														>
+														<div className="font-heading font-semibold text-tawf-gold">{donation.amount}</div>
+														<Badge className="bg-tawf-green/10 text-tawf-green border-0 mt-1">
 															{donation.status}
 														</Badge>
 													</div>
@@ -121,34 +122,34 @@ export default function DashboardPage() {
 							</div>
 
 							<div>
-								<Card className="bg-[#0f2419] border-[#14532d]">
+								<Card className="bg-white border-tawf-green/10 rounded-2xl">
 									<CardHeader>
-										<CardTitle className="text-[#f0fdf4] text-sm">Impact Tracker</CardTitle>
+										<CardTitle className="text-tawf-green font-heading text-base">Impact Tracker</CardTitle>
 									</CardHeader>
 									<CardContent>
-										<div className="space-y-4">
+										<div className="space-y-5">
 											<div>
 												<div className="flex justify-between text-sm mb-2">
-													<span className="text-[#f0fdf4]/70">Orphans Supported</span>
-													<span className="text-[#d1b86a] font-semibold">5667 USDT</span>
+													<span className="text-tawf-muted">Orphans Supported</span>
+													<span className="text-tawf-gold font-heading font-semibold">5667 USDT</span>
 												</div>
-												<Progress value={80} className="h-2" />
+												<Progress value={80} className="h-2 bg-tawf-sand" />
 											</div>
 
 											<div>
 												<div className="flex justify-between text-sm mb-2">
-													<span className="text-[#f0fdf4]/70">Refugee Families</span>
-													<span className="text-[#d1b86a] font-semibold">280 USDT</span>
+													<span className="text-tawf-muted">Refugee Families</span>
+													<span className="text-tawf-gold font-heading font-semibold">280 USDT</span>
 												</div>
-												<Progress value={30} className="h-2" />
+												<Progress value={30} className="h-2 bg-tawf-sand" />
 											</div>
 
 											<div>
 												<div className="flex justify-between text-sm mb-2">
-													<span className="text-[#f0fdf4]/70">Local Aid</span>
-													<span className="text-[#d1b86a] font-semibold">0 USDT</span>
+													<span className="text-tawf-muted">Local Aid</span>
+													<span className="text-tawf-gold font-heading font-semibold">0 USDT</span>
 												</div>
-												<Progress value={0} className="h-2" />
+												<Progress value={0} className="h-2 bg-tawf-sand" />
 											</div>
 										</div>
 									</CardContent>
